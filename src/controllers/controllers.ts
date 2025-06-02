@@ -1,79 +1,117 @@
-const endpoints = require("../../endpoints.json")
+const endpoints = require("../../endpoints.json");
 
-const{selectAllEvents, selectEventById, addNewEvents, deleteEventByEventId, selectAllUsers, addNewuser, deleteUserByUserId, selectUserByUserId, selectAllTickets, selectTicketById} = require("../models")
+import { Request, Response } from "express";
 
-exports.getApi = (request, response) => {
-    response.status(200).send({endpoints});
+const {
+  selectAllEvents,
+  selectEventById,
+  addNewEvents,
+  deleteEventByEventId,
+  selectAllUsers,
+  addNewuser,
+  deleteUserByUserId,
+  selectUserByUserId,
+  selectAllTickets,
+  selectTicketById,
+} = require("../models");
+
+interface Event {
+  id: number;
+  name: string;
+  date: string;
+  address: string;
 }
 
-exports.getEvents = (req, res) => {
-   return selectAllEvents().then((events)=> {
-        res.status(200).send({events})
-    })
+interface User {
+  id: number;
+  name: string;
+  profile_picture: string;
+  trustworthiness: number;
 }
 
-exports.getEventById = (req, res)=> {
-    const {eventId} = req.params
-   return selectEventById(eventId).then((event)=> {
-        res.status(200).send({event})
-    })
+interface Ticket {
+  id: number;
+  event_id: number;
+  user_id: number;
 }
 
-exports.postEvent = (req,res) => {
-    const {eventId} = req.params;
+exports.getApi = (req: Request, res: Response): void => {
+  res.status(200).send({ endpoints });
+};
 
-    return addNewEvents(eventId).then((event)=> {
-        res.status(201).send({event})
-    })
+exports.getEvents = (req: Request, res: Response<Event>): Promise<void> => {
+  return selectAllEvents().then((events) => {
+    res.status(200).send(events);
+  });
+};
 
-}
+exports.getEventById = (req: Request, res: Response<Event>): Promise<void> => {
+  const { eventId } = req.params;
+  return selectEventById(eventId).then((event) => {
+    res.status(200).send(event);
+  });
+};
 
-exports.deleteEvent = (req, res) => {
-    const {eventId} = req.params;
+exports.postEvent = (req: Request, res: Response<Event>): Promise<void> => {
+  const { eventId } = req.params;
 
-    return deleteEventByEventId(eventId).then(()=> {
-        res.status(204).send();
-    })
-}
+  return addNewEvents(eventId).then((event) => {
+    res.status(201).send(event);
+  });
+};
 
-exports.getAllUsers = (req,res)=> {
-    return selectAllUsers().then((usersData)=> {
-        res.status(200).send({usersData})
-    })
-}
+exports.deleteEvent = (req: Request, res: Response): Promise<void> => {
+  const { eventId } = req.params;
 
-exports.postUser = (req, res)=> {
-    const {userId} = req.params;
-    
-    return addNewuser(userId).then((user)=> {
-        res.status(201).send({user})
-    })
-}
+  return deleteEventByEventId(eventId).then(() => {
+    res.status(204).send();
+  });
+};
 
-exports.deleteUser = (req, res)=> {
-    const {userId} = req.params;
+exports.getAllUsers = (req: Request, res: Response<User>): Promise<void> => {
+  return selectAllUsers().then((usersData) => {
+    res.status(200).send(usersData);
+  });
+};
 
-    return deleteUserByUserId(userId).then(()=> {
-        res.status(204).send();
-    })
-}
+exports.postUser = (req: Request, res: Response<User>): Promise<void> => {
+  const { userId } = req.params;
 
-exports.getUserById = (req, res) => {
-    const {userId} = req.params;
-    return selectUserByUserId(userId).then((user) => {
-        res.status(200).send(user);
-    })
-}
+  return addNewuser(userId).then((user) => {
+    res.status(201).send(user);
+  });
+};
 
-exports.getAllTickets = (req, res) => {
-    return selectAllTickets().then((tickets)=> {
-        res.status(200).send({tickets})
-    })
-}
+exports.deleteUser = (req: Request, res: Response): Promise<void> => {
+  const { userId } = req.params;
 
-exports.getTicketById = (req,res) => {
-    const {ticketId} = req.params;
-    return selectTicketById(ticketId).then((ticket)=> {
-        res.status(200).send({ticket})
-    })
-}
+  return deleteUserByUserId(userId).then(() => {
+    res.status(204).send();
+  });
+};
+
+exports.getUserById = (req: Request, res: Response<User>): Promise<void> => {
+  const { userId } = req.params;
+  return selectUserByUserId(userId).then((user) => {
+    res.status(200).send(user);
+  });
+};
+
+exports.getAllTickets = (
+  req: Request,
+  res: Response<Ticket>
+): Promise<void> => {
+  return selectAllTickets().then((tickets) => {
+    res.status(200).send(tickets);
+  });
+};
+
+exports.getTicketById = (
+  req: Request,
+  res: Response<Ticket>
+): Promise<void> => {
+  const { ticketId } = req.params;
+  return selectTicketById(ticketId).then((ticket) => {
+    res.status(200).send(ticket);
+  });
+};
