@@ -15,7 +15,11 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "setup-dbs": "node ./db/create-db.js",
+    "seed-dev": "node ./db/seeds/run-seed",
+    "seed-test": "jest seed.test.js",
+    "seed-prod": "NODE_ENV=production npm run seed-dev"
   },
   "dependencies": {
     "cors": "^2.8.5",

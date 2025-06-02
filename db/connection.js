@@ -1,9 +1,8 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const ENV = process.env.NODE_ENV || 'development'
-const uri = "mongodb://localhost:27017/giggledb"
+const uri = "mongodb://localhost:27017/giggle"
 require("dotenv").config({path: `${__dirname}/../.env.${ENV}`})
 
-console.log(process.env)
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
@@ -23,7 +22,9 @@ async function run() {
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+   // await client.close();
   }
 }
 run().catch(console.dir);
+
+module.exports = {client};
