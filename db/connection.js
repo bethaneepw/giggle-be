@@ -1,15 +1,29 @@
-const {Pool} = require("pg");
-const ENV = process.env.NODE_ENV || 'development';
-const pathToCorrectEnvFile = `${__dirname}/../.env.${ENV}`;
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const ENV = process.env.NODE_ENV || 'development'
+const uri = "mongodb://localhost:27017/giggledb"
+require("dotenv").config({path: `${__dirname}/../.env.${ENV}`})
 
-require("dotenv").config({
-    path: pathToCorrectEnvFile,
-})
+console.log(process.env)
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+    maxConnecting: 2
+  }
+});
 
-if(!process.env.PGDATABASE) {
-    throw new Error("No PGDATABASE configured");
-} else {
-    console.log("Connected to: ", process.env.PGDATABASE)
+async function run() {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
 }
-
-module.exports =  new Pool();
+run().catch(console.dir);
