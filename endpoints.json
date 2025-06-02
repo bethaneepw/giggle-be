@@ -1,0 +1,9 @@
+{
+    "GET /api": {
+        "description" : "serves up a json representation of all available endpoints"
+    },
+
+    "GET /api/events" : {
+        "description": "serves up a list of all events"
+    }
+}
