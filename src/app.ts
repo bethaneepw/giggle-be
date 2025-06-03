@@ -5,13 +5,16 @@ const cors = require("cors");
 import { Request, Response } from "express";
 const {
   getApi,
+  getAllTickets,
+  getTicketById,
+} = require("./src/controllers/controllers");
+
+const {
   getEvents,
   getEventById,
   postEvent,
   deleteEvent,
-  getAllTickets,
-  getTicketById,
-} = require("./src/controllers/controllers");
+} = require("./src/controllers/events.controllers");
 
 const {
   getAllUsers,
