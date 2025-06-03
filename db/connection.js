@@ -1,29 +1,28 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const ENV = process.env.NODE_ENV || 'development'
-const uri = "mongodb://localhost:27017/giggledb"
-require("dotenv").config({path: `${__dirname}/../.env.${ENV}`})
+const ENV = process.env.NODE_ENV || "development";
+const { mongoose } = require("mongoose");
 
-console.log(process.env)
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-    maxConnecting: 2
-  }
-});
+require("dotenv").config({ path: `${__dirname}/../.env.${ENV}` });
+
+let uri = "";
+
+if (ENV === "production") {
+  uri = process.env.MONGO_DB_URL;
+} else {
+  uri = process.env.MONGO_DEV
+}
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+    await mongoose.connect(uri);
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
+  } catch (error) {
+    console.log(error)
   }
 }
-run().catch(console.dir);
+
+
+run();
+
+module.exports = { mongoose, run };
