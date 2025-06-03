@@ -1,12 +1,13 @@
-const { userSchema } = require("../../schema/mongooseschema");
+const {userSchema} = require("../../schema/userSchema")
 const { mongoose } = require("mongoose");
-const User = mongoose.model("User", userSchema);
+
+const User = mongoose.model("users", userSchema)
 
 module.exports = [
   new User({
     firstName: "Bruce",
     lastName: "Springsteen",
-    username: "T",
+    username: "TheBoss",
     location: {
       town: "London",
       postcode: "SE10 0DX",
@@ -23,7 +24,7 @@ module.exports = [
     },
     biography: "Coolest guy in NJ",
     dateOfBirth: "1949-09-23",
-    gender: "Male",
+    gender: "Man",
     trustRating: 1.0,
     isVerified: true,
   }),
@@ -47,7 +48,7 @@ module.exports = [
     },
     biography: "Best songwriter in Boygenius",
     dateOfBirth: "1995-05-02",
-    gender: "Female",
+    gender: "Woman",
     trustRating: 1.0,
     isVerified: true,
   }),
@@ -71,7 +72,7 @@ module.exports = [
     },
     biography: "Coolest guy in NJ",
     dateOfBirth: "1960-03-18",
-    gender: "Male",
+    gender: "Man",
     trustRating: 0.6,
     isVerified: false,
   }),

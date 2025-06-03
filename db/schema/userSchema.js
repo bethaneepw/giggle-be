@@ -9,9 +9,6 @@ const userSchema = new mongoose.Schema({
     unique: true,
     minlength: 2,
     maxlength: 20,
-    // validate: (value) => {
-    //   value.length <= 20 && value.length >= 2;
-    // },
   },
   location: {
     town: { type: String, required: true },
@@ -54,4 +51,4 @@ const userSchema = new mongoose.Schema({
   memberSince: { type: Date, default: Date.now },
 });
 
-module.exports = { userSchema };
+module.exports = { userSchema};

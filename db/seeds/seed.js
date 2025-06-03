@@ -1,61 +1,66 @@
-const { mongoose } = require("../connection");
 const { userData, chatData } = require("../data/test/index");
-const { userSchema } = require("./../schema/mongooseschema");
-const User = mongoose.model("users", userSchema);
+const { userSchema} = require("../schema/userSchema")
+const Chat = require("../schema/chatSchema")
+const {mongoose} = require("mongoose");
+const { run } = require("../connection");
 
-// const db = mongoose("giggle");
+const User = mongoose.model("users", userSchema)
 
-const seed = () => {
-  User.createCollection().then(function (collection) {
-    console.log("created collection");
-  });
-  console.log(mongoose.connection.collections);
-  //   mongoose.connection.db.listCollections().toArray(function (err, names) {
-  //     console.log(names);
-  //   });
-  //   return (
-  //     db
-  //       .collection("users")
-  //       .drop()
-  //       .then(() => {
-  //         return db.collection("chat").drop();
-  //       })
-  // .then(() => {
-  //   return db.collection("tickets").drop();
-  // })
-  // .then(() => {
-  //   return db.collection("events").drop();
-  // })
-  // .then(() => {
-  //   return db.createCollection("users");
-  // })
-  // .then(() => {
-  //   return db.createCollection("chat");
-  // })
-  // .then(() => {
-  //   return db.createCollection("tickets");
-  // })
-  // .then(() => {
-  //   return db.createCollection("event");
-  // })
-  // .then(() => {
-  //   return db.collection("users").insertMany(userData);
-  // })
-  // .then(() => {
-  //   return db.collection("chats").insertMany(chatData);
-  // })
-  // .then(() => {
-  //   return db.collection("users").find({}).toArray();
-  // })
-  //   .then((res) => {
-  //     console.log(res);
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   })
-  //   .finally(() => {
-  //     mongoose.close();
-  //   })
+const seed = async () => {
+
+    try {
+        // User.createCollection().then(() => {
+        //     console.log("Successfully create User Collection")
+        // }).catch((err) => {
+        //     console.log(err)
+        // })
+    await User.deleteMany().then(() => {
+        console.log("Successfully deleted old User Data")
+    })
+    await User.create(userData).then(() => {
+        console.log("Successfully created User Data")
+    })
+     } catch (error) {
+        console.log(error)
+     }
+  
+
+
+    // User.deleteMany().then(() => {
+    //     console.log("Successfully deleted old User Data")
+    // }).catch((err) => {
+    //     console.log(err)
+    // })
+
+    // User.create(userData).then(() => {
+    //     console.log("Successfully created User Data")
+    // }).catch((err) => {
+    //     console.log(err, "<<< ERROR !!")
+    // })
+
+
+
+    // await Chat.createCollection().then(
+    //     console.log("Successfully create Chat Collection")
+    // ).catch((err) => {
+    //     console.log(err)
+    // })
+
+    // await Chat.deleteMany().then(function () {
+    //     console.log("Successfully deleted old Chat Data")
+    // }).catch((err) => {
+    //     console.log(err)
+    // })
+
+    //   await Chat.create(chatData).then(
+    //     console.log("Successfully created Chat Data")
+    // ).catch((err) => {
+    //     console.log(err)
+    // })
+
+    
+    
 };
+
 
 seed();
