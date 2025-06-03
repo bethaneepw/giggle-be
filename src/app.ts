@@ -9,13 +9,17 @@ const {
   getEventById,
   postEvent,
   deleteEvent,
+  getAllTickets,
+  getTicketById,
+} = require("./src/controllers/controllers");
+
+const {
   getAllUsers,
   postUser,
   deleteUser,
   getUserById,
-  getAllTickets,
-  getTicketById,
-} = require("./src/controllers/controllers");
+} = require("./src/controllers/users.controllers");
+
 app.use(cors());
 
 const {
