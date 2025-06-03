@@ -1,11 +1,11 @@
-const devData = require("../data/") // FILE NEEDS TO BE ADDED
+const devData = require("../data/development/index.js")
 const seed = require("./seed.js")
-const db = require("../connection.js")
+const { mongoose } = require("mongoose")
 
 
 const runSeed = () => {
     return seed(devData).then(()=>{
-        db.end();
+        mongoose.disconnect();
     })
 }
 

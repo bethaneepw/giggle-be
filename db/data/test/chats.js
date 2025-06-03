@@ -1,13 +1,18 @@
+const { mongoose } = require("mongoose");
+const {chatSchema} = require("../../schema/chatSchema");
+
+const Chat = mongoose.model("chats", chatSchema)
+
 module.exports = [
-  {
+  new Chat({
     room_ref: "01",
     user_ids: ["TheBoss", "BoygeniusMVP"],
     msgs: [
-      { senderUsername: "TheBoss", body: "Hello!", timestamp: "2025-01-24T00:01:00Z" },
-      { senderUsername: "BoygeniusMVP", body: "Hey Bruce :)", timestamp: "2025-01-25T00:05:00Z" },
+      { msgId: 0, senderUsername: "TheBoss", body: "Hello!", timestamp: "2025-01-24T00:01:00Z", displayToClient: true },
+      { msgId: 1, senderUsername: "BoygeniusMVP", body: "Hey Bruce :)", timestamp: "2025-01-25T00:05:00Z", displayToClient: true },
     ],
-  },
-  {
+  }),
+  new Chat({
     room_ref: "03",
     user_ids: ["TheBoss", "col99"],
     msgs: [
@@ -34,5 +39,5 @@ module.exports = [
         displayToClient: false
       },
     ],
-  },
+  }),
 ];
