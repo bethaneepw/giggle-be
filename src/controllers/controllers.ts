@@ -69,7 +69,7 @@ exports.deleteEvent = (req: Request, res: Response): Promise<void> => {
 };
 
 exports.getAllUsers = (req: Request, res: Response<User>): Promise<void> => {
-  return selectAllUsers().then((usersData) => {
+  return selectAllUsers().then((users) => {
     res.status(200).send(usersData);
   });
 };

@@ -1,8 +1,11 @@
-var express = require("express");
-var app = express();
-var cors = require('cors');
-var _a = require("./src/controllers/controllers"), getApi = _a.getApi, getEvents = _a.getEvents, getEventById = _a.getEventById, postEvent = _a.postEvent, deleteEvent = _a.deleteEvent, getAllUsers = _a.getAllUsers, postUser = _a.postUser, deleteUser = _a.deleteUser, getUserById = _a.getUserById, getAllTickets = _a.getAllTickets, getTicketById = _a.getTicketById;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express = require("express");
+const app = express();
+const cors = require("cors");
+const { getApi, getEvents, getEventById, postEvent, deleteEvent, getAllUsers, postUser, deleteUser, getUserById, getAllTickets, getTicketById, } = require("./src/controllers/controllers");
 app.use(cors());
+const { handleCustomErrors, catchAllErrors, } = require("./src/controllers/error.controller");
 app.use(express.json());
 app.get("/api", getApi);
 app.get("/api/events", getEvents);
@@ -25,4 +28,10 @@ patch users
 get tickets + queries
 post/patch/delete tickets
 */
+// Error handling
+app.all("/*splat", (req, res) => {
+    res.status(404).send({ msg: "Invalid url!" });
+});
+app.use(handleCustomErrors);
+app.use(catchAllErrors);
 module.exports = app;
