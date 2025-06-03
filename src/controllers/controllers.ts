@@ -7,10 +7,6 @@ const {
   selectEventById,
   addNewEvents,
   deleteEventByEventId,
-  selectAllUsers,
-  addNewuser,
-  deleteUserByUserId,
-  selectUserByUserId,
   selectAllTickets,
   selectTicketById,
 } = require("../models");
