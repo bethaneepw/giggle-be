@@ -28,12 +28,7 @@ module.exports = [
     trustRating: 1.0,
     isVerified: true,
     interestedEvents: [
-      {
-        event_artist: "Megan Thee Stallion",
-        event_location: "Leeds",
-        event_venue: "Brudenell Social Club",
-        event_date: "2026-02-14T00:21:00Z",
-      },
+      "66679e9e54711517579556f3"
     ],
     profilePictureURL: "aRealImageUrl",
   }),

@@ -48,7 +48,13 @@ const userSchema = new mongoose.Schema({
   trustRating: { type: Number, default: 1.0, min: 0, max: 1.0 },
   isVerified: { type: Boolean, default: false },
   memberSince: { type: Date, default: Date.now },
-  interestedEvents: { type: Array, required: true },
+  interestedEvents: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "events",
+      required: true,
+    },
+  ],
   profilePictureURL: { type: String, required: true },
 });
 
