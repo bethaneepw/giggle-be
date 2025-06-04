@@ -1,9 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// const handleMongoErrors: ErrorRequestHandler = (err, req, res, next) => {};
+const handleMongoErrors = (err, req, res, next) => {
+    if (err.name === "CastError") {
+        if (err.kind === "ObjectId") {
+            res.status(400).send({ msg: "Invalid request!" });
+        }
+    }
+    else
+        next(err);
+};
 const handleCustomErrors = (err, req, res, next) => {
-    console.log(err, "err in handlecustom");
-    console.log(next);
     if (err.status && err.msg) {
         res.status(err.status).send({ msg: err.msg });
     }
@@ -11,7 +17,7 @@ const handleCustomErrors = (err, req, res, next) => {
         next(err);
 };
 const catchAllErrors = (err, req, res, next) => {
-    console.log(err);
+    console.log(err, "error log in catch all");
     res.status(500).send({ msg: "Internal server error!" });
 };
-module.exports = { handleCustomErrors, catchAllErrors };
+module.exports = { handleCustomErrors, catchAllErrors, handleMongoErrors };

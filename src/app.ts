@@ -28,7 +28,7 @@ app.use(cors());
 const {
   handleCustomErrors,
   catchAllErrors,
-  // handleMongoErrors,
+  handleMongoErrors,
 } = require("./controllers/error.controller");
 
 app.use(express.json());
@@ -73,7 +73,7 @@ app.all("/*splat", (req: Request, res: Response) => {
   res.status(404).send({ msg: "Invalid url!" });
 });
 
-// app.use(handleMongoErrors);
+app.use(handleMongoErrors);
 
 app.use(handleCustomErrors);
 
