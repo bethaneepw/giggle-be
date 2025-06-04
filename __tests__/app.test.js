@@ -71,3 +71,25 @@ describe("GET /api/events/:event_id", () => {
     });
   });
 });
+
+describe("POST /api/events", () => {
+  test("201: Posts a new event", () => {
+    return request(app)
+      .post("/api/events")
+      .send({
+        event_artist: "Nick Cave",
+        event_location: "Brighton",
+        event_venue: "Concord",
+        event_date: "2025-09-01T00:20:00Z",
+      })
+      .expect(201)
+      .then(() => {
+        return request(app)
+          .get("/api/events")
+          .expect(200)
+          .then(({ body: { events } }) => {
+            expect(events.length).toBe(4);
+          });
+      });
+  });
+});

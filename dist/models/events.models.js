@@ -21,7 +21,7 @@ const selectEventById = (id) => {
 };
 exports.selectEventById = selectEventById;
 const addNewEvent = (event_artist, event_location, event_venue, event_date) => {
-    return Event.add({
+    return Event.create({
         event_artist: event_artist,
         event_location: event_location,
         event_venue: event_venue,
