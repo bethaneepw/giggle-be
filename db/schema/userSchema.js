@@ -29,7 +29,6 @@ const userSchema = new mongoose.Schema({
         value === "Standing" || value === "Seating" || value === null,
     },
     giggingStyle: {
-      // possibly added in front end
       mosher: { type: Boolean, default: false },
       singalong: { type: Boolean, default: false },
       photographer: { type: Boolean, default: false },
@@ -49,6 +48,8 @@ const userSchema = new mongoose.Schema({
   trustRating: { type: Number, default: 1.0, min: 0, max: 1.0 },
   isVerified: { type: Boolean, default: false },
   memberSince: { type: Date, default: Date.now },
+  interestedEvents: { type: Array, required: true },
+  profilePictureURL: { type: String, required: true },
 });
 
-module.exports = { userSchema};
+module.exports = { userSchema };

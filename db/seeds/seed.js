@@ -1,4 +1,3 @@
-const testData = require("../data/test/index"); // can be removed when unnecessary
 const { userSchema } = require("../schema/userSchema");
 const { mongoose } = require("mongoose");
 const { chatSchema } = require("../schema/chatSchema");
@@ -47,10 +46,5 @@ const seed = async ({ userData, chatData, eventData, ticketData }) => {
     console.log(error);
   }
 };
-
-// This can be removed when unnecessary
-seed(testData).then(() => {
-  mongoose.disconnect();
-});
 
 module.exports = seed;

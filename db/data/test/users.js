@@ -1,7 +1,7 @@
-const {userSchema} = require("../../schema/userSchema")
+const { userSchema } = require("../../schema/userSchema");
 const { mongoose } = require("mongoose");
 
-const User = mongoose.model("users", userSchema)
+const User = mongoose.model("users", userSchema);
 
 module.exports = [
   new User({
@@ -13,10 +13,9 @@ module.exports = [
       postcode: "SE10 0DX",
     },
     preferences: {
-      drinkPreference: "A bit", //none, a bit, a lot
+      drinkPreference: "A bit",
       seatPreference: "Standing",
       giggingStyle: {
-        // possibly added in front end
         mosher: true,
         singalong: true,
         photographer: false,
@@ -27,6 +26,15 @@ module.exports = [
     gender: "Man",
     trustRating: 1.0,
     isVerified: true,
+    interestedEvents: [
+      {
+        event_artist: "Megan Thee Stallion",
+        event_location: "Leeds",
+        event_venue: "Brudenell Social Club",
+        event_date: "2026-02-14T00:21:00Z",
+      },
+    ],
+    profilePictureURL: "aRealImageUrl",
   }),
   new User({
     firstName: "Lucy",
@@ -37,10 +45,9 @@ module.exports = [
       postcode: "BN2 1TW",
     },
     preferences: {
-      drinkPreference: "None", //none, a bit, a lot
+      drinkPreference: "None",
       seatPreference: "Standing",
       giggingStyle: {
-        // possibly added in front end
         mosher: true,
         singalong: true,
         photographer: true,
@@ -51,6 +58,8 @@ module.exports = [
     gender: "Woman",
     trustRating: 1.0,
     isVerified: true,
+    interestedEvents: [],
+    profilePictureURL: "aRealImageUrl",
   }),
   new User({
     firstName: "Colin",
@@ -61,10 +70,9 @@ module.exports = [
       postcode: "M12 6AP",
     },
     preferences: {
-      drinkPreference: "A lot", //none, a bit, a lot
+      drinkPreference: "A lot",
       seatPreference: "Seating",
       giggingStyle: {
-        // possibly added in front end
         mosher: false,
         singalong: false,
         photographer: true,
@@ -75,5 +83,7 @@ module.exports = [
     gender: "Man",
     trustRating: 0.6,
     isVerified: false,
+    interestedEvents: [],
+    profilePictureURL: "aRealImageUrl",
   }),
 ];
