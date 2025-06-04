@@ -3,7 +3,7 @@ const { mongoose } = require("mongoose");
 const { chatSchema } = require("../schema/chatSchema");
 const { eventSchema } = require("../schema/eventSchema");
 const { ticketSchema } = require("../schema/ticketSchema");
-const { run } = require("../connection"); // DO NOT REMOVE THIS IMPORT!!!! IT WILL BREAK
+const { run } = require("../connection");
 
 const User = mongoose.model("users", userSchema);
 const Chat = mongoose.model("chats", chatSchema);
@@ -11,7 +11,9 @@ const Event = mongoose.model("events", eventSchema);
 const Ticket = mongoose.model("tickets", ticketSchema);
 
 const seed = async ({ userData, chatData, eventData, ticketData }) => {
+
   try {
+    await run()
     await User.deleteMany().then(() => {
       console.log("Successfully deleted old User Data");
     });
