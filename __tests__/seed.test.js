@@ -1,7 +1,11 @@
-const seed = require("../db/seeds/seed")
-const data = require("../db/data/test/index")
+const seed = require("../db/seeds/seed");
+const data = require("../db/data/test/index");
 const { beforeAll, afterAll } = require("@jest/globals");
-const { mongoose } = require("mongoose")
+const { mongoose } = require("mongoose");
 
-beforeAll(()=> seed(data));
-afterAll(() => mongoose.disconnect());
+beforeAll(() => {
+  return seed(data);
+});
+afterAll(() => {
+  return mongoose.disconnect();
+});
