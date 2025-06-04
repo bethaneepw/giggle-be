@@ -5,7 +5,8 @@ const { userSchema } = require("../db/schema/userSchema");
 const { ticketSchema } = require("../db/schema/ticketSchema");
 const { eventSchema } = require("../db/schema/eventSchema");
 const { chatSchema } = require("../db/schema/chatSchema");
-const { test, expect } = require("@jest/globals");
+const { test, expect, describe } = require("@jest/globals");
+const tickets = require("../db/data/test/tickets");
 
 beforeAll(() => {
   return seed(data);
@@ -258,10 +259,9 @@ describe("Seed", () => {
     });
 
     test("Tickets had the required data of the correct variable type", async () => {
-      const tickets = await Ticket.find({});
+      const tickets = await Ticket.find({}).populate("eventDetails");
       expect(tickets.length).toBeGreaterThan(0);
       tickets.forEach((ticket) => {
-        console.log(ticket, "ticket")
         expect(typeof ticket.owner_username).toBe("string");
         expect(typeof ticket.seating).toBe("string");
         expect(typeof ticket.eventDetails).toBe("object");
@@ -271,19 +271,107 @@ describe("Seed", () => {
         expect(ticket.eventDetails).toHaveProperty("event_date");
         expect(typeof ticket.hasBeenClaimed).toBe("boolean");
       });
-
-      test("Tickest has the optional data of the correct variable type", async () => {
-      });
-
-      test("Defaults hasBeenClaimed to be false", async () => {});
-
-      test("Rejects invalid values", async () => {});
-
-      test("Rejects seating value outside of permitted values", async () => {});
-
-      test("Rejects when required values are missing", async () => {});
-
-      test("Rejects when eventDetails does not follow event schema", async () => {});
     });
+
+    test("Tickets has the optional data of the correct variable type", async () => {
+      const tickets = await Ticket.find({ notes: { $exists: true } });
+      expect(tickets.length).toBeGreaterThan(0);
+      tickets.forEach((ticket) => {
+        expect(typeof ticket.notes).toBe("string");
+      });
+    });
+
+    test("Defaults hasBeenClaimed to be false", async () => {
+      const ticket = await Ticket.create({
+        owner_username: "Tester101",
+        seating: "Seating",
+        eventDetails: "66679e9e54711517579556f3",
+        notes: "Default should be false!",
+      });
+      expect(ticket.hasBeenClaimed).toBe(false);
+    });
+
+    test("Rejects invalid values", async () => {
+      const ticketData = {
+        owner_username: "Tester101",
+        seating: "Seating",
+        eventDetails: "7424972947",
+        notes: "Default should be false!",
+      };
+      await expect(Ticket.create(ticketData)).rejects.toThrow(
+        new Error(
+          `tickets validation failed: eventDetails: Cast to ObjectId failed for value "7424972947" (type string) at path "eventDetails" because of "BSONError"`
+        )
+      );
+    });
+
+    test("Rejects seating value outside of permitted values", async () => {
+      const ticketData = {
+        owner_username: "Tester101",
+        seating: "Lying Down",
+        eventDetails: "66679e9e54711517579556f3",
+      };
+
+      await expect(Ticket.create(ticketData)).rejects.toThrow(
+        new Error(
+          "tickets validation failed: seating: Validator failed for path `seating` with value `Lying Down`"
+        )
+      );
+    });
+
+    test("Rejects when required values are missing", async () => {
+        const ticketData = {
+        seating: "Standing",
+        eventDetails: "66679e9e54711517579556f3",
+      };
+      await expect(Ticket.create(ticketData)).rejects.toThrow("tickets validation failed: owner_username: Path `owner_username` is required.")
+    });
+
   });
+
+  describe("Chats collection", () => {
+    test("Chats collection exists", async () => {
+        const chats = await Chat.find({})
+        expect(chats.length).toBe(2)
+    })
+
+    test("Chats contains the required data of the correct variable type", async () => {
+        const chats = await Chat.find({})
+        expect(chats.length).toBeGreaterThan(0)
+        chats.forEach((chat)=>{
+            console.log(chat.msgs)
+            expect(Array.isArray(chat.user_ids)).toBe(true)
+            expect(chat.user_ids).toHaveLength(2)
+            expect(Array.isArray(chat.msgs)).toBe(true)
+            expect(typeof chat.msgs.msgId).toBe("number")
+            expect(typeof chat.msgs.senderUsername).toBe("string")
+            expect(typeof chat.msgs.body).toBe("string")
+            expect(chat.msgs.timestamp instanceof Date).toBe(true)
+            expect(typeof chat.msgs.displayToClient).toBe("boolean")
+        })
+
+    })
+    
+    test("Rejects chats with more than 2 users", () => {
+
+    })
+
+    test("msgs array objects displayToClients property defaults as true", () => {
+
+    })
+
+    test("msgs array objects body property must contain content", () => {
+
+    })
+
+    test("Rejects invalid values", () => {
+
+    })
+
+    test("Rejects missings fields", () => {
+
+    })
+
+  })
+
 });
