@@ -10,4 +10,4 @@ const selectAllUsers = () => {
     });
 };
 exports.selectAllUsers = selectAllUsers;
-(0, exports.selectAllUsers)();
+// selectAllUsers();

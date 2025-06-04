@@ -28,6 +28,7 @@ app.use(cors());
 const {
   handleCustomErrors,
   catchAllErrors,
+  handleMongoErrors,
 } = require("./controllers/error.controller");
 
 app.use(express.json());
@@ -71,6 +72,8 @@ post/patch/delete tickets
 app.all("/*splat", (req: Request, res: Response) => {
   res.status(404).send({ msg: "Invalid url!" });
 });
+
+app.use(handleMongoErrors);
 
 app.use(handleCustomErrors);
 

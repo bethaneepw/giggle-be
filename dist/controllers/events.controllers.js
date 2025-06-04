@@ -13,15 +13,16 @@ const { selectAllEvents, selectEventById, addNewEvent, deleteEventByEventId, } =
 // res: Response<Event>
 exports.getEvents = (req, res) => {
     return selectAllEvents().then((events) => {
-        console.log(events);
         res.status(200).send({ events });
     });
 };
-exports.getEventById = (req, res) => {
-    const { eventId } = req.params;
-    return selectEventById(eventId).then((event) => {
+exports.getEventById = (req, res, next) => {
+    const { event_id } = req.params;
+    return selectEventById(event_id)
+        .then((event) => {
         res.status(200).send({ event });
-    });
+    })
+        .catch(next);
 };
 exports.postEvent = (req, res) => {
     const { event_artist, event_location, event_venue, event_date } = req.body;
