@@ -11,24 +11,8 @@ const Event = mongoose.model("events", eventSchema);
 const Ticket = mongoose.model("tickets", ticketSchema);
 
 const seed = async ({ userData, chatData, eventData, ticketData }) => {
-
   try {
-    await run()
-    await User.deleteMany().then(() => {
-      console.log("Successfully deleted old User Data");
-    });
-    await User.create(userData).then(() => {
-      console.log("Successfully created User Data");
-    });
-
-    await Chat.deleteMany().then(function () {
-      console.log("Successfully deleted old Chat Data");
-    });
-
-    await Chat.create(chatData).then(
-      console.log("Successfully created Chat Data")
-    );
-
+    await run();
     await Event.deleteMany().then(function () {
       console.log("Successfully deleted old Event Data");
     });
@@ -36,15 +20,25 @@ const seed = async ({ userData, chatData, eventData, ticketData }) => {
     await Event.create(eventData).then(
       console.log("Successfully created Event Data")
     );
-
+    await User.deleteMany().then(() => {
+      console.log("Successfully deleted old User Data");
+    });
+    await User.create(userData).then(() => {
+      console.log("Successfully created User Data");
+    });
     await Ticket.deleteMany().then(function () {
       console.log("Successfully deleted old Ticket Data");
     });
 
     await Ticket.create(ticketData).then((res) => {
-      console.log("Successfully created Ticket Data")
-    }
-      
+      console.log("Successfully created Ticket Data");
+    });
+    await Chat.deleteMany().then(function () {
+      console.log("Successfully deleted old Chat Data");
+    });
+
+    await Chat.create(chatData).then(
+      console.log("Successfully created Chat Data")
     );
   } catch (error) {
     console.log(error);
