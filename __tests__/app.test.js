@@ -53,7 +53,7 @@ describe("GET /api/events/:event_id", () => {
   });
   test("404: Valid id that does not exist", () => {
     return request(app)
-      .get("/api/events/2000")
+      .get("/api/events/66679e9e54711517579556f9")
       .expect(404)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Event does not exist!");

@@ -7,7 +7,9 @@ const { getApi, getAllTickets, getTicketById, } = require("./controllers/control
 const { getEvents, getEventById, postEvent, deleteEvent, } = require("./controllers/events.controllers");
 const { getAllUsers, postUser, deleteUser, getUserById, } = require("./controllers/users.controllers");
 app.use(cors());
-const { handleCustomErrors, catchAllErrors, handleMongoErrors, } = require("./controllers/error.controller");
+const { handleCustomErrors, catchAllErrors,
+// handleMongoErrors,
+ } = require("./controllers/error.controller");
 app.use(express.json());
 app.get("/api", getApi);
 app.get("/api/events", getEvents);
@@ -34,7 +36,7 @@ post/patch/delete tickets
 app.all("/*splat", (req, res) => {
     res.status(404).send({ msg: "Invalid url!" });
 });
-app.use(handleMongoErrors);
+// app.use(handleMongoErrors);
 app.use(handleCustomErrors);
 app.use(catchAllErrors);
 module.exports = app;

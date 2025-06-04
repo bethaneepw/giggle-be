@@ -9,9 +9,13 @@ export const selectAllEvents = () => {
 };
 
 export const selectEventById = (id) => {
-  return Event.findById(id).then((event) => {
-    return event;
-  });
+  return Event.findById(id)
+    .orFail(() => {
+      throw { msg: "That event does not exist!", status: 404 };
+    })
+    .then((event) => {
+      return event;
+    });
 };
 
 export const addNewEvent = (
