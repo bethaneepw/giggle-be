@@ -1,18 +1,11 @@
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test/index");
-const {
-  beforeAll,
-  afterAll,
-  describe,
-  test,
-  expect,
-  xtest,
-} = require("@jest/globals");
 const { mongoose } = require("mongoose");
 const { userSchema } = require("../db/schema/userSchema");
 const { ticketSchema } = require("../db/schema/ticketSchema");
 const { eventSchema } = require("../db/schema/eventSchema");
 const { chatSchema } = require("../db/schema/chatSchema");
+const { test } = require("@jest/globals");
 
 beforeAll(() => {
   return seed(data);
@@ -120,7 +113,7 @@ describe("Seed", () => {
       );
     });
 
-    test("Rejects when required feels are missing", async () => {
+    test("Rejects when required fields are missing", async () => {
       const userData = {
         firstName: "Test",
         lastName: "Smith",
@@ -200,6 +193,96 @@ describe("Seed", () => {
   });
 
   describe("Events collection", () => {
-    
+    test("Events collection exists", async () => {
+      const events = await Event.find({});
+      expect(events.length).toBe(3);
+    });
+
+    test("Events has the required data of the correct variable type", async () => {
+      const events = await Event.find({});
+      expect(events.length).toBeGreaterThan(0);
+      events.forEach((event) => {
+        expect(typeof event.event_artist).toBe("string");
+        expect(typeof event.event_location).toBe("string");
+        expect(typeof event.event_venue).toBe("string");
+        expect(event.event_date instanceof Date).toBe(true);
+      });
+    });
+
+    test("Events accepts optional data of the correct type", async () => {
+      const event = await Event.create({
+        event_artist: "Testing Artist",
+        event_location: "Testville",
+        event_venue: "TestArena",
+        event_date: "2025-08-01T00:20:00Z",
+        event_img: "testurl.com/test.jpg",
+      });
+      expect(typeof event.event_img).toBe("string");
+    });
+
+    test("Rejects when required fields are missing", async () => {
+      const eventData = {
+        event_artist: "Testing Artist",
+        event_location: "Testville",
+        // Missing venue
+        event_date: "2025-08-01T00:20:00Z",
+        event_img: "testurl.com/test.jpg",
+      };
+      await expect(Event.create(eventData)).rejects.toThrow(
+        new Error(
+          "events validation failed: event_venue: Path `event_venue` is required."
+        )
+      );
+    });
+
+    test("Rejects invalid values", async () => {
+      const eventData = {
+        event_artist: "Testing Artist",
+        event_location: "Testville",
+        event_venue: "Test Arena",
+        event_date: "ThisIsADate",
+        event_img: "testurl.com/test.jpg",
+      };
+      await expect(Event.create(eventData)).rejects.toThrow(
+        new Error(
+          `events validation failed: event_date: Cast to date failed for value "ThisIsADate" (type string) at path "event_date"`
+        )
+      );
+    });
+
+  });
+
+  describe("Tickets collection", () => {
+    test("Tickets collection exists", async () => {
+
+    })
+
+    test("Tickets had the required data of the correct variable type", async () => {
+
+    })
+
+    test("Tickest has the optional data of the correct variable type", async () => {
+
+    })
+
+    test("Defaults hasBeenClaimed to be false", async () => {
+
+    })
+
+    test("Rejects invalid values", async () => {
+
+    })
+
+    test("Rejects seating value outside of permitted values", async () => {
+
+    })
+
+    test("Rejects when required values are missing", async () => {
+
+    })
+
+    test("Rejects when eventDetails does not follow event schema", async () => {
+        
+    })
   })
 });
