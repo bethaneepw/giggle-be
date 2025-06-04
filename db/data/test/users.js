@@ -5,6 +5,7 @@ const User = mongoose.model("users", userSchema);
 
 module.exports = [
   new User({
+    _id: "68405b9711f50eebe1b59521",
     firstName: "Bruce",
     lastName: "Springsteen",
     username: "TheBoss",
@@ -37,6 +38,7 @@ module.exports = [
     profilePictureURL: "aRealImageUrl",
   }),
   new User({
+    _id: "68405b9711f50eebe1b59522",
     firstName: "Lucy",
     lastName: "Dacus",
     username: "BoygeniusMVP",
@@ -62,6 +64,7 @@ module.exports = [
     profilePictureURL: "aRealImageUrl",
   }),
   new User({
+    _id: "68405b9711f50eebe1b59523",
     firstName: "Colin",
     lastName: "Astley",
     username: "col99",

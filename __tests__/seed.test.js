@@ -329,8 +329,49 @@ describe("Seed", () => {
 
   });
 
-//   describe("Chats collection", () => {
-//     test("Chats collection exists")
-//   })
+  describe("Chats collection", () => {
+    test("Chats collection exists", async () => {
+        const chats = await Chat.find({})
+        expect(chats.length).toBe(2)
+    })
+
+    test("Chats contains the required data of the correct variable type", async () => {
+        const chats = await Chat.find({})
+        expect(chats.length).toBeGreaterThan(0)
+        chats.forEach((chat)=>{
+            console.log(chat.msgs)
+            expect(Array.isArray(chat.user_ids)).toBe(true)
+            expect(chat.user_ids).toHaveLength(2)
+            expect(Array.isArray(chat.msgs)).toBe(true)
+            expect(typeof chat.msgs.msgId).toBe("number")
+            expect(typeof chat.msgs.senderUsername).toBe("string")
+            expect(typeof chat.msgs.body).toBe("string")
+            expect(chat.msgs.timestamp instanceof Date).toBe(true)
+            expect(typeof chat.msgs.displayToClient).toBe("boolean")
+        })
+
+    })
+    
+    test("Rejects chats with more than 2 users", () => {
+
+    })
+
+    test("msgs array objects displayToClients property defaults as true", () => {
+
+    })
+
+    test("msgs array objects body property must contain content", () => {
+
+    })
+
+    test("Rejects invalid values", () => {
+
+    })
+
+    test("Rejects missings fields", () => {
+
+    })
+
+  })
 
 });
