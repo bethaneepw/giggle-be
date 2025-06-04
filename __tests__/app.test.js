@@ -83,6 +83,15 @@ describe("POST /api/events", () => {
         event_date: "2025-09-01T00:20:00Z",
       })
       .expect(201)
+      .then(({ body: { newEvent } }) => {
+        expect(newEvent).toMatchObject({
+          event_artist: "Nick Cave",
+          event_location: "Brighton",
+          event_venue: "Concord",
+          event_date: expect.any(String),
+          _id: expect.any(String),
+        });
+      })
       .then(() => {
         return request(app)
           .get("/api/events")

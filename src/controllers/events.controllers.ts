@@ -41,8 +41,8 @@ exports.postEvent = (req: Request, res: Response<Event>): Promise<void> => {
     event_location,
     event_venue,
     event_date
-  ).then((event) => {
-    res.status(201).send({ event });
+  ).then((newEvent) => {
+    res.status(201).send({ newEvent });
   });
 };
 

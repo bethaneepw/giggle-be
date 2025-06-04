@@ -29,7 +29,7 @@ export const addNewEvent = (
     event_location: event_location,
     event_venue: event_venue,
     event_date: event_date,
-  }).then((event) => {
-    return event;
+  }).then((newEvent) => {
+    return newEvent;
   });
 };
