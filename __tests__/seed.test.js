@@ -5,7 +5,7 @@ const { userSchema } = require("../db/schema/userSchema");
 const { ticketSchema } = require("../db/schema/ticketSchema");
 const { eventSchema } = require("../db/schema/eventSchema");
 const { chatSchema } = require("../db/schema/chatSchema");
-const { test } = require("@jest/globals");
+const { test, expect } = require("@jest/globals");
 
 beforeAll(() => {
   return seed(data);
@@ -249,40 +249,41 @@ describe("Seed", () => {
         )
       );
     });
-
   });
 
   describe("Tickets collection", () => {
     test("Tickets collection exists", async () => {
-
-    })
+      const tickets = await Ticket.find({});
+      expect(tickets.length).toBe(3);
+    });
 
     test("Tickets had the required data of the correct variable type", async () => {
+      const tickets = await Ticket.find({});
+      expect(tickets.length).toBeGreaterThan(0);
+      tickets.forEach((ticket) => {
+        console.log(ticket, "ticket")
+        expect(typeof ticket.owner_username).toBe("string");
+        expect(typeof ticket.seating).toBe("string");
+        expect(typeof ticket.eventDetails).toBe("object");
+        expect(ticket.eventDetails).toHaveProperty("event_artist");
+        expect(ticket.eventDetails).toHaveProperty("event_location");
+        expect(ticket.eventDetails).toHaveProperty("event_venue");
+        expect(ticket.eventDetails).toHaveProperty("event_date");
+        expect(typeof ticket.hasBeenClaimed).toBe("boolean");
+      });
 
-    })
+      test("Tickest has the optional data of the correct variable type", async () => {
+      });
 
-    test("Tickest has the optional data of the correct variable type", async () => {
+      test("Defaults hasBeenClaimed to be false", async () => {});
 
-    })
+      test("Rejects invalid values", async () => {});
 
-    test("Defaults hasBeenClaimed to be false", async () => {
+      test("Rejects seating value outside of permitted values", async () => {});
 
-    })
+      test("Rejects when required values are missing", async () => {});
 
-    test("Rejects invalid values", async () => {
-
-    })
-
-    test("Rejects seating value outside of permitted values", async () => {
-
-    })
-
-    test("Rejects when required values are missing", async () => {
-
-    })
-
-    test("Rejects when eventDetails does not follow event schema", async () => {
-        
-    })
-  })
+      test("Rejects when eventDetails does not follow event schema", async () => {});
+    });
+  });
 });
