@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 const {
   selectAllEvents,
   selectEventById,
-  addNewEvents,
+  addNewEvent,
   deleteEventByEventId,
 } = require("../models/events.models");
 
@@ -28,9 +28,9 @@ exports.getEventById = (req: Request, res: Response<Event>): Promise<void> => {
 };
 
 exports.postEvent = (req: Request, res: Response<Event>): Promise<void> => {
-  const { eventId } = req.params;
-  return addNewEvents(eventId).then((event) => {
-    res.status(201).send(event);
+  const { event_artist, event_location, event_venue, event_date } = req.body;
+  return addNewEvent(event_artist, event_location, event_venue, event_date).then((event) => {
+    res.status(201).send({event});
   });
 };
 
