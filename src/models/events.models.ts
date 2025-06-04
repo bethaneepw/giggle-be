@@ -9,4 +9,9 @@ export const selectAllEvents = () => {
   });
 };
 
-selectAllEvents();
+export const selectEventById = (id) => {
+return Event.findByID(id).then((event) => {
+  console.log(event)
+  return event
+})
+}

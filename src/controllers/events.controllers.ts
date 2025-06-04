@@ -23,7 +23,7 @@ exports.getEvents = (req: Request, res: Response<Event>): Promise<void> => {
 exports.getEventById = (req: Request, res: Response<Event>): Promise<void> => {
   const { eventId } = req.params;
   return selectEventById(eventId).then((event) => {
-    res.status(200).send(event);
+    res.status(200).send({event});
   });
 };
 
@@ -40,3 +40,5 @@ exports.deleteEvent = (req: Request, res: Response): Promise<void> => {
     res.status(204).send();
   });
 };
+
+
