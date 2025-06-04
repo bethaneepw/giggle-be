@@ -7,28 +7,28 @@ const {
   getApi,
   getAllTickets,
   getTicketById,
-} = require("./src/controllers/controllers");
+} = require("./controllers/controllers");
 
 const {
   getEvents,
   getEventById,
   postEvent,
   deleteEvent,
-} = require("./src/controllers/events.controllers");
+} = require("./controllers/events.controllers");
 
 const {
   getAllUsers,
   postUser,
   deleteUser,
   getUserById,
-} = require("./src/controllers/users.controllers");
+} = require("./controllers/users.controllers");
 
 app.use(cors());
 
 const {
   handleCustomErrors,
   catchAllErrors,
-} = require("./src/controllers/error.controller");
+} = require("./controllers/error.controller");
 
 app.use(express.json());
 

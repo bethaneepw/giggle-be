@@ -13,7 +13,7 @@ const Ticket = mongoose.model("tickets", ticketSchema);
 const seed = async ({ userData, chatData, eventData, ticketData }) => {
 
   try {
-    run()
+    await run()
     await User.deleteMany().then(() => {
       console.log("Successfully deleted old User Data");
     });

@@ -1,8 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const { eventSchema } = require("../../db/schema/eventSchema");
+const { mongoose } = require("mongoose");
+const Event = mongoose.model("events", eventSchema);
 const { selectAllEvents, selectEventById, addNewEvent, deleteEventByEventId, } = require("../models/events.models");
+// interface Event {
+//   id: number;
+//   name: string;
+//   date: string;
+//   address: string;
+// }
+// res: Response<Event>
 exports.getEvents = (req, res) => {
     return selectAllEvents().then((events) => {
+        console.log(events);
         res.status(200).send({ events });
     });
 };
