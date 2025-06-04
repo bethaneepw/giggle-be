@@ -58,6 +58,16 @@ describe("Seed", () => {
       });
     });
 
+    test("Users with interested events can return event details", async () => {
+        const user = await User.findOne({username: "TheBoss"}).populate("interestedEvents");
+        expect(user.interestedEvents[0].event_artist).toBe("Megan Thee Stallion");
+        expect(user.interestedEvents[0].event_location).toBe("Leeds");
+        expect(user.interestedEvents[0].event_venue).toBe("Brudenell Social Club");
+        expect(user.interestedEvents[0].event_date.toISOString()).toBe("2026-02-14T00:21:00.000Z");
+        expect(user.interestedEvents[0]._id.toString()).toBe("66679e9e54711517579556f3");
+
+    })
+
     test("Allows null or missing options", async () => {
       const user = new User({
         firstName: "Test",
