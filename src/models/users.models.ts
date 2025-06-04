@@ -8,4 +8,4 @@ export const selectAllUsers = () => {
   });
 };
 
-selectAllUsers();
+// selectAllUsers();
