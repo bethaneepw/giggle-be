@@ -41,8 +41,10 @@ const seed = async ({ userData, chatData, eventData, ticketData }) => {
       console.log("Successfully deleted old Ticket Data");
     });
 
-    await Ticket.create(ticketData).then(
+    await Ticket.create(ticketData).then((res) => {
       console.log("Successfully created Ticket Data")
+    }
+      
     );
   } catch (error) {
     console.log(error);
