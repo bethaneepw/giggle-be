@@ -1,4 +1,5 @@
-const devData = require("../data/development/index.js")
+const devData = require("../data/test/index.js")
+// path needs to be changed back to /data/development once development data created
 const seed = require("./seed.js")
 const { mongoose } = require("mongoose")
 
