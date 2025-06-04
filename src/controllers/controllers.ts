@@ -2,7 +2,7 @@ const endpoints = require("../../endpoints.json");
 
 import { Request, Response } from "express";
 
-const { selectAllTickets, selectTicketById } = require("../models");
+const { selectAllTickets, selectTicketById } = require("../models/tickets.models");
 
 interface Ticket {
   id: number;

@@ -5,7 +5,7 @@ const {
   addNewuser,
   deleteUserByUserId,
   selectUserByUserId,
-} = require("../models/users.models.ts");
+} = require("../models/users.models");
 
 interface User {
   id: number;
