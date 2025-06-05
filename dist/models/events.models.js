@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteEventByEventId = exports.addNewEvent = exports.selectEventById = exports.selectAllEvents = void 0;
-const { mongoose, run } = require("../../db/connection");
+const { mongoose } = require("../../db/connection");
 const { eventSchema } = require("../../db/schema/eventSchema");
 const Event = mongoose.model("events", eventSchema);
 const selectAllEvents = () => {

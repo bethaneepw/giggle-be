@@ -10,5 +10,13 @@ const selectAllTickets = () => {
     });
 };
 exports.selectAllTickets = selectAllTickets;
-const selectTicketById = () => { };
+const selectTicketById = (ticketId) => {
+    return Ticket.findById(ticketId)
+        .orFail(() => {
+        throw { msg: "Ticket does not exist!", status: 404 };
+    })
+        .then((ticket) => {
+        return ticket;
+    });
+};
 exports.selectTicketById = selectTicketById;

@@ -5,11 +5,11 @@ const {
   selectTicketById,
 } = require("../models/tickets.models");
 
-interface Ticket {
-  id: number;
-  event_id: number;
-  user_id: number;
-}
+// interface Ticket {
+//   id: number;
+//   event_id: number;
+//   user_id: number;
+// }
 
 exports.getAllTickets = (
   req: Request,
@@ -24,9 +24,9 @@ exports.getTicketById = (
   req: Request,
   res: Response<Ticket>
 ): Promise<void> => {
-  const { ticketId } = req.params;
-  return selectTicketById(ticketId).then((ticket) => {
-    res.status(200).send(ticket);
+  const { ticket_id } = req.params;
+  return selectTicketById(ticket_id).then((ticket) => {
+    res.status(200).send({ ticket });
   });
 };
 

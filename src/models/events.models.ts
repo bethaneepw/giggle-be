@@ -1,4 +1,4 @@
-const { mongoose, run } = require("../../db/connection");
+const { mongoose } = require("../../db/connection");
 const { eventSchema } = require("../../db/schema/eventSchema");
 const Event = mongoose.model("events", eventSchema);
 
