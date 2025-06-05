@@ -8,9 +8,7 @@ const handleMongoErrors: ErrorRequestHandler = (err, req, res, next) => {
   }
 
   if (err.errors) {
-    if (err.errors.event_date.kind === "required") {
-      res.status(400).send({ msg: "Missing event date information!" });
-    }
+    res.status(400).send({ msg: "Missing information!" });
   } else next(err);
 };
 
