@@ -36,14 +36,23 @@ exports.getEventById = (req: Request, res: Response, next): Promise<void> => {
 
 exports.postEvent = (req: Request, res: Response<Event>): Promise<void> => {
   const { event_artist, event_location, event_venue, event_date } = req.body;
-  return addNewEvent(
-    event_artist,
-    event_location,
-    event_venue,
-    event_date
-  ).then((event) => {
-    res.status(201).send({ event });
-  });
+  if (
+    event_artist === "" ||
+    event_location === "" ||
+    event_venue === "" ||
+    event_date === ""
+  ) {
+    throw { msg: "Information cannot be blank!", status: 400 };
+  } else {
+    return addNewEvent(
+      event_artist,
+      event_location,
+      event_venue,
+      event_date
+    ).then((newEvent) => {
+      res.status(201).send({ newEvent });
+    });
+  }
 };
 
 exports.deleteEvent = (req: Request, res: Response): Promise<void> => {

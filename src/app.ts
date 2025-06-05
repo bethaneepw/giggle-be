@@ -39,21 +39,21 @@ app.get("/api/events", getEvents);
 
 app.get("/api/events/:event_id", getEventById);
 
-app.post("api/events/:event_id", postEvent);
+app.post("/api/events", postEvent);
 
-app.delete("api/events/:event_id", deleteEvent);
+app.delete("/api/events/:event_id", deleteEvent);
 
 app.get("/api/users", getAllUsers);
 
-app.post("/api/users/:user_id", postUser);
+app.post("/api/users", postUser);
 
-app.delete("api/users/:user_id", deleteUser);
+app.delete("/api/users/:user_id", deleteUser);
 
-app.get("api/users/:user_id", getUserById);
+app.get("/api/users/:user_id", getUserById);
 
-app.get("api/tickets", getAllTickets);
+app.get("/api/tickets", getAllTickets);
 
-app.get("api/tickets/:ticket_id", getTicketById);
+app.get("/api/tickets/:ticket_id", getTicketById);
 
 // app.post("api/ticket/")
 
