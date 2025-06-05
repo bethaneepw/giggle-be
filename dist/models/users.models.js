@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addNewUser = exports.selectUserByUserId = exports.selectUsers = void 0;
+exports.deleteUserByUserId = exports.addNewUser = exports.selectUserByUserId = exports.selectUsers = void 0;
 const { mongoose, run } = require("../../db/connection");
 const { userSchema } = require("../../db/schema/userSchema");
 const User = mongoose.model("users", userSchema);
@@ -39,3 +39,7 @@ const addNewUser = (firstName, lastName, username, location, preferences, biogra
     });
 };
 exports.addNewUser = addNewUser;
+const deleteUserByUserId = (userId) => {
+    return User.findByIdAndDelete(userId).then(() => { });
+};
+exports.deleteUserByUserId = deleteUserByUserId;
