@@ -49,3 +49,7 @@ export const addNewUser = (
     return newUser;
   });
 };
+
+export const deleteUserByUserId = (userId) => {
+  return User.findByIdAndDelete(userId).then(() => {});
+};
