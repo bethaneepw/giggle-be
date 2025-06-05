@@ -3,12 +3,9 @@ const { ticketSchema } = require("../../db/schema/ticketSchema");
 const Ticket = mongoose.model("tickets", ticketSchema);
 
 export const selectAllTickets = () => {
-    return Ticket.find({}).then((tickets) => {
-        return tickets
-    }) 
-
+  return Ticket.find({}).then((tickets) => {
+    return tickets;
+  });
 };
 
-export const selectTicketById = () => {
-
-};
+export const selectTicketById = () => {};

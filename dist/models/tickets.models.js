@@ -10,6 +10,5 @@ const selectAllTickets = () => {
     });
 };
 exports.selectAllTickets = selectAllTickets;
-const selectTicketById = () => {
-};
+const selectTicketById = () => { };
 exports.selectTicketById = selectTicketById;
