@@ -24,6 +24,7 @@ const {
   postUser,
   deleteUser,
   getUserById,
+  patchUser,
 } = require("./controllers/users.controllers");
 
 app.use(cors());
@@ -53,6 +54,8 @@ app.post("/api/users", postUser);
 app.delete("/api/users/:user_id", deleteUser);
 
 app.get("/api/users/:user_id", getUserById);
+
+app.patch("/api/users/:user_id", patchUser);
 
 app.get("/api/tickets", getTickets);
 

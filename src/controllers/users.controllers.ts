@@ -5,6 +5,7 @@ const {
   addNewUser,
   deleteUserByUserId,
   selectUserByUserId,
+  updateUser,
 } = require("../models/users.models");
 
 interface User {
@@ -89,6 +90,22 @@ exports.getUserById = (
   return selectUserByUserId(user_id)
     .then((user) => {
       res.status(200).send({ user });
+    })
+    .catch(next);
+};
+
+exports.patchUser = (
+  req: Request,
+  res: Response<User>,
+  next
+): Promise<void> => {
+  const dataToUpdate = req.body;
+  const { user_id } = req.params;
+  const pendingSelectUserByUserId = selectUserByUserId(user_id);
+  const pendingUpdateUser = updateUser(user_id, dataToUpdate);
+  return Promise.all([pendingUpdateUser, pendingSelectUserByUserId])
+    .then(([updatedUser]) => {
+      res.status(200).send({ updatedUser });
     })
     .catch(next);
 };

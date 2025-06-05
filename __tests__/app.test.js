@@ -628,4 +628,108 @@ describe("DELETE /api/users/:user_id", () => {
   });
 });
 
-describe("PATCH /api/users/:user_id", () => {});
+describe("PATCH /api/users/:user_id", () => {
+  test("201: Updates specified user with new information, e.g. username", () => {
+    return request(app)
+      .patch("/api/users/68405b9711f50eebe1b59521")
+      .send({ username: "BadScooter49" })
+      .expect(200)
+      .then(({ body: { updatedUser } }) => {
+        expect(updatedUser).toMatchObject({
+          _id: "68405b9711f50eebe1b59521",
+          firstName: "Bruce",
+          lastName: "Springsteen",
+          username: "BadScooter49",
+          location: {
+            town: "London",
+            postcode: "SE10 0DX",
+          },
+          preferences: {
+            drinkPreference: "A bit",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: true,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "Coolest guy in NJ",
+          dateOfBirth: expect.any(String),
+          gender: "Man",
+          trustRating: 1.0,
+          isVerified: true,
+          interestedEvents: ["66679e9e54711517579556f3"],
+          profilePictureURL: "aRealImageUrl",
+        });
+      });
+  });
+  test("201: Updates specified user with new information, e.g. trustRating", () => {
+    return request(app)
+      .patch("/api/users/68405b9711f50eebe1b59521")
+      .send({ trustRating: 0.75 })
+      .expect(200)
+      .then(({ body: { updatedUser } }) => {
+        expect(updatedUser).toMatchObject({
+          _id: "68405b9711f50eebe1b59521",
+          firstName: "Bruce",
+          lastName: "Springsteen",
+          username: "BadScooter49",
+          location: {
+            town: "London",
+            postcode: "SE10 0DX",
+          },
+          preferences: {
+            drinkPreference: "A bit",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: true,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "Coolest guy in NJ",
+          dateOfBirth: expect.any(String),
+          gender: "Man",
+          trustRating: 0.75,
+          isVerified: true,
+          interestedEvents: ["66679e9e54711517579556f3"],
+          profilePictureURL: "aRealImageUrl",
+        });
+      });
+  });
+  test("201: Updates specified user with new information, e.g. interestedEvents", () => {
+    return request(app)
+      .patch("/api/users/68405b9711f50eebe1b59521")
+      .send({ interestedEvents: 0.75 })
+      .expect(200)
+      .then(({ body: { updatedUser } }) => {
+        expect(updatedUser).toMatchObject({
+          _id: "68405b9711f50eebe1b59521",
+          firstName: "Bruce",
+          lastName: "Springsteen",
+          username: "BadScooter49",
+          location: {
+            town: "London",
+            postcode: "SE10 0DX",
+          },
+          preferences: {
+            drinkPreference: "A bit",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: true,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "Coolest guy in NJ",
+          dateOfBirth: expect.any(String),
+          gender: "Man",
+          trustRating: 0.75,
+          isVerified: true,
+          interestedEvents: ["66679e9e54711517579556f3"],
+          profilePictureURL: "aRealImageUrl",
+        });
+      });
+  });
+  test.todo("error empty strings");
+});

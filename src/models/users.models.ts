@@ -53,3 +53,63 @@ export const addNewUser = (
 export const deleteUserByUserId = (userId) => {
   return User.findByIdAndDelete(userId).then(() => {});
 };
+
+export const updateUser = (userId, dataToUpdate) => {
+  const {
+    firstName,
+    lastName,
+    username,
+    location,
+    preferences,
+    biography,
+    dateOfBirth,
+    gender,
+    trustRating,
+    isVerified,
+    interestedEvents,
+    profilePictureURL,
+  } = dataToUpdate;
+  if (firstName) {
+    return User.updateById();
+  }
+  if (lastName) {
+  }
+  if (username) {
+    return User.findByIdAndUpdate(
+      userId,
+      { username: username },
+      { new: true }
+    ).then((updatedUser) => {
+      return updatedUser;
+    });
+  }
+  if (location) {
+  }
+  if (preferences) {
+  }
+  if (biography) {
+  }
+  if (dateOfBirth) {
+  }
+  if (gender) {
+  }
+
+  if (trustRating) {
+    return User.findByIdAndUpdate(
+      userId,
+      {
+        trustRating: trustRating,
+      },
+      { new: true }
+    ).then((updatedUser) => {
+      return updatedUser;
+    });
+  }
+  if (isVerified) {
+  }
+  if (interestedEvents) {
+    console.log("in events");
+  }
+  if (profilePictureURL) {
+  }
+};
