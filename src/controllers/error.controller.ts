@@ -8,7 +8,8 @@ const handleMongoErrors: ErrorRequestHandler = (err, req, res, next) => {
   }
 
   if (err.errors) {
-    res.status(400).send({ msg: "Missing information!" });
+    console.log(err, "eror logxs");
+    res.status(400).send({ msg: "Invalid information!" });
   } else next(err);
 };
 

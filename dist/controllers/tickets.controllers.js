@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const { selectAllTickets, selectTicketById, addNewTicket, deleteTicketById, } = require("../models/tickets.models");
+const { selectTickets, selectTicketById, addNewTicket, deleteTicketById, } = require("../models/tickets.models");
 // interface Ticket {
 //   id: number;
 //   event_id: number;
 //   user_id: number;
 // }
-exports.getAllTickets = (req, res, next) => {
-    return selectAllTickets()
+exports.getTickets = (req, res, next) => {
+    return selectTickets()
         .then((tickets) => {
         res.status(200).send({ tickets });
     })

@@ -4,9 +4,9 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const { getApi } = require("./controllers/controllers");
-const { getAllTickets, getTicketById, postTicket, deleteTicket, } = require("./controllers/tickets.controllers");
+const { getTickets, getTicketById, postTicket, deleteTicket, } = require("./controllers/tickets.controllers");
 const { getEvents, getEventById, postEvent, deleteEvent, } = require("./controllers/events.controllers");
-const { getUsers, postUser, deleteUser, getUserById, } = require("./controllers/users.controllers");
+const { getUsers, postUser, deleteUser, getUserById, patchUser, } = require("./controllers/users.controllers");
 app.use(cors());
 const { handleCustomErrors, catchAllErrors, handleMongoErrors, } = require("./controllers/error.controller");
 app.use(express.json());
@@ -19,7 +19,8 @@ app.get("/api/users", getUsers);
 app.post("/api/users", postUser);
 app.delete("/api/users/:user_id", deleteUser);
 app.get("/api/users/:user_id", getUserById);
-app.get("/api/tickets", getAllTickets);
+app.patch("/api/users/:user_id", patchUser);
+app.get("/api/tickets", getTickets);
 app.get("/api/tickets/:ticket_id", getTicketById);
 app.post("/api/tickets", postTicket);
 app.delete("/api/tickets/:ticket_id", deleteTicket);
@@ -27,10 +28,11 @@ app.delete("/api/tickets/:ticket_id", deleteTicket);
 
 To-do:
 
-get users + queries
-patch users
-get tickets + queries
-post/patch/delete tickets
+get users queries
+patch users - add new event id, update preferences etc
+get events queries
+get tickets queries ? by id?
+patch/ tickets
 */
 // Error handling
 app.all("/*splat", (req, res) => {

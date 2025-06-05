@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 const {
-  selectAllTickets,
+  selectTickets,
   selectTicketById,
   addNewTicket,
   deleteTicketById,
@@ -13,12 +13,12 @@ const {
 //   user_id: number;
 // }
 
-exports.getAllTickets = (
+exports.getTickets = (
   req: Request,
   res: Response<Ticket>,
   next
 ): Promise<void> => {
-  return selectAllTickets()
+  return selectTickets()
     .then((tickets) => {
       res.status(200).send({ tickets });
     })

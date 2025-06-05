@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTicketById = exports.addNewTicket = exports.selectTicketById = exports.selectAllTickets = void 0;
+exports.deleteTicketById = exports.addNewTicket = exports.selectTicketById = exports.selectTickets = void 0;
 const { mongoose } = require("../../db/connection");
 const { ticketSchema } = require("../../db/schema/ticketSchema");
 const Ticket = mongoose.model("tickets", ticketSchema);
-const selectAllTickets = () => {
+const selectTickets = () => {
     return Ticket.find({}).then((tickets) => {
         return tickets;
     });
 };
-exports.selectAllTickets = selectAllTickets;
+exports.selectTickets = selectTickets;
 const selectTicketById = (ticketId) => {
     return Ticket.findById(ticketId)
         .orFail(() => {

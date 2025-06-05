@@ -6,7 +6,7 @@ import { Request, Response } from "express";
 const { getApi } = require("./controllers/controllers");
 
 const {
-  getAllTickets,
+  getTickets,
   getTicketById,
   postTicket,
   deleteTicket,
@@ -24,6 +24,7 @@ const {
   postUser,
   deleteUser,
   getUserById,
+  patchUser,
 } = require("./controllers/users.controllers");
 
 app.use(cors());
@@ -54,7 +55,9 @@ app.delete("/api/users/:user_id", deleteUser);
 
 app.get("/api/users/:user_id", getUserById);
 
-app.get("/api/tickets", getAllTickets);
+app.patch("/api/users/:user_id", patchUser);
+
+app.get("/api/tickets", getTickets);
 
 app.get("/api/tickets/:ticket_id", getTicketById);
 
@@ -66,10 +69,11 @@ app.delete("/api/tickets/:ticket_id", deleteTicket);
 
 To-do:
 
-get users + queries
-patch users
-get tickets + queries
-post/patch/delete tickets
+get users queries
+patch users - add new event id, update preferences etc 
+get events queries
+get tickets queries ? by id? 
+patch/ tickets
 */
 
 // Error handling
