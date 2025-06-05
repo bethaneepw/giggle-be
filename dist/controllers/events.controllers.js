@@ -39,8 +39,13 @@ exports.postEvent = (req, res) => {
     }
 };
 exports.deleteEvent = (req, res) => {
-    const { eventId } = req.params;
-    return deleteEventByEventId(eventId).then(() => {
+    const { event_id } = req.params;
+    const pendingSelectEventById = selectEventById(event_id);
+    const pendingDeleteEventByEventId = deleteEventByEventId(event_id);
+    return Promise.all([
+        pendingDeleteEventByEventId,
+        pendingSelectEventById,
+    ]).then(() => {
         res.status(204).send();
     });
 };

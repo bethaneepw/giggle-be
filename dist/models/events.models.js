@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addNewEvent = exports.selectEventById = exports.selectAllEvents = void 0;
+exports.deleteEventByEventId = exports.addNewEvent = exports.selectEventById = exports.selectAllEvents = void 0;
 const { mongoose, run } = require("../../db/connection");
 const { eventSchema } = require("../../db/schema/eventSchema");
 const Event = mongoose.model("events", eventSchema);
@@ -31,3 +31,7 @@ const addNewEvent = (event_artist, event_location, event_venue, event_date) => {
     });
 };
 exports.addNewEvent = addNewEvent;
+const deleteEventByEventId = (eventId) => {
+    return Event.findByIdAndDelete(eventId).then(() => { });
+};
+exports.deleteEventByEventId = deleteEventByEventId;

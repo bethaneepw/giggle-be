@@ -33,3 +33,7 @@ export const addNewEvent = (
     return newEvent;
   });
 };
+
+export const deleteEventByEventId = (eventId) => {
+  return Event.findByIdAndDelete(eventId).then(() => {});
+};
