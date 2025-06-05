@@ -133,3 +133,43 @@ describe("POST /api/events", () => {
     });
   });
 });
+
+describe("DELETE /api/events/event_id", () => {
+  test("204: Deletes specified event", () => {
+    return request(app)
+      .get("/api/events")
+      .expect(200)
+      .then(({ body: { events } }) => {
+        const originalLength = events.length;
+        return request(app)
+          .delete("/api/events/66679e9e54711517579556f2")
+          .expect(204)
+          .then((res) => {
+            return request(app)
+              .get("/api/events")
+              .expect(200)
+              .then(({ body: { events } }) => {
+                expect(events.length).toBe(originalLength - 1);
+              });
+          });
+      });
+  });
+  describe("Errors", () => {
+    test("400: Invalid event_id used", () => {
+      return request(app)
+        .delete("/api/events/invalidId")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request!");
+        });
+    });
+    test("404: Valid event_id that does not exist", () => {
+      return request(app)
+        .delete("/api/events/66679e9e54711517579556f9")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Event does not exist!");
+        });
+    });
+  });
+});
