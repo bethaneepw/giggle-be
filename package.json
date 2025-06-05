@@ -15,10 +15,11 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --runInBand",
     "seed-dev": "node ./db/seeds/run-seed.js",
     "seed-test": "jest seed.test.js",
-    "seed-prod": "NODE_ENV=production npm run seed-dev"
+    "seed-prod": "NODE_ENV=production npm run seed-dev",
+    "compile": "npx tsc"
   },
   "dependencies": {
     "cors": "^2.8.5",

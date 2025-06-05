@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 const { eventSchema } = require("../../db/schema/eventSchema");
-const { mongoose} = require("mongoose")
-const Event = mongoose.model("events", eventSchema)
-
+const { mongoose } = require("mongoose");
+const Event = mongoose.model("events", eventSchema);
 
 const {
   selectAllEvents,
@@ -20,32 +19,53 @@ const {
 
 // res: Response<Event>
 
-exports.getEvents = (req: Request, res: Response<Event>[]): Promise<void> => {
-  return selectAllEvents().then((events) => {
-    console.log(events)
-    res.status(200).send({ events });
-  });
+exports.getEvents = (req: Request, res: Response, next): Promise<void> => {
+  return selectAllEvents()
+    .then((events) => {
+      res.status(200).send({ events });
+    })
+    .catch(next);
 };
 
-exports.getEventById = (req: Request, res: Response<Event>): Promise<void> => {
-  const { eventId } = req.params;
-  return selectEventById(eventId).then((event) => {
-    res.status(200).send({event});
-  });
+exports.getEventById = (req: Request, res: Response, next): Promise<void> => {
+  const { event_id } = req.params;
+  return selectEventById(event_id)
+    .then((event) => {
+      res.status(200).send({ event });
+    })
+    .catch(next);
 };
 
-exports.postEvent = (req: Request, res: Response<Event>): Promise<void> => {
+exports.postEvent = (
+  req: Request,
+  res: Response<Event>,
+  next
+): Promise<void> => {
   const { event_artist, event_location, event_venue, event_date } = req.body;
-  return addNewEvent(event_artist, event_location, event_venue, event_date).then((event) => {
-    res.status(201).send({event});
-  });
+  if (
+    event_artist === "" ||
+    event_location === "" ||
+    event_venue === "" ||
+    event_date === ""
+  ) {
+    throw { msg: "Information cannot be blank!", status: 400 };
+  } else {
+    return addNewEvent(event_artist, event_location, event_venue, event_date)
+      .then((newEvent) => {
+        res.status(201).send({ newEvent });
+      })
+      .catch(next);
+  }
 };
 
-exports.deleteEvent = (req: Request, res: Response): Promise<void> => {
-  const { eventId } = req.params;
-  return deleteEventByEventId(eventId).then(() => {
-    res.status(204).send();
-  });
+exports.deleteEvent = (req: Request, res: Response, next): Promise<void> => {
+  const { event_id } = req.params;
+  const pendingSelectEventById = selectEventById(event_id);
+  const pendingDeleteEventByEventId = deleteEventByEventId(event_id);
+
+  return Promise.all([pendingDeleteEventByEventId, pendingSelectEventById])
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch(next);
 };
-
-

@@ -3,11 +3,14 @@ const app = express();
 const cors = require("cors");
 
 import { Request, Response } from "express";
+const { getApi } = require("./controllers/controllers");
+
 const {
-  getApi,
   getAllTickets,
   getTicketById,
-} = require("./controllers/controllers");
+  postTicket,
+  deleteTicket,
+} = require("./controllers/tickets.controllers");
 
 const {
   getEvents,
@@ -17,7 +20,7 @@ const {
 } = require("./controllers/events.controllers");
 
 const {
-  getAllUsers,
+  getUsers,
   postUser,
   deleteUser,
   getUserById,
@@ -28,6 +31,7 @@ app.use(cors());
 const {
   handleCustomErrors,
   catchAllErrors,
+  handleMongoErrors,
 } = require("./controllers/error.controller");
 
 app.use(express.json());
@@ -38,23 +42,25 @@ app.get("/api/events", getEvents);
 
 app.get("/api/events/:event_id", getEventById);
 
-app.post("api/events/:event_id", postEvent);
+app.post("/api/events", postEvent);
 
-app.delete("api/events/:event_id", deleteEvent);
+app.delete("/api/events/:event_id", deleteEvent);
 
-app.get("/api/users", getAllUsers);
+app.get("/api/users", getUsers);
 
-app.post("/api/users/:user_id", postUser);
+app.post("/api/users", postUser);
 
-app.delete("api/users/:user_id", deleteUser);
+app.delete("/api/users/:user_id", deleteUser);
 
-app.get("api/users/:user_id", getUserById);
+app.get("/api/users/:user_id", getUserById);
 
-app.get("api/tickets", getAllTickets);
+app.get("/api/tickets", getAllTickets);
 
-app.get("api/tickets/:ticket_id", getTicketById);
+app.get("/api/tickets/:ticket_id", getTicketById);
 
-// app.post("api/ticket/")
+app.post("/api/tickets", postTicket);
+
+app.delete("/api/tickets/:ticket_id", deleteTicket);
 
 /*
 
@@ -71,6 +77,8 @@ post/patch/delete tickets
 app.all("/*splat", (req: Request, res: Response) => {
   res.status(404).send({ msg: "Invalid url!" });
 });
+
+app.use(handleMongoErrors);
 
 app.use(handleCustomErrors);
 
