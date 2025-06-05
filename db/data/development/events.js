@@ -33,10 +33,17 @@ module.exports = [
     event_date: "2026-07-11T00:19:00Z",
   }),
   new Event({
-    _id: "6841b0960102f104d97a39f2",
-    event_artist: "Sebastian",
+    _id: "6841b11448f32b84af511461",
+    event_artist: "J.J. Slider",
+    event_location: "Leeds",
+    event_venue: "Brudenell Social Club",
+    event_date: "2026-08-01T00:20:00Z",
+  }),
+  new Event({
+    _id: "6841b11448f32b84af511461",
+    event_artist: "J.J. Slider",
     event_location: "London",
-    event_venue: "Roundhouse",
-    event_date: "2026-08-02T00:20:00Z",
+    event_venue: "KOKO",
+    event_date: "2026-08-03T00:20:00Z",
   }),
 ];
