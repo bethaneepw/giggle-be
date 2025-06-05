@@ -132,7 +132,7 @@ describe("POST /api/events", () => {
   });
 });
 
-describe("DELETE /api/events/event_id", () => {
+describe("DELETE /api/events/:event_id", () => {
   test("204: Deletes specified event", () => {
     return request(app)
       .get("/api/events")
@@ -319,7 +319,7 @@ describe("POST /api/tickets", () => {
   });
 });
 
-describe("DELETE /api/tickets/ticket_id", () => {
+describe("DELETE /api/tickets/:ticket_id", () => {
   test("204: Deletes specified ticket", () => {
     return request(app)
       .get("/api/tickets")
@@ -588,7 +588,7 @@ describe("POST /api/users", () => {
   });
 });
 
-describe("DELETE /api/users/user_id", () => {
+describe("DELETE /api/users/:user_id", () => {
   test("204: Deletes specified user", () => {
     return request(app)
       .get("/api/users")
@@ -627,3 +627,5 @@ describe("DELETE /api/users/user_id", () => {
     });
   });
 });
+
+describe("PATCH /api/users/:user_id", () => {});
