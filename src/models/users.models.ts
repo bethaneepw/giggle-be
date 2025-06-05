@@ -115,7 +115,13 @@ export const updateUser = (userId, dataToUpdate) => {
   if (isVerified) {
   }
   if (interestedEvents) {
-    console.log("in events");
+    return User.findByIdAndUpdate(
+      userId,
+      { $push: { interestedEvents: interestedEvents } },
+      { new: true }
+    ).then((updatedUser) => {
+      return updatedUser;
+    });
   }
   if (profilePictureURL) {
   }
