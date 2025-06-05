@@ -45,6 +45,7 @@ const deleteUserByUserId = (userId) => {
 exports.deleteUserByUserId = deleteUserByUserId;
 const updateUser = (userId, dataToUpdate) => {
     const { firstName, lastName, username, location, preferences, biography, dateOfBirth, gender, trustRating, isVerified, interestedEvents, profilePictureURL, } = dataToUpdate;
+    console.log(dataToUpdate);
     if (firstName) {
         return User.updateById();
     }
@@ -75,7 +76,13 @@ const updateUser = (userId, dataToUpdate) => {
             return updatedUser;
         });
     }
-    if (isVerified) {
+    if (isVerified === false || isVerified === true) {
+        console.log("in is verif");
+        return User.findByIdAndUpdate(userId, {
+            isVerified: isVerified,
+        }, { new: true }).then((updatedUser) => {
+            return updatedUser;
+        });
     }
     if (interestedEvents) {
         return User.findByIdAndUpdate(userId, { $push: { interestedEvents: interestedEvents } }, { new: true }).then((updatedUser) => {
@@ -83,6 +90,11 @@ const updateUser = (userId, dataToUpdate) => {
         });
     }
     if (profilePictureURL) {
+        return User.findByIdAndUpdate(userId, {
+            profilePictureURL: profilePictureURL,
+        }, { new: true }).then((updatedUser) => {
+            return updatedUser;
+        });
     }
 };
 exports.updateUser = updateUser;

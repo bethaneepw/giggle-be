@@ -112,7 +112,17 @@ export const updateUser = (userId, dataToUpdate) => {
       return updatedUser;
     });
   }
-  if (isVerified) {
+  if (isVerified === false || isVerified === true) {
+    console.log("in is verif");
+    return User.findByIdAndUpdate(
+      userId,
+      {
+        isVerified: isVerified,
+      },
+      { new: true }
+    ).then((updatedUser) => {
+      return updatedUser;
+    });
   }
   if (interestedEvents) {
     return User.findByIdAndUpdate(
@@ -124,5 +134,14 @@ export const updateUser = (userId, dataToUpdate) => {
     });
   }
   if (profilePictureURL) {
+    return User.findByIdAndUpdate(
+      userId,
+      {
+        profilePictureURL: profilePictureURL,
+      },
+      { new: true }
+    ).then((updatedUser) => {
+      return updatedUser;
+    });
   }
 };

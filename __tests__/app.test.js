@@ -802,5 +802,42 @@ describe("PATCH /api/users/:user_id", () => {
         });
       });
   });
+  test("201: Updates specified user with new information, e.g. boolean isVerified", () => {
+    return request(app)
+      .patch("/api/users/68405b9711f50eebe1b59521")
+      .send({ isVerified: false })
+      .expect(200)
+      .then(({ body: { updatedUser } }) => {
+        expect(updatedUser).toMatchObject({
+          _id: "68405b9711f50eebe1b59521",
+          firstName: "Bruce",
+          lastName: "Springsteen",
+          username: "BadScooter49",
+          location: {
+            town: "Leeds",
+            postcode: "LS10 1JH",
+          },
+          preferences: {
+            drinkPreference: "A bit",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: true,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "Coolest guy in NJ",
+          dateOfBirth: expect.any(String),
+          gender: "Man",
+          trustRating: 0.75,
+          isVerified: false,
+          interestedEvents: [
+            "66679e9e54711517579556f3",
+            "66679e9e54711517579556f2",
+          ],
+          profilePictureURL: "aRealImageUrl",
+        });
+      });
+  });
   test.todo("error empty strings");
 });
