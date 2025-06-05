@@ -450,3 +450,140 @@ describe("GET /api/users/:user_id", () => {
     });
   });
 });
+
+describe("POST /api/users", () => {
+  test("201: Posts a new user", () => {
+    return request(app)
+      .post("/api/users")
+      .send({
+        firstName: "Father John",
+        lastName: "Misty",
+        username: "PapaMisty",
+        location: {
+          town: "Leeds",
+          postcode: "LS10 1JH",
+        },
+        preferences: {
+          drinkPreference: "A lot",
+          seatPreference: "Standing",
+          giggingStyle: {
+            mosher: false,
+            singalong: true,
+            photographer: false,
+          },
+        },
+        biography: "People are boring.",
+        dateOfBirth: "1989-09-23",
+        gender: "Man",
+        trustRating: 1.0,
+        isVerified: true,
+        interestedEvents: ["66679e9e54711517579556f3"],
+        profilePictureURL: "aRealImageUrl",
+      })
+      .expect(201)
+      .then(({ body: { newUser } }) => {
+        expect(newUser).toMatchObject({
+          firstName: "Father John",
+          lastName: "Misty",
+          username: "PapaMisty",
+          location: {
+            town: "Leeds",
+            postcode: "LS10 1JH",
+          },
+          preferences: {
+            drinkPreference: "A lot",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: false,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "People are boring.",
+          dateOfBirth: expect.any(String),
+          gender: "Man",
+          trustRating: 1.0,
+          isVerified: true,
+          interestedEvents: ["66679e9e54711517579556f3"],
+          profilePictureURL: "aRealImageUrl",
+          _id: expect.any(String),
+        });
+      })
+      .then(() => {
+        return request(app)
+          .get("/api/users")
+          .expect(200)
+          .then(({ body: { users } }) => {
+            expect(users.length).toBe(4);
+          });
+      });
+  });
+
+  describe("Errors", () => {
+    test("400: Not all required keys present in user object", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          lastName: "Misty",
+          username: "PapaMisty",
+          location: {
+            town: "Leeds",
+            postcode: "LS10 1JH",
+          },
+          preferences: {
+            drinkPreference: "A lot",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: false,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "People are boring.",
+          dateOfBirth: "1989-09-23",
+          gender: "Man",
+          trustRating: 1.0,
+          isVerified: true,
+          interestedEvents: ["66679e9e54711517579556f3"],
+          profilePictureURL: "aRealImageUrl",
+        })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Missing information!");
+        });
+    });
+    test("400: Empty information sent", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          firstName: "",
+          lastName: "Misty",
+          username: "PapaMisty",
+          location: {
+            town: "Leeds",
+            postcode: "LS10 1JH",
+          },
+          preferences: {
+            drinkPreference: "A lot",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: false,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "People are boring.",
+          dateOfBirth: "1989-09-23",
+          gender: "Man",
+          trustRating: 1.0,
+          isVerified: true,
+          interestedEvents: ["66679e9e54711517579556f3"],
+          profilePictureURL: "aRealImageUrl",
+        })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Information cannot be blank!");
+        });
+    });
+  });
+});

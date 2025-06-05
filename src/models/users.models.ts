@@ -17,3 +17,35 @@ export const selectUserByUserId = (userId) => {
       return user;
     });
 };
+
+export const addNewUser = (
+  firstName,
+  lastName,
+  username,
+  location,
+  preferences,
+  biography,
+  dateOfBirth,
+  gender,
+  trustRating,
+  isVerified,
+  interestedEvents,
+  profilePictureURL
+) => {
+  return User.create({
+    firstName,
+    lastName,
+    username,
+    location,
+    preferences,
+    biography,
+    dateOfBirth,
+    gender,
+    trustRating,
+    isVerified,
+    interestedEvents,
+    profilePictureURL,
+  }).then((newUser) => {
+    return newUser;
+  });
+};
