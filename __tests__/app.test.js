@@ -359,3 +359,41 @@ describe("DELETE /api/tickets/ticket_id", () => {
     });
   });
 });
+
+describe("GET /api/users", () => {
+  test("200 responds with an array containing all users", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body: { users } }) => {
+        expect(users.length).toBe(3);
+        users.forEach((user) => {
+          expect(user).toMatchObject({
+            firstName: expect.any(String),
+            lastName: expect.any(String),
+            username: expect.any(String),
+            location: {
+              town: expect.any(String),
+              postcode: expect.any(String),
+            },
+            preferences: {
+              drinkPreference: expect.any(String),
+              seatPreference: expect.any(String),
+              giggingStyle: {
+                mosher: expect.any(Boolean),
+                singalong: expect.any(Boolean),
+                photographer: expect.any(Boolean),
+              },
+            },
+            biography: expect.any(String),
+            dateOfBirth: expect.any(String),
+            gender: expect.any(String),
+            trustRating: expect.any(Number),
+            isVerified: expect.any(Boolean),
+            interestedEvents: expect.any(Array),
+            profilePictureURL: expect.any(String),
+          });
+        });
+      });
+  });
+});

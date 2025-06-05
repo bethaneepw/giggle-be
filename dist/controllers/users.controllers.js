@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const { selectAllUsers, addNewuser, deleteUserByUserId, selectUserByUserId, } = require("../models/users.models");
-exports.getAllUsers = (req, res) => {
-    return selectAllUsers().then((users) => {
+const { selectUsers, addNewuser, deleteUserByUserId, selectUserByUserId, } = require("../models/users.models");
+exports.getUsers = (req, res) => {
+    return selectUsers().then((users) => {
         res.status(200).send({ users });
     });
 };

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 const {
-  selectAllUsers,
+  selectUsers,
   addNewuser,
   deleteUserByUserId,
   selectUserByUserId,
@@ -14,8 +14,8 @@ interface User {
   trustworthiness: number;
 }
 
-exports.getAllUsers = (req: Request, res: Response<User>): Promise<void> => {
-  return selectAllUsers().then((users) => {
+exports.getUsers = (req: Request, res: Response<User>): Promise<void> => {
+  return selectUsers().then((users) => {
     res.status(200).send({ users });
   });
 };
