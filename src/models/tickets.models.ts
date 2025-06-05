@@ -8,4 +8,12 @@ export const selectAllTickets = () => {
   });
 };
 
-export const selectTicketById = () => {};
+export const selectTicketById = (ticketId) => {
+  return Ticket.findById(ticketId)
+    .orFail(() => {
+      throw { msg: "Ticket does not exist!", status: 404 };
+    })
+    .then((ticket) => {
+      return ticket;
+    });
+};

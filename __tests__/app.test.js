@@ -192,3 +192,40 @@ describe("GET /api/tickets", () => {
       });
   });
 });
+
+describe("GET /api/tickets/:ticket_id", () => {
+  test("200 responds with an object of specified ticket", () => {
+    return request(app)
+      .get("/api/tickets/56679e9e54711517579556f5")
+      .expect(200)
+      .then(({ body: { ticket } }) => {
+        expect(ticket).toMatchObject({
+          _id: "56679e9e54711517579556f5",
+          owner_username: "col99",
+          seating: "Seating",
+          eventDetails: "66679e9e54711517579556f3",
+          notes: "Would love a friend to bring!!",
+          hasBeenClaimed: true,
+        });
+      });
+  });
+
+  describe("Errors", () => {
+    test("404: Valid id that does not exist", () => {
+      return request(app)
+        .get("/api/tickets/46679e9e54711517579556f5")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Ticket does not exist!");
+        });
+    });
+    test("400: Invalid ID", () => {
+      return request(app)
+        .get("/api/tickets/notValidId")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request!");
+        });
+    });
+  });
+});
