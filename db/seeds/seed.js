@@ -12,50 +12,46 @@ const Event = mongoose.model("events", eventSchema);
 const Ticket = mongoose.model("tickets", ticketSchema);
 const Message = mongoose.model("messages", messageSchema);
 
-const seed = async ({ userData, chatData, eventData, ticketData, messageData }) => {
+const seed = async ({
+  userData,
+  chatData,
+  eventData,
+  ticketData,
+  messageData,
+}) => {
   try {
     await run();
 
-    await Event.deleteMany().then(() => {
-      console.log("Successfully deleted old Event Data");
-    });
+    await Event.deleteMany();
+    console.log("Successfully deleted old Event Data");
 
-    await User.deleteMany().then(() => {
-      console.log("Successfully deleted old User Data");
-    });
+    await User.deleteMany();
+    console.log("Successfully deleted old User Data");
 
-    await Chat.deleteMany().then(() => {
-      console.log("Successfully deleted old Chat Data");
-    });
+    await Chat.deleteMany();
+    console.log("Successfully deleted old Chat Data");
 
-    await Message.deleteMany().then(() => {
-      console.log("Successfully deleted old Messages Data");
-    });
+    await Message.deleteMany();
+    console.log("Successfully deleted old Messages Data");
 
-    await Ticket.deleteMany().then(() => {
-      console.log("Successfully deleted old Ticket Data");
-    });
+    await Ticket.deleteMany();
+    console.log("Successfully deleted old Ticket Data");
 
-    await Event.create(eventData).then(() => {
-      console.log("Successfully created Event Data");
-    });
+    await Event.create(eventData);
+    console.log("Successfully created Event Data");
 
-    await User.create(userData).then(() => {
-      console.log("Successfully created User Data");
-    });
+    await User.create(userData);
+    console.log("Successfully created User Data");
 
-    await Ticket.create(ticketData).then(() => {
-      console.log("Successfully created Ticket Data");
-    });
+    await Ticket.create(ticketData);
+    console.log("Successfully created Ticket Data");
 
-    await Chat.create(chatData).then(() => {
-      console.log("Successfully created Chat Data");
-    });
+    await Chat.create(chatData);
+    console.log("Successfully created Chat Data");
 
-    await Message.create(messageData).then((res) => {
-      console.log(res)
-      console.log("Successfully created Message Data");
-    });
+    await Message.create(messageData);
+    console.log(res);
+    console.log("Successfully created Message Data");
   } catch (error) {
     console.log(error);
   }
