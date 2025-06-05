@@ -587,3 +587,43 @@ describe("POST /api/users", () => {
     });
   });
 });
+
+describe("DELETE /api/users/user_id", () => {
+  test("204: Deletes specified user", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body: { users } }) => {
+        const originalLength = users.length;
+        return request(app)
+          .delete("/api/users/68405b9711f50eebe1b59523")
+          .expect(204)
+          .then((res) => {
+            return request(app)
+              .get("/api/users")
+              .expect(200)
+              .then(({ body: { users } }) => {
+                expect(users.length).toBe(originalLength - 1);
+              });
+          });
+      });
+  });
+  describe("Errors", () => {
+    test("400: Invalid user_id used", () => {
+      return request(app)
+        .delete("/api/users/invalidId")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request!");
+        });
+    });
+    test("404: Valid user_id that does not exist", () => {
+      return request(app)
+        .delete("/api/users/28405b9711f50eebe1b59528")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("User does not exist!");
+        });
+    });
+  });
+});
