@@ -4,7 +4,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const { getApi } = require("./controllers/controllers");
-const { getAllTickets, getTicketById, } = require("./controllers/tickets.controllers");
+const { getAllTickets, getTicketById, postTicket, deleteTicket, } = require("./controllers/tickets.controllers");
 const { getEvents, getEventById, postEvent, deleteEvent, } = require("./controllers/events.controllers");
 const { getAllUsers, postUser, deleteUser, getUserById, } = require("./controllers/users.controllers");
 app.use(cors());
@@ -21,7 +21,8 @@ app.delete("/api/users/:user_id", deleteUser);
 app.get("/api/users/:user_id", getUserById);
 app.get("/api/tickets", getAllTickets);
 app.get("/api/tickets/:ticket_id", getTicketById);
-// app.post("api/ticket/")
+app.post("/api/tickets", postTicket);
+app.delete("/api/tickets/:ticket_id", deleteTicket);
 /*
 
 To-do:

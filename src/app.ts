@@ -8,6 +8,8 @@ const { getApi } = require("./controllers/controllers");
 const {
   getAllTickets,
   getTicketById,
+  postTicket,
+  deleteTicket,
 } = require("./controllers/tickets.controllers");
 
 const {
@@ -56,7 +58,9 @@ app.get("/api/tickets", getAllTickets);
 
 app.get("/api/tickets/:ticket_id", getTicketById);
 
-// app.post("api/ticket/")
+app.post("/api/tickets", postTicket);
+
+app.delete("/api/tickets/:ticket_id", deleteTicket);
 
 /*
 
