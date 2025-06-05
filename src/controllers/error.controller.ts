@@ -8,7 +8,6 @@ const handleMongoErrors: ErrorRequestHandler = (err, req, res, next) => {
   }
 
   if (err.errors) {
-    console.log(err, "eror logxs");
     res.status(400).send({ msg: "Invalid information!" });
   } else next(err);
 };
@@ -20,7 +19,7 @@ const handleCustomErrors: ErrorRequestHandler = (err, req, res, next) => {
 };
 
 const catchAllErrors: ErrorRequestHandler = (err, req, res) => {
-  console.log(err, "error log in catch all");
+  console.log(err, "Error log in catch all");
   res.status(500).send({ msg: "Internal server error!" });
 };
 

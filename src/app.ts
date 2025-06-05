@@ -10,6 +10,7 @@ const {
   getTicketById,
   postTicket,
   deleteTicket,
+  patchTicket,
 } = require("./controllers/tickets.controllers");
 
 const {
@@ -65,14 +66,15 @@ app.post("/api/tickets", postTicket);
 
 app.delete("/api/tickets/:ticket_id", deleteTicket);
 
+app.patch("/api/tickets/:ticket_id", patchTicket);
+
 /*
 
 To-do:
 
 get users queries
-patch users - add new event id, update preferences etc 
 get events queries
-get tickets queries ? by id? 
+get tickets queries ? by user id? 
 patch/ tickets
 */
 

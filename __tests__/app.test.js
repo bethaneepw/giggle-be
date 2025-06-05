@@ -18,6 +18,7 @@ afterAll(() => {
 });
 
 describe("GET /api/events", () => {
+  console.log("tests starting");
   test("200 responds with an array containing all events", () => {
     return request(app)
       .get("/api/events")

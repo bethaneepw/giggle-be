@@ -39,3 +39,33 @@ export const addNewTicket = (
 export const deleteTicketById = (ticketId) => {
   return Ticket.findByIdAndDelete(ticketId).then(() => {});
 };
+
+export const updateTicket = (ticketId, dataToUpdate) => {
+  const { notes, hasBeenClaimed } = dataToUpdate;
+  if (hasBeenClaimed === "") {
+    //notes can be patched blank
+    throw { msg: "Information cannot be blank!", status: 400 };
+  }
+  if (notes) {
+    console.log(notes, "in notes");
+    return Ticket.findByIdAndUpdate(
+      ticketId,
+      { notes: notes },
+      { new: true, runValidators: true }
+    ).then((updatedTicket) => {
+      console.log(updatedTicket, "updated");
+      return updatedTicket;
+    });
+  }
+
+  //   if (hasBeenClaimed === false || hasBeenClaimed === true) {
+  //     console.log(hasBeenClaimed, "in claimed");
+  //     return Ticket.findByIdAndUpdate(
+  //       ticketId,
+  //       { hasBeenClaimed: hasBeenClaimed },
+  //       { new: true, runValidators: true }
+  //     ).then((updatedTicket) => {
+  //       return updatedTicket;
+  //     });
+  //   }
+};
