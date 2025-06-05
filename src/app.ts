@@ -3,11 +3,12 @@ const app = express();
 const cors = require("cors");
 
 import { Request, Response } from "express";
+const { getApi } = require("./controllers/controllers");
+
 const {
-  getApi,
   getAllTickets,
   getTicketById,
-} = require("./controllers/controllers");
+} = require("./controllers/tickets.controllers");
 
 const {
   getEvents,

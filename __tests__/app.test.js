@@ -173,3 +173,24 @@ describe("DELETE /api/events/event_id", () => {
     });
   });
 });
+
+
+describe('GET /api/tickets', () => {
+  test('200: Returns an array of all tickets', () => {
+    return request(app)
+    .get("/api/tickets")
+    .expect(200)
+    .then(({ body: {tickets}}) => {
+      expect(tickets.length).toBe(3)
+      tickets.map((ticket) => {
+        expect(ticket).toMatchObject({
+          owner_username: expect.any(String),
+          seating: expect.any(String),
+          eventDetails: expect.any(String),
+          notes: expect.any(String),
+          hasBeenClaimed: expect.any(Boolean)
+        })
+      })
+    })
+  })
+})
