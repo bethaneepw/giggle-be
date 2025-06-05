@@ -8,4 +8,12 @@ export const selectUsers = () => {
   });
 };
 
-// selectAllUsers();
+export const selectUserByUserId = (userId) => {
+  return User.findById(userId)
+    .orFail(() => {
+      throw { msg: "User does not exist!", status: 404 };
+    })
+    .then((user) => {
+      return user;
+    });
+};

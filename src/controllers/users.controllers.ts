@@ -36,9 +36,15 @@ exports.deleteUser = (req: Request, res: Response): Promise<void> => {
   });
 };
 
-exports.getUserById = (req: Request, res: Response<User>): Promise<void> => {
-  const { userId } = req.params;
-  return selectUserByUserId(userId).then((user) => {
-    res.status(200).send(user);
-  });
+exports.getUserById = (
+  req: Request,
+  res: Response<User>,
+  next
+): Promise<void> => {
+  const { user_id } = req.params;
+  return selectUserByUserId(user_id)
+    .then((user) => {
+      res.status(200).send({ user });
+    })
+    .catch(next);
 };

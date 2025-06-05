@@ -18,9 +18,11 @@ exports.deleteUser = (req, res) => {
         res.status(204).send();
     });
 };
-exports.getUserById = (req, res) => {
-    const { userId } = req.params;
-    return selectUserByUserId(userId).then((user) => {
-        res.status(200).send(user);
-    });
+exports.getUserById = (req, res, next) => {
+    const { user_id } = req.params;
+    return selectUserByUserId(user_id)
+        .then((user) => {
+        res.status(200).send({ user });
+    })
+        .catch(next);
 };
