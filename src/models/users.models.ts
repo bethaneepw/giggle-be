@@ -84,6 +84,13 @@ export const updateUser = (userId, dataToUpdate) => {
     });
   }
   if (location) {
+    return User.findByIdAndUpdate(
+      userId,
+      { location: location },
+      { new: true }
+    ).then((updatedUser) => {
+      return updatedUser;
+    });
   }
   if (preferences) {
   }
