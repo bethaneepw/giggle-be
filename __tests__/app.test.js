@@ -207,7 +207,6 @@ describe("GET /api/tickets/:ticket_id", () => {
         });
       });
   });
-
   describe("Errors", () => {
     test("404: Valid id that does not exist", () => {
       return request(app)
@@ -395,5 +394,59 @@ describe("GET /api/users", () => {
           });
         });
       });
+  });
+});
+
+describe("GET /api/users/:user_id", () => {
+  test("200 responds with an object of specified user", () => {
+    return request(app)
+      .get("/api/users/68405b9711f50eebe1b59521")
+      .expect(200)
+      .then(({ body: { user } }) => {
+        expect(user).toMatchObject({
+          _id: "68405b9711f50eebe1b59521",
+          firstName: "Bruce",
+          lastName: "Springsteen",
+          username: "TheBoss",
+          location: {
+            town: "London",
+            postcode: "SE10 0DX",
+          },
+          preferences: {
+            drinkPreference: "A bit",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: true,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "Coolest guy in NJ",
+          dateOfBirth: expect.any(String),
+          gender: "Man",
+          trustRating: 1.0,
+          isVerified: true,
+          interestedEvents: ["66679e9e54711517579556f3"],
+          profilePictureURL: "aRealImageUrl",
+        });
+      });
+  });
+  describe("Errors", () => {
+    test("404: Valid id that does not exist", () => {
+      return request(app)
+        .get("/api/users/28405b9711f50eebe1b59521")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("User does not exist!");
+        });
+    });
+    test("400: Invalid ID", () => {
+      return request(app)
+        .get("/api/users/notValidId")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request!");
+        });
+    });
   });
 });
