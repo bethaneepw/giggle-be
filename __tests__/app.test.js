@@ -878,3 +878,38 @@ describe("PATCH /api/users/:user_id", () => {
     });
   });
 });
+
+describe("PATCH /api/tickets/:ticket_id", () => {
+  test("201: Updates specified ticket with new information, e.g. notes", () => {
+    return request(app)
+      .patch("/api/tickets/56679e9e54711517579556f5")
+      .send({ notes: "Really, really, REALLY want a friend to take!" })
+      .expect(200)
+      .then(({ body: { updatedTicket } }) => {
+        expect(updateTicket).toMatchObject({
+          _id: "56679e9e54711517579556f5",
+          owner_username: "col99",
+          seating: "Seating",
+          eventDetails: "66679e9e54711517579556f3",
+          notes: "Really, really, REALLY want a friend to take!",
+          hasBeenClaimed: true,
+        });
+      });
+  });
+  test("201: Updates specified ticket with new information, e.g. hasBeenClaimed", () => {
+    return request(app)
+      .patch("/api/tickets/56679e9e54711517579556f5")
+      .send({ hasBeenClaimed: false })
+      .expect(200)
+      .then(({ body: { updatedTicket } }) => {
+        expect(updateTicket).toMatchObject({
+          _id: "56679e9e54711517579556f5",
+          owner_username: "col99",
+          seating: "Seating",
+          eventDetails: "66679e9e54711517579556f3",
+          notes: "Really, really, REALLY want a friend to take!",
+          hasBeenClaimed: false,
+        });
+      });
+  });
+});
