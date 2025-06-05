@@ -33,7 +33,7 @@ module.exports = [
     event_date: "2026-07-11T00:19:00Z",
   }),
   new Event({
-    _id: "6841b11448f32b84af511461",
+    _id: "6841b11448f32b84af511461", // double check this id it needs to change
     event_artist: "J.J. Slider",
     event_location: "Leeds",
     event_venue: "Brudenell Social Club",

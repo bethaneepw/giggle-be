@@ -5,6 +5,7 @@ const User = mongoose.model("users", userSchema);
 
 module.exports = [
   new User({
+    _id: "6841b8281660cfef7b90ccf8",
     firstName: "Bernahl",
     lastName: "Knight",
     username: "bernahlk92",
@@ -19,11 +20,12 @@ module.exports = [
     gender: "Man",
     trustRating: 0.95,
     isVerified: true,
-    memberSince: new Date("2025-05-24"),
+    memberSince: new Date("2025-0-24"),
     interestedEvents: ["60b3e1c2e00e9d3d0b42b0e1", "60b3e1c2e00e9d3d0b42b0e2"],
     profilePictureURL: "https://example.com/profiles/john_doe92.jpg",
   }),
   new User({
+    _id: "6841b83cb614f77a81b68513",
     firstName: "Rennala",
     lastName: "Moon",
     username: "pointyHatEnjoyer",
@@ -44,6 +46,7 @@ module.exports = [
     profilePictureURL: "https://example.com/profiles/pointyHatEnjoyer.jpg",
   }),
   new User({
+    _id: "6841b84b309aaa9367de0c29",
     firstName: "Miriel",
     lastName: "Pastor",
     username: "mirielLikesTurtles",
@@ -58,11 +61,12 @@ module.exports = [
     gender: "Man",
     trustRating: 1.0,
     isVerified: true,
-    memberSince: new Date("2025-05-24"),
+    memberSince: new Date("2025-0-24"),
     interestedEvents: ["60b3e1c2e00e9d3d0b42b0e5", "60b3e1c2e00e9d3d0b42b0e6"],
     profilePictureURL: "https://example.com/profiles/mirielLikesTurtles.jpg",
   }),
   new User({
+    _id: "6841b879c2c71307acb46c51",
     firstName: "Freyja",
     lastName: "Redmane",
     username: "freyja_redmane",
@@ -82,6 +86,7 @@ module.exports = [
     profilePictureURL: "https://example.com/profiles/freyja_redmane.jpg",
   }),
   new User({
+    _id: "6841b87e5783843a75f13120",
     firstName: "Kenneth",
     lastName: "Haight",
     username: "lordKenneth",
@@ -102,6 +107,7 @@ module.exports = [
     profilePictureURL: "https://example.com/profiles/lordKenneth.jpg",
   }),
   new User({
+    _id: "6841b8841eca10853eb5fa0d",
     firstName: "Millicent",
     lastName: "Scarlett",
     username: "scarlett_m",
@@ -117,11 +123,12 @@ module.exports = [
     gender: "Woman",
     trustRating: 0.7,
     isVerified: false,
-    memberSince: new Date("2025-05-24"),
+    memberSince: new Date("2025-0-24"),
     interestedEvents: ["60b3e1c2e00e9d3d0b42b0eb", "60b3e1c2e00e9d3d0b42b0ec"],
     profilePictureURL: "https://example.com/profiles/scarlett_m.jpg",
   }),
   new User({
+    _id: "6841b889896285fce9d14796",
     firstName: "Jerren",
     lastName: "Hunter",
     username: "hunter_jerren",
@@ -142,6 +149,7 @@ module.exports = [
     profilePictureURL: "https://example.com/profiles/hunter_jerren.jpg",
   }),
   new User({
+    _id: "6841b89ab79d94a7dae54eba",
     firstName: "Nepheli",
     lastName: "Loux",
     username: "nepheli_99",
@@ -161,6 +169,7 @@ module.exports = [
     profilePictureURL: "https://example.com/profiles/nepheli_99.jpg",
   }),
   new User({
+    _id: "6841b89f651e088a4534d24a",
     firstName: "Albus",
     lastName: "Old",
     username: "old_albus",
@@ -181,6 +190,7 @@ module.exports = [
     profilePictureURL: "https://example.com/profiles/old_albus.jpg",
   }),
   new User({
+    _id: "6841b8a381d395a620af285f",
     firstName: "Alexander",
     lastName: "Jar",
     username: "jar_man",
@@ -200,6 +210,7 @@ module.exports = [
     profilePictureURL: "https://example.com/profiles/jar_man.jpg",
   }),
   new User({
+    _id: "6841b8a92dc3ed702a69d6b1",
     firstName: "Tester",
     lastName: "McTester",
     username: "tester99",
@@ -218,7 +229,4 @@ module.exports = [
     interestedEvents: ["60b3e1c2e00e9d3d0b42b0e1", "60b3e1c2e00e9d3d0b42b0e2"],
     profilePictureURL: "https://example.com/profiles/jar_man.jpg",
   }),
-
-
-  
 ];
