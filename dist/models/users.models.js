@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateUser = exports.deleteUserByUserId = exports.addNewUser = exports.selectUserByUserId = exports.selectUsers = void 0;
-const { mongoose, run } = require("../../db/connection");
+const { mongoose } = require("../../db/connection");
 const { userSchema } = require("../../db/schema/userSchema");
 const User = mongoose.model("users", userSchema);
 const selectUsers = () => {
@@ -45,54 +45,73 @@ const deleteUserByUserId = (userId) => {
 exports.deleteUserByUserId = deleteUserByUserId;
 const updateUser = (userId, dataToUpdate) => {
     const { firstName, lastName, username, location, preferences, biography, dateOfBirth, gender, trustRating, isVerified, interestedEvents, profilePictureURL, } = dataToUpdate;
-    console.log(dataToUpdate);
+    if (firstName === "" ||
+        lastName === "" ||
+        username === "" ||
+        location === "" ||
+        biography === "" ||
+        dateOfBirth === "" ||
+        trustRating === "" ||
+        profilePictureURL === "") {
+        throw { msg: "Information cannot be blank!", status: 400 };
+    }
     if (firstName) {
-        return User.updateById();
+        return User.findByIdAndUpdate(userId, { firstName: firstName }, { new: true, runValidators: true }).then((updatedUser) => {
+            return updatedUser;
+        });
     }
     if (lastName) {
+        return User.findByIdAndUpdate(userId, { lastName: lastName }, { new: true, runValidators: true }).then((updatedUser) => {
+            return updatedUser;
+        });
     }
     if (username) {
-        return User.findByIdAndUpdate(userId, { username: username }, { new: true }).then((updatedUser) => {
+        return User.findByIdAndUpdate(userId, { username: username }, { new: true, runValidators: true }).then((updatedUser) => {
             return updatedUser;
         });
     }
     if (location) {
-        return User.findByIdAndUpdate(userId, { location: location }, { new: true }).then((updatedUser) => {
+        return User.findByIdAndUpdate(userId, { location: location }, { new: true, runValidators: true }).then((updatedUser) => {
             return updatedUser;
         });
     }
     if (preferences) {
+        return User.findByIdAndUpdate(userId, { preferences: preferences }, { new: true, runValidators: true }).then((updatedUser) => {
+            return updatedUser;
+        });
     }
     if (biography) {
+        return User.findByIdAndUpdate(userId, { biography: biography }, { new: true, runValidators: true }).then((updatedUser) => {
+            return updatedUser;
+        });
     }
     if (dateOfBirth) {
+        return User.findByIdAndUpdate(userId, { dateOfBirth: dateOfBirth }, { new: true, runValidators: true }).then((updatedUser) => {
+            return updatedUser;
+        });
     }
     if (gender) {
+        return User.findByIdAndUpdate(userId, { gender: gender }, { new: true, runValidators: true }).then((updatedUser) => {
+            return updatedUser;
+        });
     }
     if (trustRating) {
-        return User.findByIdAndUpdate(userId, {
-            trustRating: trustRating,
-        }, { new: true }).then((updatedUser) => {
+        return User.findByIdAndUpdate(userId, { trustRating: trustRating }, { new: true, runValidators: true }).then((updatedUser) => {
             return updatedUser;
         });
     }
     if (isVerified === false || isVerified === true) {
-        console.log("in is verif");
-        return User.findByIdAndUpdate(userId, {
-            isVerified: isVerified,
-        }, { new: true }).then((updatedUser) => {
+        return User.findByIdAndUpdate(userId, { isVerified: isVerified }, { new: true, runValidators: true }).then((updatedUser) => {
             return updatedUser;
         });
     }
     if (interestedEvents) {
-        return User.findByIdAndUpdate(userId, { $push: { interestedEvents: interestedEvents } }, { new: true }).then((updatedUser) => {
+        return User.findByIdAndUpdate(userId, { $push: { interestedEvents: interestedEvents } }, { new: true, runValidators: true }).then((updatedUser) => {
             return updatedUser;
         });
     }
     if (profilePictureURL) {
-        return User.findByIdAndUpdate(userId, {
-            profilePictureURL: profilePictureURL,
-        }, { new: true }).then((updatedUser) => {
+        return User.findByIdAndUpdate(userId, { profilePictureURL: profilePictureURL }, { new: true, runValidators: true }).then((updatedUser) => {
             return updatedUser;
         });
     }

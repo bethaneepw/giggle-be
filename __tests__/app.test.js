@@ -112,7 +112,7 @@ describe("POST /api/events", () => {
         })
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("Missing information!");
+          expect(msg).toBe("Invalid information!");
         });
     });
   });
@@ -298,7 +298,7 @@ describe("POST /api/tickets", () => {
         })
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("Missing information!");
+          expect(msg).toBe("Invalid information!");
         });
     });
     test("400: Empty information sent", () => {
@@ -549,7 +549,7 @@ describe("POST /api/users", () => {
         })
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("Missing information!");
+          expect(msg).toBe("Invalid information!");
         });
     });
     test("400: Empty information sent", () => {
@@ -839,5 +839,42 @@ describe("PATCH /api/users/:user_id", () => {
         });
       });
   });
-  test.todo("error empty strings");
+  describe("Errors", () => {
+    test("400: Empty patch sent", () => {
+      return request(app)
+        .patch("/api/users/68405b9711f50eebe1b59521")
+        .send({ firstName: "" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Information cannot be blank!");
+        });
+    });
+    test("400: Information that does not conform to schema sent, e.g. Male gender", () => {
+      return request(app)
+        .patch("/api/users/68405b9711f50eebe1b59521")
+        .send({ gender: "Male" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid information!");
+        });
+    });
+    test("404: Valid but non-existent id used", () => {
+      return request(app)
+        .patch("/api/users/18405b9711f50eebe1b59521")
+        .send({ gender: "Woman" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("User does not exist!");
+        });
+    });
+    test("400: Invalid id used", () => {
+      return request(app)
+        .patch("/api/users/invalidId")
+        .send({ gender: "Woman" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request!");
+        });
+    });
+  });
 });

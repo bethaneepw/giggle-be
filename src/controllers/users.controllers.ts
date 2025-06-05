@@ -1,4 +1,7 @@
 import { Request, Response } from "express";
+const { mongoose } = require("../../db/connection");
+const { userSchema } = require("../../db/schema/userSchema");
+const User = mongoose.model("users", userSchema);
 
 const {
   selectUsers,
@@ -8,12 +11,12 @@ const {
   updateUser,
 } = require("../models/users.models");
 
-interface User {
-  id: number;
-  name: string;
-  profile_picture: string;
-  trustworthiness: number;
-}
+// interface User {
+//   id: number;
+//   name: string;
+//   profile_picture: string;
+//   trustworthiness: number;
+// }
 
 exports.getUsers = (req: Request, res: Response<User>): Promise<void> => {
   return selectUsers().then((users) => {

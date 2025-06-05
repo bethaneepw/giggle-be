@@ -1,6 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const { mongoose } = require("../../db/connection");
+const { userSchema } = require("../../db/schema/userSchema");
+const User = mongoose.model("users", userSchema);
 const { selectUsers, addNewUser, deleteUserByUserId, selectUserByUserId, updateUser, } = require("../models/users.models");
+// interface User {
+//   id: number;
+//   name: string;
+//   profile_picture: string;
+//   trustworthiness: number;
+// }
 exports.getUsers = (req, res) => {
     return selectUsers().then((users) => {
         res.status(200).send({ users });
