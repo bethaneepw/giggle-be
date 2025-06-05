@@ -112,25 +112,23 @@ describe("POST /api/events", () => {
         })
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("Missing event date information!");
+          expect(msg).toBe("Missing information!");
         });
     });
   });
-  describe("Errors", () => {
-    test("400: Empty information sent", () => {
-      return request(app)
-        .post("/api/events")
-        .send({
-          event_artist: "Nick Cave",
-          event_location: "Brighton",
-          event_venue: "",
-          event_date: "2025-09-01T00:20:00Z",
-        })
-        .expect(400)
-        .then(({ body: { msg } }) => {
-          expect(msg).toBe("Information cannot be blank!");
-        });
-    });
+  test("400: Empty information sent", () => {
+    return request(app)
+      .post("/api/events")
+      .send({
+        event_artist: "Nick Cave",
+        event_location: "Brighton",
+        event_venue: "",
+        event_date: "2025-09-01T00:20:00Z",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Information cannot be blank!");
+      });
   });
 });
 
@@ -225,6 +223,98 @@ describe("GET /api/tickets/:ticket_id", () => {
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("Invalid request!");
+        });
+    });
+  });
+});
+
+describe("POST /api/tickets", () => {
+  test("201: Posts a new ticket", () => {
+    return request(app)
+      .post("/api/tickets")
+      .send({
+        owner_username: "TheBoss",
+        seating: "Standing",
+        eventDetails: "66679e9e54711517579556f3",
+        notes: "Patti can't come :(",
+        hasBeenClaimed: false,
+      })
+      .expect(201)
+      .then(({ body: { newTicket } }) => {
+        expect(newTicket).toMatchObject({
+          owner_username: "TheBoss",
+          seating: "Standing",
+          eventDetails: "66679e9e54711517579556f3",
+          notes: "Patti can't come :(",
+          hasBeenClaimed: false,
+          _id: expect.any(String),
+        });
+      })
+      .then(() => {
+        return request(app)
+          .get("/api/tickets")
+          .expect(200)
+          .then(({ body: { tickets } }) => {
+            expect(tickets.length).toBe(4);
+          });
+      });
+  });
+  test("201: Posts a new ticket when given no optional notes", () => {
+    return request(app)
+      .post("/api/tickets")
+      .send({
+        owner_username: "TheBoss",
+        seating: "Standing",
+        eventDetails: "66679e9e54711517579556f3",
+        hasBeenClaimed: false,
+      })
+      .expect(201)
+      .then(({ body: { newTicket } }) => {
+        expect(newTicket).toMatchObject({
+          owner_username: "TheBoss",
+          seating: "Standing",
+          eventDetails: "66679e9e54711517579556f3",
+          hasBeenClaimed: false,
+          _id: expect.any(String),
+        });
+      })
+      .then(() => {
+        return request(app)
+          .get("/api/tickets")
+          .expect(200)
+          .then(({ body: { tickets } }) => {
+            expect(tickets.length).toBe(5);
+          });
+      });
+  });
+  describe("Errors", () => {
+    test("400: Not all required keys present in ticket object", () => {
+      return request(app)
+        .post("/api/tickets")
+        .send({
+          seating: "Standing",
+          eventDetails: "66679e9e54711517579556f3",
+          notes: "Patti can't come :(",
+          hasBeenClaimed: false,
+        })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Missing information!");
+        });
+    });
+    test("400: Empty information sent", () => {
+      return request(app)
+        .post("/api/tickets")
+        .send({
+          owner_username: "TheBoss",
+          seating: "Standing",
+          eventDetails: "",
+          notes: "Patti can't come :(",
+          hasBeenClaimed: false,
+        })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Information cannot be blank!");
         });
     });
   });

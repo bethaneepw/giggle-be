@@ -11,10 +11,12 @@ const { selectAllEvents, selectEventById, addNewEvent, deleteEventByEventId, } =
 //   address: string;
 // }
 // res: Response<Event>
-exports.getEvents = (req, res) => {
-    return selectAllEvents().then((events) => {
+exports.getEvents = (req, res, next) => {
+    return selectAllEvents()
+        .then((events) => {
         res.status(200).send({ events });
-    });
+    })
+        .catch(next);
 };
 exports.getEventById = (req, res, next) => {
     const { event_id } = req.params;
@@ -24,7 +26,7 @@ exports.getEventById = (req, res, next) => {
     })
         .catch(next);
 };
-exports.postEvent = (req, res) => {
+exports.postEvent = (req, res, next) => {
     const { event_artist, event_location, event_venue, event_date } = req.body;
     if (event_artist === "" ||
         event_location === "" ||
@@ -33,19 +35,20 @@ exports.postEvent = (req, res) => {
         throw { msg: "Information cannot be blank!", status: 400 };
     }
     else {
-        return addNewEvent(event_artist, event_location, event_venue, event_date).then((newEvent) => {
+        return addNewEvent(event_artist, event_location, event_venue, event_date)
+            .then((newEvent) => {
             res.status(201).send({ newEvent });
-        });
+        })
+            .catch(next);
     }
 };
-exports.deleteEvent = (req, res) => {
+exports.deleteEvent = (req, res, next) => {
     const { event_id } = req.params;
     const pendingSelectEventById = selectEventById(event_id);
     const pendingDeleteEventByEventId = deleteEventByEventId(event_id);
-    return Promise.all([
-        pendingDeleteEventByEventId,
-        pendingSelectEventById,
-    ]).then(() => {
+    return Promise.all([pendingDeleteEventByEventId, pendingSelectEventById])
+        .then(() => {
         res.status(204).send();
-    });
+    })
+        .catch(next);
 };

@@ -17,3 +17,21 @@ export const selectTicketById = (ticketId) => {
       return ticket;
     });
 };
+
+export const addNewTicket = (
+  owner_username,
+  seating,
+  eventDetails,
+  notes,
+  hasBeenClaimed
+) => {
+  return Ticket.create({
+    owner_username,
+    seating,
+    eventDetails,
+    notes,
+    hasBeenClaimed,
+  }).then((newTicket) => {
+    return newTicket;
+  });
+};
