@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addNewTicket = exports.selectTicketById = exports.selectAllTickets = void 0;
+exports.deleteTicketById = exports.addNewTicket = exports.selectTicketById = exports.selectAllTickets = void 0;
 const { mongoose } = require("../../db/connection");
 const { ticketSchema } = require("../../db/schema/ticketSchema");
 const Ticket = mongoose.model("tickets", ticketSchema);
@@ -32,3 +32,7 @@ const addNewTicket = (owner_username, seating, eventDetails, notes, hasBeenClaim
     });
 };
 exports.addNewTicket = addNewTicket;
+const deleteTicketById = (ticketId) => {
+    return Ticket.findByIdAndDelete(ticketId).then(() => { });
+};
+exports.deleteTicketById = deleteTicketById;

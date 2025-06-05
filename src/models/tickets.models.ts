@@ -35,3 +35,7 @@ export const addNewTicket = (
     return newTicket;
   });
 };
+
+export const deleteTicketById = (ticketId) => {
+  return Ticket.findByIdAndDelete(ticketId).then(() => {});
+};

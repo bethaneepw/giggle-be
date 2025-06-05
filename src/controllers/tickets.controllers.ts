@@ -4,6 +4,7 @@ const {
   selectAllTickets,
   selectTicketById,
   addNewTicket,
+  deleteTicketById,
 } = require("../models/tickets.models");
 
 // interface Ticket {
@@ -66,4 +67,14 @@ exports.postTicket = (
   }
 };
 
-exports.deleteTicket = () => {};
+exports.deleteTicket = (req: Request, res: Response, next): Promise<void> => {
+  const { ticket_id } = req.params;
+  const pendingSelectTicketById = selectTicketById(ticket_id);
+  const pendingDeleteTicketById = deleteTicketById(ticket_id);
+
+  return Promise.all([pendingDeleteTicketById, pendingSelectTicketById])
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch(next);
+};

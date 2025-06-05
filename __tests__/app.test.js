@@ -319,3 +319,43 @@ describe("POST /api/tickets", () => {
     });
   });
 });
+
+describe("DELETE /api/tickets/ticket_id", () => {
+  test("204: Deletes specified ticket", () => {
+    return request(app)
+      .get("/api/tickets")
+      .expect(200)
+      .then(({ body: { tickets } }) => {
+        const originalLength = tickets.length;
+        return request(app)
+          .delete("/api/tickets/56679e9e54711517579556f5")
+          .expect(204)
+          .then((res) => {
+            return request(app)
+              .get("/api/tickets")
+              .expect(200)
+              .then(({ body: { tickets } }) => {
+                expect(tickets.length).toBe(originalLength - 1);
+              });
+          });
+      });
+  });
+  describe("Errors", () => {
+    test("400: Invalid ticket_id used", () => {
+      return request(app)
+        .delete("/api/tickets/invalidId")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request!");
+        });
+    });
+    test("404: Valid ticket_id that does not exist", () => {
+      return request(app)
+        .delete("/api/tickets/36679e9e54711517579556f5")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Ticket does not exist!");
+        });
+    });
+  });
+});
