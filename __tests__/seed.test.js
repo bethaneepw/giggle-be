@@ -5,8 +5,9 @@ const { userSchema } = require("../db/schema/userSchema");
 const { ticketSchema } = require("../db/schema/ticketSchema");
 const { eventSchema } = require("../db/schema/eventSchema");
 const { chatSchema } = require("../db/schema/chatSchema");
-const { test, expect, describe } = require("@jest/globals");
-const tickets = require("../db/data/test/tickets");
+const { messageSchema } = require("../db/schema/messageSchema");
+const { test, expect, describe, beforeEach } = require("@jest/globals");
+const { isExportDeclaration } = require("typescript");
 
 beforeAll(() => {
   return seed(data);
@@ -19,6 +20,7 @@ const User = mongoose.model("users", userSchema);
 const Ticket = mongoose.model("tickets", ticketSchema);
 const Event = mongoose.model("events", eventSchema);
 const Chat = mongoose.model("chats", chatSchema);
+const Message = mongoose.model("messages", messageSchema);
 
 describe("Seed", () => {
   describe("Users collection", () => {
@@ -59,14 +61,21 @@ describe("Seed", () => {
     });
 
     test("Users with interested events can return event details", async () => {
-        const user = await User.findOne({username: "TheBoss"}).populate("interestedEvents");
-        expect(user.interestedEvents[0].event_artist).toBe("Megan Thee Stallion");
-        expect(user.interestedEvents[0].event_location).toBe("Leeds");
-        expect(user.interestedEvents[0].event_venue).toBe("Brudenell Social Club");
-        expect(user.interestedEvents[0].event_date.toISOString()).toBe("2026-02-14T00:21:00.000Z");
-        expect(user.interestedEvents[0]._id.toString()).toBe("66679e9e54711517579556f3");
-
-    })
+      const user = await User.findOne({ username: "TheBoss" }).populate(
+        "interestedEvents"
+      );
+      expect(user.interestedEvents[0].event_artist).toBe("Megan Thee Stallion");
+      expect(user.interestedEvents[0].event_location).toBe("Leeds");
+      expect(user.interestedEvents[0].event_venue).toBe(
+        "Brudenell Social Club"
+      );
+      expect(user.interestedEvents[0].event_date.toISOString()).toBe(
+        "2026-02-14T00:21:00.000Z"
+      );
+      expect(user.interestedEvents[0]._id.toString()).toBe(
+        "66679e9e54711517579556f3"
+      );
+    });
 
     test("Allows null or missing options", async () => {
       const user = new User({
@@ -350,80 +359,132 @@ describe("Seed", () => {
       const chats = await Chat.find({});
       expect(chats.length).toBeGreaterThan(0);
       chats.forEach((chat) => {
-        expect(Array.isArray(chat.user_ids)).toBe(true);
-        expect(chat.user_ids).toHaveLength(2)
-        expect(Array.isArray(chat.msgs)).toBe(true);
-        chat.msgs.forEach((message) => {
-          expect(typeof message.msgId).toBe("number");
-          expect(typeof message.senderUsername).toBe("string");
-          expect(typeof message.body).toBe("string");
-          expect(message.timestamp instanceof Date).toBe(true);
-          expect(typeof message.displayToClient).toBe("boolean");
+        const plainChat = chat.toObject();
+        expect(plainChat).toMatchObject({
+          _id: expect.any(Object),
+          user_ids: expect.any(Array),
         });
+        expect(chat.user_ids).toHaveLength(2);
       });
     });
 
     test("Rejects chats with more than 2 users", async () => {
-        const chatData = {
-            user_ids: ["68405b9711f50eebe1b59521", "68405b9711f50eebe1b59523", "68405b9711f50eebe1b59522"],
-            msgs: [ {
-                msgId: 0,
-                senderUsername: "col99",
-                body: "hello",
-                displayToClient: true
-            }]
-        }
-        await expect(Chat.create(chatData)).rejects.toThrow(new Error("chats validation failed: user_ids: must contain 2 user_ids"))
-    });
-
-    test("msgs array objects displayToClients property defaults as true", async () => {
-        const chat = await Chat.create({
-            user_ids: ["68405b9711f50eebe1b59521", "68405b9711f50eebe1b59523"],
-            msgs: [ {
-                msgId: 0,
-                senderUsername: "col99",
-                body: "hello",
-            }]
-        })
-        expect(chat.msgs[0].displayToClient).toBe(true)
-    });
-
-    test("msgs array objects body property must contain content", async () => {
-        const chatData = {
-            user_ids: ["68405b9711f50eebe1b59521", "68405b9711f50eebe1b59523"],
-            msgs: [ {
-                msgId: 0,
-                senderUsername: "col99",
-                body: "",
-                displayToClient: true
-            }]
-        }
-        await expect(Chat.create(chatData)).rejects.toThrow(new Error("chats validation failed: msgs.0.body: Path `body` is required."))
+      const chatData = {
+        user_ids: [
+          "68405b9711f50eebe1b59521",
+          "68405b9711f50eebe1b59523",
+          "68405b9711f50eebe1b59522",
+        ],
+      };
+      await expect(Chat.create(chatData)).rejects.toThrow(
+        new Error("chats validation failed: user_ids: must contain 2 user_ids")
+      );
     });
 
     test("Rejects invalid values", async () => {
-        const chatData = {
-            user_ids: ["68405b9711f50eebe1b59521", "68405b9711f50eebe1b59523"],
-            msgs: [ {
-                msgId: 0,
-                senderUsername: "col99",
-                body: "Hello",
-                displayToClient: "hello"
-            }]
-        }
-        await expect(Chat.create(chatData)).rejects.toThrow(new Error("chats validation failed: msgs.0.displayToClient: Cast to Boolean failed for value \"hello\" (type string) at path \"displayToClient\" because of \"CastError\""))
+      const chatData = {
+        user_ids: "68405b9711f50eebe1b59521" + "68405b9711f50eebe1b59523",
+      };
+      await expect(Chat.create(chatData)).rejects.toThrow(
+        new Error("chats validation failed: user_ids: must contain 2 user_ids")
+      );
     });
 
     test("Rejects missings fields", async () => {
-        const chatData = {
-            msgs: [ {
-                msgId: 0,
-                senderUsername: "col99",
-                body: "Hello",
-                displayToClient: true
-            }]
-        }
-        await expect(Chat.create(chatData)).rejects.toThrow(new Error("chats validation failed: user_ids: must contain 2 user_ids"))
+      const chatData = {};
+      await expect(Chat.create(chatData)).rejects.toThrow(
+        new Error("chats validation failed: user_ids: must contain 2 user_ids")
+      );
+    });
+  });
+
+  describe("Messages collection", () => {
+    test("Messages collection exists", async () => {
+      const messages = await Message.find({});
+      expect(messages.length).toBe(7);
+    });
+
+    test("Message contain the required data of the correct variable type", async () => {
+      const messages = await Message.find({});
+      expect(messages.length).toBeGreaterThan(0);
+      messages.forEach((message) => {
+        const plainMessage = message.toObject();
+        expect(plainMessage).toMatchObject({
+          _id: expect.any(Object),
+          roomId: expect.any(Object),
+          senderId: expect.any(Object),
+          body: expect.any(String),
+          timestamp: expect.any(Date),
+          displayToClient: expect.any(Boolean),
+        });
+      });
+    });
+
+    test("Messages require body property to have content", async () => {
+      const messageData = {
+        user_ids: ["68405b9711f50eebe1b59521", "68405b9711f50eebe1b59523"],
+        roomId: "68405d38239a61ea5b7ad207",
+        senderId: "68405b9711f50eebe1b59523",
+        body: "",
+        displayToClient: true,
+      };
+
+      await expect(Message.create(messageData)).rejects.toThrow(
+        new Error("messages validation failed: body: Path `body` is required.")
+      );
+    });
+
+    test("Messages default displayToClient property as true", async () => {
+      const message = await Message.create({
+        user_ids: ["68405b9711f50eebe1b59521", "68405b9711f50eebe1b59523"],
+        roomId: "68405d38239a61ea5b7ad207",
+        senderId: "68405b9711f50eebe1b59523",
+        body: "hey champ!",
+      });
+      expect(message).toHaveProperty("displayToClient");
+      expect(message.displayToClient).toBe(true);
+    });
+
+    test("Messages have a timestamp property as default without being explicitly passed", async () => {
+      const message = await Message.create({
+        user_ids: ["68405b9711f50eebe1b59521", "68405b9711f50eebe1b59523"],
+        roomId: "68405d38239a61ea5b7ad207",
+        senderId: "68405b9711f50eebe1b59523",
+        body: "hey champ!",
+      });
+      expect(message).toHaveProperty("timestamp");
+      expect(message.timestamp instanceof Date).toBe(true);
+    });
+
+    test("Rejects invalid values", async () => {
+      const messageData = {
+        user_ids: ["68405b9711f50eebe1b59521", "68405b9711f50eebe1b59523"],
+        roomId: 420424,
+        senderId: "68405b9711f50eebe1b59523",
+        body: "testing",
+        displayToClient: true,
+      };
+
+      await expect(Message.create(messageData)).rejects.toThrow(
+        new Error(
+          `messages validation failed: roomId: Cast to ObjectId failed for value "420424" (type number) at path "roomId" because of "BSONError"`
+        )
+      );
+    });
+
+    test("Rejects missing fields", async () => {
+      const messageData = {
+        user_ids: ["68405b9711f50eebe1b59521", "68405b9711f50eebe1b59523"],
+        senderId: "68405b9711f50eebe1b59523",
+        body: "testing",
+        displayToClient: true,
+      };
+
+      await expect(Message.create(messageData)).rejects.toThrow(
+        new Error(
+          "messages validation failed: roomId: Path `roomId` is required."
+        )
+      );
     });
   });
 });
