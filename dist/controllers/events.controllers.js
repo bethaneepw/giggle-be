@@ -26,9 +26,17 @@ exports.getEventById = (req, res, next) => {
 };
 exports.postEvent = (req, res) => {
     const { event_artist, event_location, event_venue, event_date } = req.body;
-    return addNewEvent(event_artist, event_location, event_venue, event_date).then((newEvent) => {
-        res.status(201).send({ newEvent });
-    });
+    if (event_artist === "" ||
+        event_location === "" ||
+        event_venue === "" ||
+        event_date === "") {
+        throw { msg: "Information cannot be blank!", status: 400 };
+    }
+    else {
+        return addNewEvent(event_artist, event_location, event_venue, event_date).then((newEvent) => {
+            res.status(201).send({ newEvent });
+        });
+    }
 };
 exports.deleteEvent = (req, res) => {
     const { eventId } = req.params;

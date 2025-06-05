@@ -101,4 +101,35 @@ describe("POST /api/events", () => {
           });
       });
   });
+  describe("Errors", () => {
+    test("400: Not all keys present in event object", () => {
+      return request(app)
+        .post("/api/events")
+        .send({
+          event_artist: "Nick Cave",
+          event_location: "Brighton",
+          event_venue: "Concord",
+        })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Missing event date information!");
+        });
+    });
+  });
+  describe("Errors", () => {
+    test("400: Empty information sent", () => {
+      return request(app)
+        .post("/api/events")
+        .send({
+          event_artist: "Nick Cave",
+          event_location: "Brighton",
+          event_venue: "",
+          event_date: "2025-09-01T00:20:00Z",
+        })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Information cannot be blank!");
+        });
+    });
+  });
 });

@@ -5,6 +5,12 @@ const handleMongoErrors: ErrorRequestHandler = (err, req, res, next) => {
     if (err.kind === "ObjectId") {
       res.status(400).send({ msg: "Invalid request!" });
     }
+  }
+
+  if (err.errors) {
+    if (err.errors.event_date.kind === "required") {
+      res.status(400).send({ msg: "Missing event date information!" });
+    }
   } else next(err);
 };
 
@@ -14,7 +20,7 @@ const handleCustomErrors: ErrorRequestHandler = (err, req, res, next) => {
   } else next(err);
 };
 
-const catchAllErrors: ErrorRequestHandler = (err, req, res, next) => {
+const catchAllErrors: ErrorRequestHandler = (err, req, res) => {
   console.log(err, "error log in catch all");
   res.status(500).send({ msg: "Internal server error!" });
 };
