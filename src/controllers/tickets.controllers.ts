@@ -40,7 +40,7 @@ exports.getTicketById = (
 
 exports.postTicket = (
   req: Request,
-  res: Response<Event>,
+  res: Response<Ticket>,
   next
 ): Promise<void> => {
   const { owner_username, seating, eventDetails, notes, hasBeenClaimed } =

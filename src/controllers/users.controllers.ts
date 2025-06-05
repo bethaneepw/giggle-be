@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 const {
   selectUsers,
-  addNewuser,
+  addNewUser,
   deleteUserByUserId,
   selectUserByUserId,
 } = require("../models/users.models");
@@ -20,17 +20,56 @@ exports.getUsers = (req: Request, res: Response<User>): Promise<void> => {
   });
 };
 
-exports.postUser = (req: Request, res: Response<User>): Promise<void> => {
-  const { userId } = req.params;
-
-  return addNewuser(userId).then((user) => {
-    res.status(201).send(user);
-  });
+exports.postUser = (req: Request, res: Response<User>, next): Promise<void> => {
+  const {
+    firstName,
+    lastName,
+    username,
+    location,
+    preferences,
+    biography,
+    dateOfBirth,
+    gender,
+    trustRating,
+    isVerified,
+    interestedEvents,
+    profilePictureURL,
+  } = req.body;
+  if (
+    firstName === "" ||
+    lastName === "" ||
+    username === "" ||
+    location === "" ||
+    biography === "" ||
+    dateOfBirth === "" ||
+    trustRating === "" ||
+    profilePictureURL === ""
+  ) {
+    throw { msg: "Information cannot be blank!", status: 400 };
+  } else {
+    return addNewUser(
+      firstName,
+      lastName,
+      username,
+      location,
+      preferences,
+      biography,
+      dateOfBirth,
+      gender,
+      trustRating,
+      isVerified,
+      interestedEvents,
+      profilePictureURL
+    )
+      .then((newUser) => {
+        res.status(201).send({ newUser });
+      })
+      .catch(next);
+  }
 };
 
 exports.deleteUser = (req: Request, res: Response): Promise<void> => {
   const { userId } = req.params;
-
   return deleteUserByUserId(userId).then(() => {
     res.status(204).send();
   });
