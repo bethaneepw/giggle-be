@@ -12,6 +12,7 @@ const { handleCustomErrors, catchAllErrors, handleMongoErrors, } = require("./co
 app.use(express.json());
 app.get("/api", getApi);
 app.get("/api/events", getEvents);
+//queries to add still: date
 app.get("/api/events/:event_id", getEventById);
 app.post("/api/events", postEvent);
 app.delete("/api/events/:event_id", deleteEvent);

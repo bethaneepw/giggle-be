@@ -41,6 +41,7 @@ app.use(express.json());
 app.get("/api", getApi);
 
 app.get("/api/events", getEvents);
+//queries to add still: date
 
 app.get("/api/events/:event_id", getEventById);
 

@@ -1,15 +1,42 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEventByEventId = exports.addNewEvent = exports.selectEventById = exports.selectAllEvents = void 0;
+exports.deleteEventByEventId = exports.addNewEvent = exports.selectEventById = exports.selectEvents = void 0;
 const { mongoose } = require("../../db/connection");
 const { eventSchema } = require("../../db/schema/eventSchema");
 const Event = mongoose.model("events", eventSchema);
-const selectAllEvents = () => {
-    return Event.find({}).then((events) => {
+const selectEvents = (sort_by, order, artist, town) => {
+    const orderGreenList = ["asc", "desc"];
+    const sortByGreenList = ["event_artist", "event_location"];
+    if (order && !orderGreenList.includes(order.toLowerCase())) {
+        throw { msg: "Invalid order request!", status: 400 };
+    }
+    if (sort_by && !sortByGreenList.includes(sort_by.toLowerCase())) {
+        throw { msg: "Invalid sort_by request!", status: 400 };
+    }
+    const queries = {};
+    if (town) {
+        queries.event_location = { $regex: new RegExp(town, "ig") };
+    }
+    if (artist) {
+        queries.event_artist = { $regex: new RegExp(artist, "ig") };
+    }
+    const sortOrderQueries = {};
+    if (sort_by) {
+        if (!order) {
+            //if no order, do default: ascending
+            sortOrderQueries[sort_by] = "asc";
+        }
+        else {
+            sortOrderQueries[sort_by] = order.toLowerCase();
+        }
+    }
+    return Event.find(queries)
+        .sort(sortOrderQueries)
+        .then((events) => {
         return events;
     });
 };
-exports.selectAllEvents = selectAllEvents;
+exports.selectEvents = selectEvents;
 const selectEventById = (id) => {
     return Event.findById(id)
         .orFail(() => {
