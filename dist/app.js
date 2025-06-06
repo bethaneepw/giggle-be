@@ -4,7 +4,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const { getApi } = require("./controllers/controllers");
-const { getTickets, getTicketById, postTicket, deleteTicket, } = require("./controllers/tickets.controllers");
+const { getTickets, getTicketById, postTicket, deleteTicket, patchTicket, } = require("./controllers/tickets.controllers");
 const { getEvents, getEventById, postEvent, deleteEvent, } = require("./controllers/events.controllers");
 const { getUsers, postUser, deleteUser, getUserById, patchUser, } = require("./controllers/users.controllers");
 app.use(cors());
@@ -24,14 +24,14 @@ app.get("/api/tickets", getTickets);
 app.get("/api/tickets/:ticket_id", getTicketById);
 app.post("/api/tickets", postTicket);
 app.delete("/api/tickets/:ticket_id", deleteTicket);
+app.patch("/api/tickets/:ticket_id", patchTicket);
 /*
 
 To-do:
 
 get users queries
-patch users - add new event id, update preferences etc
 get events queries
-get tickets queries ? by id?
+get tickets queries ? by user id?
 patch/ tickets
 */
 // Error handling

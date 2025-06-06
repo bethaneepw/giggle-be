@@ -1,6 +1,6 @@
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test/index");
-const { mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 // const { userSchema } = require("../db/schema/userSchema");
 // const { ticketSchema } = require("../db/schema/ticketSchema");
 // const { eventSchema } = require("../db/schema/eventSchema");
@@ -9,12 +9,19 @@ const { test, expect, describe } = require("@jest/globals");
 const request = require("supertest");
 const app = require("../dist/app");
 
+// const { run } = require("../db/connection");
+
+// beforeAll(async () => {
+//   await run();
+// });
+
 beforeAll(() => {
+  //needs to be accounted for in tests, not reseeding before every test with beforeEach
   return seed(data);
 });
 
-afterAll(() => {
-  return mongoose.disconnect();
+afterAll(async () => {
+  await mongoose.disconnect();
 });
 
 describe("GET /api/events", () => {
@@ -871,6 +878,71 @@ describe("PATCH /api/users/:user_id", () => {
       return request(app)
         .patch("/api/users/invalidId")
         .send({ gender: "Woman" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request!");
+        });
+    });
+  });
+});
+
+describe("PATCH /api/tickets/:ticket_id", () => {
+  test("201: Updates specified ticket with new information, e.g. notes", () => {
+    return request(app)
+      .patch("/api/tickets/56679e9e54711517579556f4")
+      .send({ notes: "Really, really, REALLY want a friend to take!" })
+      .expect(200)
+      .then(({ body: { updatedTicket } }) => {
+        expect(updatedTicket).toMatchObject({
+          _id: "56679e9e54711517579556f4",
+          owner_username: "BoygeniusMVP",
+          seating: "Standing",
+          eventDetails: "66679e9e54711517579556f3",
+          notes: "Really, really, REALLY want a friend to take!",
+          hasBeenClaimed: false,
+        });
+      });
+  });
+  test("201: Updates specified ticket with new information, e.g. hasBeenClaimed", () => {
+    return request(app)
+      .patch("/api/tickets/56679e9e54711517579556f4")
+      .send({ hasBeenClaimed: true })
+      .expect(200)
+      .then(({ body: { updatedTicket } }) => {
+        expect(updatedTicket).toMatchObject({
+          _id: "56679e9e54711517579556f4",
+          owner_username: "BoygeniusMVP",
+          seating: "Standing",
+          eventDetails: "66679e9e54711517579556f3",
+          notes: "Really, really, REALLY want a friend to take!",
+          hasBeenClaimed: true,
+        });
+      });
+  });
+
+  describe("Errors", () => {
+    test("400: Information that does not conform to schema sent, e.g. hasBeenClaimed non-boolean", () => {
+      return request(app)
+        .patch("/api/tickets/56679e9e54711517579556f4")
+        .send({ hasBeenClaimed: "Invalid" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid information!");
+        });
+    });
+    test("404: Valid but non-existent id used", () => {
+      return request(app)
+        .patch("/api/tickets/16679e9e54711517579556f9")
+        .send({ notes: "Anyone?" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Ticket does not exist!");
+        });
+    });
+    test("400: Invalid id used", () => {
+      return request(app)
+        .patch("/api/tickets/invalidId")
+        .send({ notes: "Anyone?" })
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("Invalid request!");
