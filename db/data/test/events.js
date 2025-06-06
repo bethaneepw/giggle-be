@@ -7,7 +7,7 @@ module.exports = [
   new Event({
     event_artist: "Phoebe Bridgers",
     event_location: "Brighton",
-    event_venue: "Concord",
+    event_venue: "Concorde 2",
     event_date: "2025-08-01T00:20:00Z",
     _id: "66679e9e54711517579556f1",
   }),
