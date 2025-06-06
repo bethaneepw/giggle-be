@@ -322,7 +322,23 @@ describe("POST /api/tickets", () => {
         .then(({ body: { msg } }) => {
           expect(msg).toBe("Information cannot be blank!");
         });
-    });
+    }),
+    test("404:Ticket posted for an event not found in the database", ()=>{
+      return request (app)
+      .post("/api/tickets/andadam93")
+      .send ({
+        _id: "56679e9e54711517579556f5",
+        owner_username: "col99",
+        seating: "Seating",
+        eventDetails: "This event it does not exist",
+        notes: "Would love a friend to bring!!",
+        hasBeenClaimed: true,
+      })
+      .expect(404)
+      .then(({body:{msg}})=>{
+        expect(msg).toBe("Invalid url!")
+      })
+    })
   });
 });
 
