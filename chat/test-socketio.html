@@ -1,190 +1,240 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Socket.IO Test</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
-        .connected { background: #d4edda; color: #155724; }
-        .disconnected { background: #f8d7da; color: #721c24; }
-        .test-section { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
-        input, button { padding: 8px; margin: 5px; }
-        #messages { height: 200px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
-        .message { margin: 5px 0; padding: 5px; background: #f8f9fa; border-radius: 3px; }
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .status {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+      }
+      .connected {
+        background: #d4edda;
+        color: #155724;
+      }
+      .disconnected {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      .test-section {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 5px;
+      }
+      input,
+      button {
+        padding: 8px;
+        margin: 5px;
+      }
+      #messages {
+        height: 200px;
+        overflow-y: scroll;
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+      .message {
+        margin: 5px 0;
+        padding: 5px;
+        background: #f8f9fa;
+        border-radius: 3px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>Socket.IO Chat Test</h1>
-        
-        <div id="status" class="status disconnected">Disconnected</div>
-        
-        <div class="test-section">
-            <h3>Test Your Chat Rooms</h3>
-            <p>Your test room IDs:</p>
-            <ul>
-                <li><code>68405d38239a61ea5b7ad204</code> - Bruce & Lucy</li>
-                <li><code>68405d38239a61ea5b7ad207</code> - Bruce & Colin</li>
-            </ul>
-        </div>
-        
-        <div class="test-section">
-            <h3>Join Room</h3>
-            <input type="text" id="roomInput" placeholder="Enter room ID" value="68405d38239a61ea5b7ad204">
-            <button onclick="joinRoom()">Join Room</button>
-            <div id="currentRoom"></div>
-        </div>
-        
-        <div class="test-section">
-            <h3>Send Message</h3>
-            <input type="text" id="usernameInput" placeholder="Username" value="TestUser">
-            <input type="text" id="messageInput" placeholder="Type message...">
-            <button onclick="sendMessage()">Send</button>
-        </div>
-        
-        <div class="test-section">
-            <h3>Messages</h3>
-            <div id="messages"></div>
-            <button onclick="clearMessages()">Clear Messages</button>
-        </div>
-        
-        <div class="test-section">
-            <h3>Test REST API</h3>
-            <button onclick="testGetChats()">Test GET /</button>
-            <button onclick="testGetChat()">Test GET /api/chats/:roomId</button>
-            <div id="apiResults"></div>
-        </div>
+      <h1>Socket.IO Chat Test</h1>
+
+      <div id="status" class="status disconnected">Disconnected</div>
+
+      <div class="test-section">
+        <h3>Test Your Chat Rooms</h3>
+        <p>Your test room IDs:</p>
+        <ul>
+          <li><code>68405d38239a61ea5b7ad204</code> - Bruce & Lucy</li>
+          <li><code>68405d38239a61ea5b7ad207</code> - Bruce & Colin</li>
+        </ul>
+      </div>
+
+      <div class="test-section">
+        <h3>Join Room</h3>
+        <input
+          type="text"
+          id="roomInput"
+          placeholder="Enter room ID"
+          value="68405d38239a61ea5b7ad204"
+        />
+        <button onclick="joinRoom()">Join Room</button>
+        <div id="currentRoom"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>Send Message</h3>
+        <input
+          type="text"
+          id="usernameInput"
+          placeholder="Username"
+          value="TestUser"
+        />
+        <input type="text" id="messageInput" placeholder="Type message..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+
+      <div class="test-section">
+        <h3>Messages</h3>
+        <div id="messages"></div>
+        <button onclick="clearMessages()">Clear Messages</button>
+      </div>
+
+      <div class="test-section">
+        <h3>Test REST API</h3>
+        <button onclick="testGetChats()">Test GET /</button>
+        <button onclick="testGetChat()">Test GET /api/chats/:roomId</button>
+        <div id="apiResults"></div>
+      </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script>
-      
-        const SERVER_URL = 'http://192.168.1.25:9090';
-        const socket = io(SERVER_URL);
-        
-        let currentRoom = null;
+      const SERVER_URL = "http://192.168.1.25:9090";
+      const socket = io(SERVER_URL);
 
+      let currentRoom = null;
 
-        socket.on('connect', () => {
-            document.getElementById('status').className = 'status connected';
-            document.getElementById('status').textContent = 'Connected to ' + SERVER_URL;
-            console.log('Connected to server');
-        });
+      socket.on("connect", () => {
+        document.getElementById("status").className = "status connected";
+        document.getElementById("status").textContent =
+          "Connected to " + SERVER_URL;
+        console.log("Connected to server");
+      });
 
-        socket.on('disconnect', () => {
-            document.getElementById('status').className = 'status disconnected';
-            document.getElementById('status').textContent = 'Disconnected';
-            console.log('Disconnected from server');
-        });
+      socket.on("disconnect", () => {
+        document.getElementById("status").className = "status disconnected";
+        document.getElementById("status").textContent = "Disconnected";
+        console.log("Disconnected from server");
+      });
 
-        socket.on('connect_error', (error) => {
-            document.getElementById('status').className = 'status disconnected';
-            document.getElementById('status').textContent = 'Connection Error: ' + error.message;
-            console.error('Connection error:', error);
-        });
+      socket.on("connect_error", (error) => {
+        document.getElementById("status").className = "status disconnected";
+        document.getElementById("status").textContent =
+          "Connection Error: " + error.message;
+        console.error("Connection error:", error);
+      });
 
-        // Message handling
-        socket.on('chat message', (message) => {
-            console.log('Received message:', message);
-            addMessageToDisplay(message);
-        });
+      // Message handling
+      socket.on("chat message", (message) => {
+        console.log("Received message:", message);
+        addMessageToDisplay(message);
+      });
 
-        function joinRoom() {
-            const roomId = document.getElementById('roomInput').value.trim();
-            if (!roomId) return;
-            
-            console.log('Joining room:', roomId);
-            socket.emit('join room', roomId);
-            currentRoom = roomId;
-            document.getElementById('currentRoom').textContent = `Current room: ${roomId}`;
+      function joinRoom() {
+        const roomId = document.getElementById("roomInput").value.trim();
+        if (!roomId) return;
+
+        console.log("Joining room:", roomId);
+        socket.emit("join room", roomId);
+        currentRoom = roomId;
+        document.getElementById(
+          "currentRoom"
+        ).textContent = `Current room: ${roomId}`;
+      }
+
+      function sendMessage() {
+        const username = document.getElementById("usernameInput").value.trim();
+        const message = document.getElementById("messageInput").value.trim();
+
+        if (!message || !currentRoom || !username) {
+          alert("Please join a room and enter username and message");
+          return;
         }
 
-        function sendMessage() {
-            const username = document.getElementById('usernameInput').value.trim();
-            const message = document.getElementById('messageInput').value.trim();
-            
-            if (!message || !currentRoom || !username) {
-                alert('Please join a room and enter username and message');
-                return;
-            }
+        const messageData = {
+          roomId: currentRoom,
+          senderUsername: username,
+          body: message,
+        };
 
-            const messageData = {
-                roomId: currentRoom,
-                senderUsername: username,
-                body: message
-            };
+        console.log("Sending message:", messageData);
+        socket.emit("chat message", messageData);
+        document.getElementById("messageInput").value = "";
+      }
 
-            console.log('Sending message:', messageData);
-            socket.emit('chat message', messageData);
-            document.getElementById('messageInput').value = '';
-        }
-
-        function addMessageToDisplay(message) {
-            const messagesDiv = document.getElementById('messages');
-            const messageElement = document.createElement('div');
-            messageElement.className = 'message';
-            messageElement.innerHTML = `
+      function addMessageToDisplay(message) {
+        const messagesDiv = document.getElementById("messages");
+        const messageElement = document.createElement("div");
+        messageElement.className = "message";
+        messageElement.innerHTML = `
                 <strong>${message.senderUsername}:</strong> ${message.body}
-                <small>(${new Date(message.timestamp).toLocaleTimeString()})</small>
+                <small>(${new Date(
+                  message.timestamp
+                ).toLocaleTimeString()})</small>
             `;
-            messagesDiv.appendChild(messageElement);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
+        messagesDiv.appendChild(messageElement);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
 
-        function clearMessages() {
-            document.getElementById('messages').innerHTML = '';
-        }
+      function clearMessages() {
+        document.getElementById("messages").innerHTML = "";
+      }
 
-
-        async function testGetChats() {
-            try {
-                const response = await fetch(`${SERVER_URL}/`);
-                const data = await response.json();
-                document.getElementById('apiResults').innerHTML = `
+      async function testGetChats() {
+        try {
+          const response = await fetch(`${SERVER_URL}/`);
+          const data = await response.json();
+          document.getElementById("apiResults").innerHTML = `
                     <h4>GET / Result:</h4>
                     <pre>${JSON.stringify(data, null, 2)}</pre>
                 `;
-                console.log('GET / result:', data);
-            } catch (error) {
-                document.getElementById('apiResults').innerHTML = `
+          console.log("GET / result:", data);
+        } catch (error) {
+          document.getElementById("apiResults").innerHTML = `
                     <h4>GET / Error:</h4>
                     <pre>${error.message}</pre>
                 `;
-                console.error('GET / error:', error);
-            }
+          console.error("GET / error:", error);
+        }
+      }
+
+      async function testGetChat() {
+        const roomId = document.getElementById("roomInput").value.trim();
+        if (!roomId) {
+          alert("Enter a room ID first");
+          return;
         }
 
-        async function testGetChat() {
-            const roomId = document.getElementById('roomInput').value.trim();
-            if (!roomId) {
-                alert('Enter a room ID first');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${SERVER_URL}/api/chats/${roomId}`);
-                const data = await response.json();
-                document.getElementById('apiResults').innerHTML = `
+        try {
+          const response = await fetch(`${SERVER_URL}/api/chats/${roomId}`);
+          const data = await response.json();
+          document.getElementById("apiResults").innerHTML = `
                     <h4>GET /api/chats/${roomId} Result:</h4>
                     <pre>${JSON.stringify(data, null, 2)}</pre>
                 `;
-                console.log('GET chat result:', data);
-            } catch (error) {
-                document.getElementById('apiResults').innerHTML = `
+          console.log("GET chat result:", data);
+        } catch (error) {
+          document.getElementById("apiResults").innerHTML = `
                     <h4>GET /api/chats/${roomId} Error:</h4>
                     <pre>${error.message}</pre>
                 `;
-                console.error('GET chat error:', error);
-            }
+          console.error("GET chat error:", error);
         }
+      }
 
-        // Allow sending message with Enter key
-        document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
+      // Allow sending message with Enter key
+      document
+        .getElementById("messageInput")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            sendMessage();
+          }
         });
     </script>
-</body>
-</html> -->
+  </body>
+</html>
