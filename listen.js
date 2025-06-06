@@ -1,5 +1,6 @@
-const app = require("./dist/app")
 
-app.listen(9090, ()=> {
-    console.log("Server is listening on 9090")
-})
+const app = require("./dist/app.js");
+const { PORT = 9090 } = process.env;
+
+app.listen(PORT, () => console.log(`Listening on ${PORT}...`));
+
