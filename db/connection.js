@@ -6,9 +6,13 @@ require("dotenv").config({ path: `${__dirname}/../.env.${ENV}` });
 let uri = "";
 
 if (ENV === "production") {
-  uri = process.env.MONGO_DB_URL;
+  uri = process.env.MONGODB_URI;
 } else {
   uri = process.env.MONGO_DEV
+}
+
+if (!process.env.MONGO_DEV && !process.env.MONGODB_URI) {
+  throw new Error("PGDATABASE or DATABASE_URL not set");
 }
 
 async function run() {
