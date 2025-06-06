@@ -9,7 +9,7 @@ const { getEvents, getEventById, postEvent, deleteEvent, } = require("./controll
 const { getUsers, postUser, deleteUser, getUserById, patchUser, } = require("./controllers/users.controllers");
 app.use(cors());
 const { handleCustomErrors, catchAllErrors, handleMongoErrors, } = require("./controllers/error.controller");
-const { getChatbyId, } = require("./controllers/chats.controllers")
+// const { getChatbyId, } = require("./controllers/chats.controllers")
 const { postMessagebyId, getMessagebyRoomId, patchMessagebyId} = require("./controllers/messages.controlers")
 app.use(express.json());
 app.get("/api", getApi);
