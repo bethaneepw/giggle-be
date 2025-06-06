@@ -16,7 +16,12 @@ if (!process.env.MONGO_DEV && !process.env.MONGODB_URI) {
 }
 
 const clientOptions = {
-  serverApi: { version: "1", strict: true, deprecationErrors: true },
+  serverApi: {
+    version: "1",
+    strict: true,
+    deprecationErrors: true,
+    maxPoolSize: 200,
+  },
 };
 
 async function run() {
