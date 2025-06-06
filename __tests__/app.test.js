@@ -256,7 +256,7 @@ describe("GET /api/events?artist= query", () => {
         expect(events[0]).toMatchObject({
           event_artist: "Phoebe Bridgers",
           event_location: "Brighton",
-          event_venue: "Concord",
+          event_venue: "Concorde 2",
           event_date: expect.any(String),
           _id: "66679e9e54711517579556f1",
         });
@@ -273,7 +273,7 @@ describe("GET /api/events?artist= query works with partial search", () => {
         expect(events[0]).toMatchObject({
           event_artist: "Phoebe Bridgers",
           event_location: "Brighton",
-          event_venue: "Concord",
+          event_venue: "Concorde 2",
           event_date: expect.any(String),
           _id: "66679e9e54711517579556f1",
         });
@@ -425,22 +425,22 @@ describe("POST /api/tickets", () => {
           expect(msg).toBe("Information cannot be blank!");
         });
     }),
-    test("404:Ticket posted for an event not found in the database", ()=>{
-      return request (app)
-      .post("/api/tickets/andadam93")
-      .send ({
-        _id: "56679e9e54711517579556f5",
-        owner_username: "col99",
-        seating: "Seating",
-        eventDetails: "This event it does not exist",
-        notes: "Would love a friend to bring!!",
-        hasBeenClaimed: true,
-      })
-      .expect(404)
-      .then(({body:{msg}})=>{
-        expect(msg).toBe("Invalid url!")
-      })
-    })
+      test("404:Ticket posted for an event not found in the database", () => {
+        return request(app)
+          .post("/api/tickets/andadam93")
+          .send({
+            _id: "56679e9e54711517579556f5",
+            owner_username: "col99",
+            seating: "Seating",
+            eventDetails: "This event it does not exist",
+            notes: "Would love a friend to bring!!",
+            hasBeenClaimed: true,
+          })
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("Invalid url!");
+          });
+      });
   });
 });
 

@@ -3,6 +3,10 @@ const app = express();
 const cors = require("cors");
 
 import { Request, Response } from "express";
+
+app.use(cors());
+app.use(express.json());
+
 const { getApi } = require("./controllers/controllers");
 
 const {
@@ -28,15 +32,11 @@ const {
   patchUser,
 } = require("./controllers/users.controllers");
 
-app.use(cors());
-
 const {
   handleCustomErrors,
   catchAllErrors,
   handleMongoErrors,
 } = require("./controllers/error.controller");
-
-app.use(express.json());
 
 app.get("/api", getApi);
 
@@ -69,8 +69,6 @@ app.delete("/api/tickets/:ticket_id", deleteTicket);
 
 app.patch("/api/tickets/:ticket_id", patchTicket);
 
-
-
 /*
 
 To-do:
@@ -83,7 +81,7 @@ patch/ tickets
 
 // Error handling
 
-app.all("/*splat", (req: Request, res: Response) => {
+app.all("/*splat", (req: Request, res: Response, next) => {
   res.status(404).send({ msg: "Invalid url!" });
 });
 

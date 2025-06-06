@@ -4,8 +4,6 @@ exports.updateTicket = exports.deleteTicketById = exports.addNewTicket = exports
 const { mongoose } = require("../../db/connection");
 const { ticketSchema } = require("../../db/schema/ticketSchema");
 const Ticket = mongoose.model("tickets", ticketSchema);
-const { addNewEvent } = require("./events.models")
-
 const selectTickets = () => {
     return Ticket.find({}).then((tickets) => {
         return tickets;
@@ -23,18 +21,6 @@ const selectTicketById = (ticketId) => {
 };
 exports.selectTicketById = selectTicketById;
 const addNewTicket = (owner_username, seating, eventDetails, notes, hasBeenClaimed) => {
- if(Ticket.find({}).populate("eventDetails")===undefined){
-return {msg:"this event is not listed in or app, please add it to the events", status:404}
- }else {
-
- }
-
-//  Ticket.find({}).populate("eventDetails")
-//  .orFail(()=>{
-//     throw { msg:"this event is not listed in or app, please add it to the events", status:404}
-//     return 
-//  })
-    
     return Ticket.create({
         owner_username,
         seating,
@@ -44,7 +30,6 @@ return {msg:"this event is not listed in or app, please add it to the events", s
     }).then((newTicket) => {
         return newTicket;
     });
-   
 };
 exports.addNewTicket = addNewTicket;
 const deleteTicketById = (ticketId) => {

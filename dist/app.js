@@ -3,13 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const app = express();
 const cors = require("cors");
+app.use(cors());
+app.use(express.json());
 const { getApi } = require("./controllers/controllers");
 const { getTickets, getTicketById, postTicket, deleteTicket, patchTicket, } = require("./controllers/tickets.controllers");
 const { getEvents, getEventById, postEvent, deleteEvent, } = require("./controllers/events.controllers");
 const { getUsers, postUser, deleteUser, getUserById, patchUser, } = require("./controllers/users.controllers");
-app.use(cors());
 const { handleCustomErrors, catchAllErrors, handleMongoErrors, } = require("./controllers/error.controller");
-app.use(express.json());
 app.get("/api", getApi);
 app.get("/api/events", getEvents);
 //queries to add still: date
@@ -36,7 +36,7 @@ get tickets queries ? by user id?
 patch/ tickets
 */
 // Error handling
-app.all("/*splat", (req, res) => {
+app.all("/*splat", (req, res, next) => {
     res.status(404).send({ msg: "Invalid url!" });
 });
 app.use(handleMongoErrors);
