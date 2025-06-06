@@ -139,6 +139,38 @@ describe("POST /api/events", () => {
   });
 });
 
+describe("GET /api/events?sort= query", () => {
+  test("200: Get all events, sorted by artist", () => {
+    return request(app)
+      .get("/api/events?sort_by=event_artist")
+      .expect(200)
+      .then(({ body: { events } }) => {
+        expect(events.length).toBe(4);
+        expect(events).toBeSortedBy("event_artist", { ascending: true });
+      });
+  });
+});
+describe("GET /api/events?order=sort= queries", () => {
+  test("200: Get all events, sorted by location and ordered desc", () => {
+    return request(app)
+      .get("/api/events?sort_by=event_location&order=desc")
+      .expect(200)
+      .then(({ body: { events } }) => {
+        expect(events.length).toBe(4);
+        expect(events).toBeSortedBy("event_location", { descending: true });
+      });
+  });
+  test("200: Get all events, sorted by location and ordered asc", () => {
+    return request(app)
+      .get("/api/events?sort_by=event_location&order=asc")
+      .expect(200)
+      .then(({ body: { events } }) => {
+        expect(events.length).toBe(4);
+        expect(events).toBeSortedBy("event_location", { ascending: true });
+      });
+  });
+});
+
 describe("DELETE /api/events/:event_id", () => {
   test("204: Deletes specified event", () => {
     return request(app)
@@ -176,6 +208,76 @@ describe("DELETE /api/events/:event_id", () => {
           expect(msg).toBe("Event does not exist!");
         });
     });
+  });
+});
+
+describe("GET /api/events?town= query", () => {
+  test("200: Query by town", () => {
+    return request(app)
+      .get("/api/events?town=Leeds")
+      .expect(200)
+      .then(({ body: { events } }) => {
+        expect(events.length).toBe(1);
+        expect(events[0]).toMatchObject({
+          event_artist: "Megan Thee Stallion",
+          event_location: "Leeds",
+          event_venue: "Brudenell Social Club",
+          event_date: expect.any(String),
+          _id: "66679e9e54711517579556f3",
+        });
+      });
+  });
+});
+describe("GET /api/events?town= query works with case insensitivity", () => {
+  test("200: Query by town", () => {
+    return request(app)
+      .get("/api/events?town=leeDs")
+      .expect(200)
+      .then(({ body: { events } }) => {
+        expect(events.length).toBe(1);
+        expect(events[0]).toMatchObject({
+          event_artist: "Megan Thee Stallion",
+          event_location: "Leeds",
+          event_venue: "Brudenell Social Club",
+          event_date: expect.any(String),
+          _id: "66679e9e54711517579556f3",
+        });
+      });
+  });
+});
+
+describe("GET /api/events?artist= query", () => {
+  test("200: Query by artist", () => {
+    return request(app)
+      .get("/api/events?artist=Phoebe+Bridgers")
+      .expect(200)
+      .then(({ body: { events } }) => {
+        expect(events.length).toBe(1);
+        expect(events[0]).toMatchObject({
+          event_artist: "Phoebe Bridgers",
+          event_location: "Brighton",
+          event_venue: "Concord",
+          event_date: expect.any(String),
+          _id: "66679e9e54711517579556f1",
+        });
+      });
+  });
+});
+describe("GET /api/events?artist= query works with partial search", () => {
+  test("200: Query by artist", () => {
+    return request(app)
+      .get("/api/events?artist=Phoe")
+      .expect(200)
+      .then(({ body: { events } }) => {
+        expect(events.length).toBe(1);
+        expect(events[0]).toMatchObject({
+          event_artist: "Phoebe Bridgers",
+          event_location: "Brighton",
+          event_venue: "Concord",
+          event_date: expect.any(String),
+          _id: "66679e9e54711517579556f1",
+        });
+      });
   });
 });
 
@@ -361,6 +463,71 @@ describe("DELETE /api/tickets/:ticket_id", () => {
         .expect(404)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("Ticket does not exist!");
+        });
+    });
+  });
+});
+
+describe("PATCH /api/tickets/:ticket_id", () => {
+  test("201: Updates specified ticket with new information, e.g. notes", () => {
+    return request(app)
+      .patch("/api/tickets/56679e9e54711517579556f4")
+      .send({ notes: "Really, really, REALLY want a friend to take!" })
+      .expect(200)
+      .then(({ body: { updatedTicket } }) => {
+        expect(updatedTicket).toMatchObject({
+          _id: "56679e9e54711517579556f4",
+          owner_username: "BoygeniusMVP",
+          seating: "Standing",
+          eventDetails: "66679e9e54711517579556f3",
+          notes: "Really, really, REALLY want a friend to take!",
+          hasBeenClaimed: false,
+        });
+      });
+  });
+  test("201: Updates specified ticket with new information, e.g. hasBeenClaimed", () => {
+    return request(app)
+      .patch("/api/tickets/56679e9e54711517579556f4")
+      .send({ hasBeenClaimed: true })
+      .expect(200)
+      .then(({ body: { updatedTicket } }) => {
+        expect(updatedTicket).toMatchObject({
+          _id: "56679e9e54711517579556f4",
+          owner_username: "BoygeniusMVP",
+          seating: "Standing",
+          eventDetails: "66679e9e54711517579556f3",
+          notes: "Really, really, REALLY want a friend to take!",
+          hasBeenClaimed: true,
+        });
+      });
+  });
+
+  describe("Errors", () => {
+    test("400: Information that does not conform to schema sent, e.g. hasBeenClaimed non-boolean", () => {
+      return request(app)
+        .patch("/api/tickets/56679e9e54711517579556f4")
+        .send({ hasBeenClaimed: "Invalid" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid information!");
+        });
+    });
+    test("404: Valid but non-existent id used", () => {
+      return request(app)
+        .patch("/api/tickets/16679e9e54711517579556f9")
+        .send({ notes: "Anyone?" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Ticket does not exist!");
+        });
+    });
+    test("400: Invalid id used", () => {
+      return request(app)
+        .patch("/api/tickets/invalidId")
+        .send({ notes: "Anyone?" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request!");
         });
     });
   });
@@ -878,71 +1045,6 @@ describe("PATCH /api/users/:user_id", () => {
       return request(app)
         .patch("/api/users/invalidId")
         .send({ gender: "Woman" })
-        .expect(400)
-        .then(({ body: { msg } }) => {
-          expect(msg).toBe("Invalid request!");
-        });
-    });
-  });
-});
-
-describe("PATCH /api/tickets/:ticket_id", () => {
-  test("201: Updates specified ticket with new information, e.g. notes", () => {
-    return request(app)
-      .patch("/api/tickets/56679e9e54711517579556f4")
-      .send({ notes: "Really, really, REALLY want a friend to take!" })
-      .expect(200)
-      .then(({ body: { updatedTicket } }) => {
-        expect(updatedTicket).toMatchObject({
-          _id: "56679e9e54711517579556f4",
-          owner_username: "BoygeniusMVP",
-          seating: "Standing",
-          eventDetails: "66679e9e54711517579556f3",
-          notes: "Really, really, REALLY want a friend to take!",
-          hasBeenClaimed: false,
-        });
-      });
-  });
-  test("201: Updates specified ticket with new information, e.g. hasBeenClaimed", () => {
-    return request(app)
-      .patch("/api/tickets/56679e9e54711517579556f4")
-      .send({ hasBeenClaimed: true })
-      .expect(200)
-      .then(({ body: { updatedTicket } }) => {
-        expect(updatedTicket).toMatchObject({
-          _id: "56679e9e54711517579556f4",
-          owner_username: "BoygeniusMVP",
-          seating: "Standing",
-          eventDetails: "66679e9e54711517579556f3",
-          notes: "Really, really, REALLY want a friend to take!",
-          hasBeenClaimed: true,
-        });
-      });
-  });
-
-  describe("Errors", () => {
-    test("400: Information that does not conform to schema sent, e.g. hasBeenClaimed non-boolean", () => {
-      return request(app)
-        .patch("/api/tickets/56679e9e54711517579556f4")
-        .send({ hasBeenClaimed: "Invalid" })
-        .expect(400)
-        .then(({ body: { msg } }) => {
-          expect(msg).toBe("Invalid information!");
-        });
-    });
-    test("404: Valid but non-existent id used", () => {
-      return request(app)
-        .patch("/api/tickets/16679e9e54711517579556f9")
-        .send({ notes: "Anyone?" })
-        .expect(404)
-        .then(({ body: { msg } }) => {
-          expect(msg).toBe("Ticket does not exist!");
-        });
-    });
-    test("400: Invalid id used", () => {
-      return request(app)
-        .patch("/api/tickets/invalidId")
-        .send({ notes: "Anyone?" })
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("Invalid request!");

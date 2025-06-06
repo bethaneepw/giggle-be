@@ -4,7 +4,7 @@ const { mongoose } = require("mongoose");
 const Event = mongoose.model("events", eventSchema);
 
 const {
-  selectAllEvents,
+  selectEvents,
   selectEventById,
   addNewEvent,
   deleteEventByEventId,
@@ -20,7 +20,19 @@ const {
 // res: Response<Event>
 
 exports.getEvents = (req: Request, res: Response, next): Promise<void> => {
-  return selectAllEvents()
+  const { sort_by, order, artist, town } = req.query;
+  const allowedKeys = ["sort_by", "order", "artist", "town"];
+  const invalidKeys = Object.keys(req.query).some(
+    (key) => !allowedKeys.includes(key)
+  );
+  if (invalidKeys) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid or misspelt query parameter!",
+    });
+  }
+
+  return selectEvents(sort_by, order, artist, town)
     .then((events) => {
       res.status(200).send({ events });
     })

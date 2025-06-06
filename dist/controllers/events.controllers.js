@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const { eventSchema } = require("../../db/schema/eventSchema");
 const { mongoose } = require("mongoose");
 const Event = mongoose.model("events", eventSchema);
-const { selectAllEvents, selectEventById, addNewEvent, deleteEventByEventId, } = require("../models/events.models");
+const { selectEvents, selectEventById, addNewEvent, deleteEventByEventId, } = require("../models/events.models");
 // interface Event {
 //   id: number;
 //   name: string;
@@ -12,7 +12,16 @@ const { selectAllEvents, selectEventById, addNewEvent, deleteEventByEventId, } =
 // }
 // res: Response<Event>
 exports.getEvents = (req, res, next) => {
-    return selectAllEvents()
+    const { sort_by, order, artist, town } = req.query;
+    const allowedKeys = ["sort_by", "order", "artist", "town"];
+    const invalidKeys = Object.keys(req.query).some((key) => !allowedKeys.includes(key));
+    if (invalidKeys) {
+        return Promise.reject({
+            status: 400,
+            msg: "Invalid or misspelt query parameter!",
+        });
+    }
+    return selectEvents(sort_by, order, artist, town)
         .then((events) => {
         res.status(200).send({ events });
     })
