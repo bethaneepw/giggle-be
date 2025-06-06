@@ -1,6 +1,6 @@
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test/index");
-const { mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 // const { userSchema } = require("../db/schema/userSchema");
 // const { ticketSchema } = require("../db/schema/ticketSchema");
 // const { eventSchema } = require("../db/schema/eventSchema");
@@ -9,12 +9,19 @@ const { test, expect, describe } = require("@jest/globals");
 const request = require("supertest");
 const app = require("../dist/app");
 
+// const { run } = require("../db/connection");
+
+// beforeAll(async () => {
+//   await run();
+// });
+
 beforeAll(() => {
+  //needs to be accounted for in tests, not reseeding before every test with beforeEach because of hardcoded ids - mongodb can't remake the database with same ids
   return seed(data);
 });
 
-afterAll(() => {
-  return mongoose.disconnect();
+afterAll(async () => {
+  await mongoose.disconnect();
 });
 
 describe("GET /api/events", () => {
@@ -112,7 +119,7 @@ describe("POST /api/events", () => {
         })
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("Missing information!");
+          expect(msg).toBe("Invalid information!");
         });
     });
   });
@@ -132,7 +139,7 @@ describe("POST /api/events", () => {
   });
 });
 
-describe("DELETE /api/events/event_id", () => {
+describe("DELETE /api/events/:event_id", () => {
   test("204: Deletes specified event", () => {
     return request(app)
       .get("/api/events")
@@ -298,7 +305,7 @@ describe("POST /api/tickets", () => {
         })
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("Missing information!");
+          expect(msg).toBe("Invalid information!");
         });
     });
     test("400: Empty information sent", () => {
@@ -319,7 +326,7 @@ describe("POST /api/tickets", () => {
   });
 });
 
-describe("DELETE /api/tickets/ticket_id", () => {
+describe("DELETE /api/tickets/:ticket_id", () => {
   test("204: Deletes specified ticket", () => {
     return request(app)
       .get("/api/tickets")
@@ -549,7 +556,7 @@ describe("POST /api/users", () => {
         })
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("Missing information!");
+          expect(msg).toBe("Invalid information!");
         });
     });
     test("400: Empty information sent", () => {
@@ -588,7 +595,7 @@ describe("POST /api/users", () => {
   });
 });
 
-describe("DELETE /api/users/user_id", () => {
+describe("DELETE /api/users/:user_id", () => {
   test("204: Deletes specified user", () => {
     return request(app)
       .get("/api/users")
@@ -623,6 +630,322 @@ describe("DELETE /api/users/user_id", () => {
         .expect(404)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("User does not exist!");
+        });
+    });
+  });
+});
+
+describe("PATCH /api/users/:user_id", () => {
+  test("201: Updates specified user with new information, e.g. username", () => {
+    return request(app)
+      .patch("/api/users/68405b9711f50eebe1b59521")
+      .send({ username: "BadScooter49" })
+      .expect(200)
+      .then(({ body: { updatedUser } }) => {
+        expect(updatedUser).toMatchObject({
+          _id: "68405b9711f50eebe1b59521",
+          firstName: "Bruce",
+          lastName: "Springsteen",
+          username: "BadScooter49",
+          location: {
+            town: "London",
+            postcode: "SE10 0DX",
+          },
+          preferences: {
+            drinkPreference: "A bit",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: true,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "Coolest guy in NJ",
+          dateOfBirth: expect.any(String),
+          gender: "Man",
+          trustRating: 1.0,
+          isVerified: true,
+          interestedEvents: ["66679e9e54711517579556f3"],
+          profilePictureURL: "aRealImageUrl",
+        });
+      });
+  });
+  test("201: Updates specified user with new information, e.g. trustRating", () => {
+    return request(app)
+      .patch("/api/users/68405b9711f50eebe1b59521")
+      .send({ trustRating: 0.75 })
+      .expect(200)
+      .then(({ body: { updatedUser } }) => {
+        expect(updatedUser).toMatchObject({
+          _id: "68405b9711f50eebe1b59521",
+          firstName: "Bruce",
+          lastName: "Springsteen",
+          username: "BadScooter49",
+          location: {
+            town: "London",
+            postcode: "SE10 0DX",
+          },
+          preferences: {
+            drinkPreference: "A bit",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: true,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "Coolest guy in NJ",
+          dateOfBirth: expect.any(String),
+          gender: "Man",
+          trustRating: 0.75,
+          isVerified: true,
+          interestedEvents: ["66679e9e54711517579556f3"],
+          profilePictureURL: "aRealImageUrl",
+        });
+      });
+  });
+  test("201: Updates specified user with new information, e.g. town", () => {
+    return request(app)
+      .patch("/api/users/68405b9711f50eebe1b59521")
+      .send({ location: { town: "Leeds", postcode: "LS10 1JH" } })
+      .expect(200)
+      .then(({ body: { updatedUser } }) => {
+        expect(updatedUser).toMatchObject({
+          _id: "68405b9711f50eebe1b59521",
+          firstName: "Bruce",
+          lastName: "Springsteen",
+          username: "BadScooter49",
+          location: {
+            town: "Leeds",
+            postcode: "LS10 1JH",
+          },
+          preferences: {
+            drinkPreference: "A bit",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: true,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "Coolest guy in NJ",
+          dateOfBirth: expect.any(String),
+          gender: "Man",
+          trustRating: 0.75,
+          isVerified: true,
+          interestedEvents: ["66679e9e54711517579556f3"],
+          profilePictureURL: "aRealImageUrl",
+        });
+      });
+  });
+  test("201: Updates specified user with new information, e.g. town", () => {
+    return request(app)
+      .patch("/api/users/68405b9711f50eebe1b59521")
+      .send({ location: { town: "Leeds", postcode: "LS10 1JH" } })
+      .expect(200)
+      .then(({ body: { updatedUser } }) => {
+        expect(updatedUser).toMatchObject({
+          _id: "68405b9711f50eebe1b59521",
+          firstName: "Bruce",
+          lastName: "Springsteen",
+          username: "BadScooter49",
+          location: {
+            town: "Leeds",
+            postcode: "LS10 1JH",
+          },
+          preferences: {
+            drinkPreference: "A bit",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: true,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "Coolest guy in NJ",
+          dateOfBirth: expect.any(String),
+          gender: "Man",
+          trustRating: 0.75,
+          isVerified: true,
+          interestedEvents: ["66679e9e54711517579556f3"],
+          profilePictureURL: "aRealImageUrl",
+        });
+      });
+  });
+  test("201: Updates specified user with new information, e.g. interestedEvents", () => {
+    return request(app)
+      .patch("/api/users/68405b9711f50eebe1b59521")
+      .send({ interestedEvents: "66679e9e54711517579556f2" })
+      .expect(200)
+      .then(({ body: { updatedUser } }) => {
+        expect(updatedUser).toMatchObject({
+          _id: "68405b9711f50eebe1b59521",
+          firstName: "Bruce",
+          lastName: "Springsteen",
+          username: "BadScooter49",
+          location: {
+            town: "Leeds",
+            postcode: "LS10 1JH",
+          },
+          preferences: {
+            drinkPreference: "A bit",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: true,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "Coolest guy in NJ",
+          dateOfBirth: expect.any(String),
+          gender: "Man",
+          trustRating: 0.75,
+          isVerified: true,
+          interestedEvents: [
+            "66679e9e54711517579556f3",
+            "66679e9e54711517579556f2",
+          ],
+          profilePictureURL: "aRealImageUrl",
+        });
+      });
+  });
+  test("201: Updates specified user with new information, e.g. boolean isVerified", () => {
+    return request(app)
+      .patch("/api/users/68405b9711f50eebe1b59521")
+      .send({ isVerified: false })
+      .expect(200)
+      .then(({ body: { updatedUser } }) => {
+        expect(updatedUser).toMatchObject({
+          _id: "68405b9711f50eebe1b59521",
+          firstName: "Bruce",
+          lastName: "Springsteen",
+          username: "BadScooter49",
+          location: {
+            town: "Leeds",
+            postcode: "LS10 1JH",
+          },
+          preferences: {
+            drinkPreference: "A bit",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: true,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "Coolest guy in NJ",
+          dateOfBirth: expect.any(String),
+          gender: "Man",
+          trustRating: 0.75,
+          isVerified: false,
+          interestedEvents: [
+            "66679e9e54711517579556f3",
+            "66679e9e54711517579556f2",
+          ],
+          profilePictureURL: "aRealImageUrl",
+        });
+      });
+  });
+  describe("Errors", () => {
+    test("400: Empty patch sent", () => {
+      return request(app)
+        .patch("/api/users/68405b9711f50eebe1b59521")
+        .send({ firstName: "" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Information cannot be blank!");
+        });
+    });
+    test("400: Information that does not conform to schema sent, e.g. Male gender", () => {
+      return request(app)
+        .patch("/api/users/68405b9711f50eebe1b59521")
+        .send({ gender: "Male" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid information!");
+        });
+    });
+    test("404: Valid but non-existent id used", () => {
+      return request(app)
+        .patch("/api/users/18405b9711f50eebe1b59521")
+        .send({ gender: "Woman" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("User does not exist!");
+        });
+    });
+    test("400: Invalid id used", () => {
+      return request(app)
+        .patch("/api/users/invalidId")
+        .send({ gender: "Woman" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request!");
+        });
+    });
+  });
+});
+
+describe("PATCH /api/tickets/:ticket_id", () => {
+  test("201: Updates specified ticket with new information, e.g. notes", () => {
+    return request(app)
+      .patch("/api/tickets/56679e9e54711517579556f4")
+      .send({ notes: "Really, really, REALLY want a friend to take!" })
+      .expect(200)
+      .then(({ body: { updatedTicket } }) => {
+        expect(updatedTicket).toMatchObject({
+          _id: "56679e9e54711517579556f4",
+          owner_username: "BoygeniusMVP",
+          seating: "Standing",
+          eventDetails: "66679e9e54711517579556f3",
+          notes: "Really, really, REALLY want a friend to take!",
+          hasBeenClaimed: false,
+        });
+      });
+  });
+  test("201: Updates specified ticket with new information, e.g. hasBeenClaimed", () => {
+    return request(app)
+      .patch("/api/tickets/56679e9e54711517579556f4")
+      .send({ hasBeenClaimed: true })
+      .expect(200)
+      .then(({ body: { updatedTicket } }) => {
+        expect(updatedTicket).toMatchObject({
+          _id: "56679e9e54711517579556f4",
+          owner_username: "BoygeniusMVP",
+          seating: "Standing",
+          eventDetails: "66679e9e54711517579556f3",
+          notes: "Really, really, REALLY want a friend to take!",
+          hasBeenClaimed: true,
+        });
+      });
+  });
+
+  describe("Errors", () => {
+    test("400: Information that does not conform to schema sent, e.g. hasBeenClaimed non-boolean", () => {
+      return request(app)
+        .patch("/api/tickets/56679e9e54711517579556f4")
+        .send({ hasBeenClaimed: "Invalid" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid information!");
+        });
+    });
+    test("404: Valid but non-existent id used", () => {
+      return request(app)
+        .patch("/api/tickets/16679e9e54711517579556f9")
+        .send({ notes: "Anyone?" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Ticket does not exist!");
+        });
+    });
+    test("400: Invalid id used", () => {
+      return request(app)
+        .patch("/api/tickets/invalidId")
+        .send({ notes: "Anyone?" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request!");
         });
     });
   });

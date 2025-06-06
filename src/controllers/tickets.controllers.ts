@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 
 const {
-  selectAllTickets,
+  selectTickets,
   selectTicketById,
   addNewTicket,
   deleteTicketById,
+  updateTicket,
 } = require("../models/tickets.models");
 
 // interface Ticket {
@@ -13,12 +14,12 @@ const {
 //   user_id: number;
 // }
 
-exports.getAllTickets = (
+exports.getTickets = (
   req: Request,
   res: Response<Ticket>,
   next
 ): Promise<void> => {
-  return selectAllTickets()
+  return selectTickets()
     .then((tickets) => {
       res.status(200).send({ tickets });
     })
@@ -75,6 +76,22 @@ exports.deleteTicket = (req: Request, res: Response, next): Promise<void> => {
   return Promise.all([pendingDeleteTicketById, pendingSelectTicketById])
     .then(() => {
       res.status(204).send();
+    })
+    .catch(next);
+};
+
+exports.patchTicket = (
+  req: Request,
+  res: Response<Ticket>,
+  next
+): Promise<void> => {
+  const dataToUpdate = req.body;
+  const { ticket_id } = req.params;
+  const pendingSelectTicketById = selectTicketById(ticket_id);
+  const pendingUpdateTicket = updateTicket(ticket_id, dataToUpdate);
+  return Promise.all([pendingUpdateTicket, pendingSelectTicketById])
+    .then(([updatedTicket]) => {
+      res.status(200).send({ updatedTicket });
     })
     .catch(next);
 };

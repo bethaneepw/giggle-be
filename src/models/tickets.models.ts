@@ -2,7 +2,7 @@ const { mongoose } = require("../../db/connection");
 const { ticketSchema } = require("../../db/schema/ticketSchema");
 const Ticket = mongoose.model("tickets", ticketSchema);
 
-export const selectAllTickets = () => {
+export const selectTickets = () => {
   return Ticket.find({}).then((tickets) => {
     return tickets;
   });
@@ -38,4 +38,34 @@ export const addNewTicket = (
 
 export const deleteTicketById = (ticketId) => {
   return Ticket.findByIdAndDelete(ticketId).then(() => {});
+};
+
+export const updateTicket = (ticketId, dataToUpdate) => {
+  const { notes, hasBeenClaimed } = dataToUpdate;
+  if (hasBeenClaimed === "") {
+    //notes can be patched blank
+    throw { msg: "Information cannot be blank!", status: 400 };
+  }
+  if (notes) {
+    return Ticket.findByIdAndUpdate(
+      ticketId,
+      { notes: notes },
+      { new: true, runValidators: true }
+    ).then((updatedTicket) => {
+      return updatedTicket;
+    });
+  }
+
+  if (hasBeenClaimed === false || hasBeenClaimed === true) {
+    return Ticket.findByIdAndUpdate(
+      ticketId,
+      { hasBeenClaimed: hasBeenClaimed },
+      { new: true, runValidators: true }
+    ).then((updatedTicket) => {
+      return updatedTicket;
+    });
+  }
+  if (hasBeenClaimed && hasBeenClaimed !== true && hasBeenClaimed !== false) {
+    throw { msg: "Invalid information!", status: 400 };
+  }
 };
