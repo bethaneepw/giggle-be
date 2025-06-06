@@ -10,7 +10,7 @@ module.exports = [
     senderId: "60b3e1c2e00e9d3d0b42b0e5", // Miriel's _id
     body: "Hey there! I'm Miriel, nice to meet you. Looks like we're both into live music! Have you been to many gigs lately?",
     displayToClient: true,
-    timestamp: new Date("2025-06-01T10:00:00Z"), // After 30th May
+    timestamp: new Date("2025-06-01T10:00:00Z"), 
   }),
   new Message({
     _id: "6841b9d0574bb808eb4d16f4",
