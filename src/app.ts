@@ -3,6 +3,10 @@ const app = express();
 const cors = require("cors");
 
 import { Request, Response } from "express";
+
+app.use(cors());
+app.use(express.json());
+
 const { getApi } = require("./controllers/controllers");
 
 const {
@@ -28,15 +32,11 @@ const {
   patchUser,
 } = require("./controllers/users.controllers");
 
-app.use(cors());
-
 const {
   handleCustomErrors,
   catchAllErrors,
   handleMongoErrors,
 } = require("./controllers/error.controller");
-
-app.use(express.json());
 
 app.get("/api", getApi);
 
