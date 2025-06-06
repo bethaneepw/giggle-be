@@ -9,6 +9,8 @@ const { getEvents, getEventById, postEvent, deleteEvent, } = require("./controll
 const { getUsers, postUser, deleteUser, getUserById, patchUser, } = require("./controllers/users.controllers");
 app.use(cors());
 const { handleCustomErrors, catchAllErrors, handleMongoErrors, } = require("./controllers/error.controller");
+const { getChatbyId, } = require("./controllers/chats.controllers")
+const { postMessagebyId, getMessagebyRoomId, patchMessagebyId} = require("./controllers/messages.controlers")
 app.use(express.json());
 app.get("/api", getApi);
 app.get("/api/events", getEvents);
@@ -26,6 +28,12 @@ app.get("/api/tickets/:ticket_id", getTicketById);
 app.post("/api/tickets", postTicket);
 app.delete("/api/tickets/:ticket_id", deleteTicket);
 app.patch("/api/tickets/:ticket_id", patchTicket);
+// app.get("/api/chats/:chats_id", getChatbyId);
+app.post("/api/messages/:roomId", postMessagebyId);
+app.get("/api/messages/:roomId", getMessagebyRoomId);
+app.delete("/api/messages/:message_id", deleteMessagebyId);
+app.patch("/api/messages/:message_id", patchMessagebyId);
+
 /*
 
 To-do:
