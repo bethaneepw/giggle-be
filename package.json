@@ -20,7 +20,6 @@
     "seed-dev": "node ./db/seeds/run-seed.js",
     "seed-test": "jest seed.test.js",
     "seed-prod": "NODE_ENV=production npm run seed-dev",
-    "start": "node listen.js",
     "compile": "npx tsc"
   },
   "dependencies": {
