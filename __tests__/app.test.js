@@ -16,7 +16,7 @@ const app = require("../dist/app");
 // });
 
 beforeAll(() => {
-  //needs to be accounted for in tests, not reseeding before every test with beforeEach
+  //needs to be accounted for in tests, not reseeding before every test with beforeEach because of hardcoded ids - mongodb can't remake the database with same ids
   return seed(data);
 });
 
