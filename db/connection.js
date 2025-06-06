@@ -37,4 +37,6 @@ async function run() {
   }
 }
 
+run();
+
 module.exports = { mongoose, run };
