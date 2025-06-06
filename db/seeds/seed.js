@@ -21,36 +21,76 @@ const seed = async ({
 }) => {
   try {
     await run();
+    console.log("Seeding database...");
+    try {
+      await Ticket.deleteMany({});
+      console.log("Successfully deleted old Ticket Data");
+    } catch (err) {
+      console.log("failed to delete tickets", err);
+    }
 
-    await Event.deleteMany();
-    console.log("Successfully deleted old Event Data");
+    try {
+      await Message.deleteMany({});
+      console.log("Successfully deleted old Messages Data");
+    } catch (err) {
+      console.log("failed to delete messages", err);
+    }
 
-    await User.deleteMany();
-    console.log("Successfully deleted old User Data");
+    try {
+      await Chat.deleteMany({});
+      console.log("Successfully deleted old Chat Data");
+    } catch (err) {
+      console.log("failed to delete chats", err);
+    }
 
-    await Chat.deleteMany();
-    console.log("Successfully deleted old Chat Data");
+    try {
+      await User.deleteMany({});
+      console.log("Successfully deleted old User Data");
+    } catch (err) {
+      console.log("failed to delete users", err);
+    }
 
-    await Message.deleteMany();
-    console.log("Successfully deleted old Messages Data");
+    try {
+      await Event.deleteMany({});
+      console.log("Successfully deleted old Event Data");
+    } catch (err) {
+      console.log("failed to delete events", err);
+    }
 
-    await Ticket.deleteMany();
-    console.log("Successfully deleted old Ticket Data");
+    try {
+      await Event.create(eventData);
+      console.log("Successfully created Event Data");
+    } catch (err) {
+      console.log("failed to create events", err);
+    }
 
-    await Event.create(eventData);
-    console.log("Successfully created Event Data");
+    try {
+      await User.create(userData);
+      console.log("Successfully created User Data");
+    } catch (err) {
+      console.log("failed to create users", err);
+    }
 
-    await User.create(userData);
-    console.log("Successfully created User Data");
+    try {
+      await Chat.create(chatData);
+      console.log("Successfully created Chat Data");
+    } catch (err) {
+      console.log("failed to create chats", err);
+    }
 
-    await Ticket.create(ticketData);
-    console.log("Successfully created Ticket Data");
+    try {
+      await Message.create(messageData);
+      console.log("Successfully created Message Data");
+    } catch (err) {
+      console.log("failed to create messages", err);
+    }
 
-    await Chat.create(chatData);
-    console.log("Successfully created Chat Data");
-
-    await Message.create(messageData);
-    console.log("Successfully created Message Data");
+    try {
+      await Ticket.create(ticketData);
+      console.log("Successfully created Ticket Data");
+    } catch (err) {
+      console.log("failed to creae tickets", err);
+    }
   } catch (error) {
     console.log(error);
   }
