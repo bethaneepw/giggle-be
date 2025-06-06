@@ -39,5 +39,10 @@
     "ts-jest": "^29.3.4",
     "typescript": "^5.8.3"
   },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "jest-sorted"
+    ]
+  },
   "keywords": []
 }
