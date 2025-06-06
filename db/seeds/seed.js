@@ -52,8 +52,7 @@ const seed = async ({ userData, chatData, eventData, ticketData, messageData }) 
       console.log("Successfully created Chat Data");
     });
 
-    await Message.create(messageData).then((res) => {
-      console.log(res)
+    await Message.create(messageData).then(() => {
       console.log("Successfully created Message Data");
     });
   } catch (error) {
