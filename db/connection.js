@@ -37,6 +37,8 @@ async function run() {
   }
 }
 
-run();
+if (ENV === "production") {
+  run();
+}
 
 module.exports = { mongoose, run };
