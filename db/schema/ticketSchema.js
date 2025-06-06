@@ -13,7 +13,11 @@ const ticketSchema = new mongoose.Schema({
     required: true,
   },
   notes: { type: String, required: false },
-  hasBeenClaimed: { type: Boolean, required: true, default: false },
+  hasBeenClaimed: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 });
 
 module.exports = { ticketSchema };

@@ -50,7 +50,6 @@ const seed = async ({
     console.log("Successfully created Chat Data");
 
     await Message.create(messageData);
-    console.log(res);
     console.log("Successfully created Message Data");
   } catch (error) {
     console.log(error);
