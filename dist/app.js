@@ -68,7 +68,7 @@ patch/ tickets
 */
 // Error handling
 app.all("/*splat", (req, res) => {
-  res.status(404).send({ msg: "Invalid url!" });
+    res.status(404).send({ msg: "Invalid url!" });
 });
 app.use(handleMongoErrors);
 app.use(handleCustomErrors);
