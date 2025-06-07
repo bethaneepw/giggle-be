@@ -1,9 +1,274 @@
 {
-    "GET /api": {
-        "description" : "serves up a json representation of all available endpoints"
+  "GET /api": {
+    "description": "serves a json representation of all available endpoints"
+  },
+  "GET /api/events": {
+    "description": "serves an array of all events",
+    "queries": ["sort_by", "order", "artist", "town"],
+    "query defaults": {
+      "sort_by": null,
+      "order": "asc",
+      "artist": null,
+      "town": null
     },
-
-    "GET /api/events" : {
-        "description": "serves up a list of all events"
+    "exampleResponse": {
+      "events": [
+        {
+          "_id": "6842aa5401b3d102a586c50a",
+          "event_artist": "J.J. Slider",
+          "event_location": "Leeds",
+          "event_venue": "Brudenell Social Club",
+          "event_date": "2026-08-01T00:20:00Z"
+        },
+        {
+          "_id": "6841b08fdd14c4583ebed053",
+          "event_artist": "The Stardews",
+          "event_location": "London",
+          "event_venue": "Roundhouse",
+          "event_date": "2026-07-11T00:19:00Z"
+        }
+      ]
     }
+  },
+  "GET /api/events/:event_id": {
+    "description": "serves an object of the event requested",
+    "exampleResponse": {
+      "event": {
+        "_id": "6842aa5401b3d102a586c50a",
+        "event_artist": "J.J. Slider",
+        "event_location": "Leeds",
+        "event_venue": "Brudenell Social Club",
+        "event_date": "2026-08-01T00:20:00Z"
+      }
+    }
+  },
+  "POST /api/events": {
+    "description": "adds a new event and returns the event object",
+    "exampleResponse": {
+      "newEvent": {
+        "_id": "6842aa5401b3d102a586c50a",
+        "event_artist": "J.J. Slider",
+        "event_location": "Leeds",
+        "event_venue": "Brudenell Social Club",
+        "event_date": "2026-08-01T00:20:00Z"
+      }
+    }
+  },
+  "DELETE /api/events/:event_id": {
+    "description": "deletes the specified event with no content returned"
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "exampleResponse": {
+      "users": [
+        {
+          "_id": "68405b9711f50eebe1b59521",
+          "firstName": "Bruce",
+          "lastName": "Springsteen",
+          "username": "TheBoss",
+          "location": {
+            "town": "London",
+            "postcode": "SE10 0DX"
+          },
+          "preferences": {
+            "drinkPreference": "A bit",
+            "seatPreference": "Standing",
+            "giggingStyle": {
+              "mosher": true,
+              "singalong": true,
+              "photographer": false
+            }
+          },
+          "biography": "Coolest guy in NJ",
+          "dateOfBirth": "1949-09-23",
+          "gender": "Man",
+          "trustRating": 1.0,
+          "isVerified": true,
+          "interestedEvents": ["66679e9e54711517579556f3"],
+          "profilePictureURL": "aRealImageUrl"
+        },
+        {
+          "_id": "68405b9711f50eebe1b59522",
+          "firstName": "Lucy",
+          "lastName": "Dacus",
+          "username": "BoygeniusMVP",
+          "location": {
+            "town": "Brighton",
+            "postcode": "BN2 1TW"
+          },
+          "preferences": {
+            "drinkPreference": "None",
+            "seatPreference": "Standing",
+            "giggingStyle": {
+              "mosher": true,
+              "singalong": true,
+              "photographer": true
+            }
+          },
+          "biography": "Best songwriter in Boygenius",
+          "dateOfBirth": "1995-05-02",
+          "gender": "Woman",
+          "trustRating": 1.0,
+          "isVerified": true,
+          "interestedEvents": [],
+          "profilePictureURL": "aRealImageUrl"
+        }
+      ]
+    }
+  },
+  "GET /api/users:user_id": {
+    "description": "serves an object of the specified user",
+    "exampleResponse": {
+      "user": {
+        "_id": "68405b9711f50eebe1b59521",
+        "firstName": "Bruce",
+        "lastName": "Springsteen",
+        "username": "TheBoss",
+        "location": {
+          "town": "London",
+          "postcode": "SE10 0DX"
+        },
+        "preferences": {
+          "drinkPreference": "A bit",
+          "seatPreference": "Standing",
+          "giggingStyle": {
+            "mosher": true,
+            "singalong": true,
+            "photographer": false
+          }
+        },
+        "biography": "Coolest guy in NJ",
+        "dateOfBirth": "1949-09-23",
+        "gender": "Man",
+        "trustRating": 1.0,
+        "isVerified": true,
+        "interestedEvents": ["66679e9e54711517579556f3"],
+        "profilePictureURL": "aRealImageUrl"
+      }
+    }
+  },
+  "POST /api/users": {
+    "description": "adds a new user and returns an object of the new user",
+    "exampleResponse": {
+      "newUser": {
+        "_id": "68405b9711f50eebe1b59521",
+        "firstName": "Bruce",
+        "lastName": "Springsteen",
+        "username": "TheBoss",
+        "location": {
+          "town": "London",
+          "postcode": "SE10 0DX"
+        },
+        "preferences": {
+          "drinkPreference": "A bit",
+          "seatPreference": "Standing",
+          "giggingStyle": {
+            "mosher": true,
+            "singalong": true,
+            "photographer": false
+          }
+        },
+        "biography": "Coolest guy in NJ",
+        "dateOfBirth": "1949-09-23",
+        "gender": "Man",
+        "trustRating": 1.0,
+        "isVerified": true,
+        "interestedEvents": ["66679e9e54711517579556f3"],
+        "profilePictureURL": "aRealImageUrl"
+      }
+    }
+  },
+  "DELETE /api/users:user_id": {
+    "description": "deletes the requested user and returns no content"
+  },
+  "PATCH /api/users/:user_id": {
+    "description": "updates a user with firstName, lastName, username, location, preferences, biography, dateOfBirth, gender, trustRating, isVerified, interestedEvents, or profilePictureURL, and serves the updated user object",
+    "exampleResponse": {
+      "updatedUser": {
+        "_id": "68405b9711f50eebe1b59521",
+        "firstName": "Bruce",
+        "lastName": "Springsteen",
+        "username": "TheBoss",
+        "location": {
+          "town": "London",
+          "postcode": "SE10 0DX"
+        },
+        "preferences": {
+          "drinkPreference": "A lot",
+          "seatPreference": "Standing",
+          "giggingStyle": {
+            "mosher": true,
+            "singalong": true,
+            "photographer": false
+          }
+        },
+        "biography": "Coolest guy in NJ",
+        "dateOfBirth": "1949-09-23",
+        "gender": "Man",
+        "trustRating": 1.0,
+        "isVerified": true,
+        "interestedEvents": ["66679e9e54711517579556f3"],
+        "profilePictureURL": "aRealImageUrl"
+      }
+    }
+  },
+  "GET /api/tickets": {
+    "exampleResponse": {
+      "tickets": [
+        {
+          "owner_username": "freyja_redmane",
+          "seating": "Standing",
+          "eventDetails": "6841ade2e789d40979e235ca",
+          "notes": "Wouldn't mind getting dinner and making an evening of it :)",
+          "hasBeenClaimed": false
+        },
+        {
+          "owner_username": "mirielLikesTurtles",
+          "seating": "Seating",
+          "eventDetails": "6841ae037d69e77ef75f6b2f",
+          "notes": "",
+          "hasBeenClaimed": true
+        }
+      ]
+    }
+  },
+  "GET /api/tickets/:ticket_id": {
+    "description": "serves an object of the ticket requested",
+    "exampleResponse": {
+      "ticket": {
+        "owner_username": "freyja_redmane",
+        "seating": "Standing",
+        "eventDetails": "6841ade2e789d40979e235ca",
+        "notes": "Wouldn't mind getting dinner and making an evening of it :)",
+        "hasBeenClaimed": false
+      }
+    }
+  },
+  "POST /api/tickets": {
+    "description": "adds a new ticket and serves it as an object",
+    "exampleResponse": {
+      "newTicket": {
+        "owner_username": "freyja_redmane",
+        "seating": "Standing",
+        "eventDetails": "6841ade2e789d40979e235ca",
+        "notes": "Wouldn't mind getting dinner and making an evening of it :)",
+        "hasBeenClaimed": false
+      }
+    }
+  },
+  "DELETE /api/tickets/:ticket_id": {
+    "description": "removes the requested ticket and serves no content"
+  },
+  "PATCH /api/tickets/:ticket_id": {
+    "description": "updates a ticket with hasBeenClaimed or notes and serves the updated ticket",
+    "exampleResponse": {
+      "updatedTicket": {
+        "owner_username": "freyja_redmane",
+        "seating": "Standing",
+        "eventDetails": "6841ade2e789d40979e235ca",
+        "notes": "This has gone now, thanks all for your interest!",
+        "hasBeenClaimed": true
+      }
+    }
+  }
 }
