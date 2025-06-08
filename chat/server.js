@@ -3,21 +3,17 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const mongoose = require("mongoose");
 const cors = require("cors");
-// const Chat = require("../db/data/test/chats");
 const Chat = require("./models/Chat");
-// const User = require("../db/data/test/users");
 const User = require("./models/User");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// GET / - List all chats with user information
+// List all chats with user information
 app.get("/", async (req, res) => {
   try {
-    console.log("AAAAAAAAAAAAA", Chat);
     const chats = await Chat.find({});
-    console.log("HHHHHHHHHHHH", chats);
 
     const chatsWithUserInfo = await Promise.all(
       chats.map(async (chat) => {
@@ -42,7 +38,7 @@ app.get("/", async (req, res) => {
   }
 });
 
-// GET /api/chats/:roomId - Get specific chat history
+//  /api/chats/:roomId - Get specific chat history
 app.get("/api/chats/:roomId", async (req, res) => {
   try {
     const { roomId } = req.params;
@@ -145,34 +141,3 @@ server.listen(9090, () => {
   console.log("- 68405d38239a61ea5b7ad207 (Bruce & Colin)");
 });
 
-// //original server.js
-
-// const express = require("express");
-// const { log } = require("node:console");
-// const { createServer } = require("node:http");
-// const { join } = require("node:path");
-// const { Server } = require("socket.io");
-
-// const app = express();
-// const server = createServer(app);
-// const io = new Server(server);
-
-// // app.get("/", (req, res) => res.send("Hello world"));
-
-// app.get("/", (req, res) => {
-//   res.sendFile(join(`${__dirname}`, "index.html"));
-// });
-
-// io.on("connection", (socket) => {
-//   console.log("a user connected");
-//   socket.on("disconnect", () => {
-//     console.log("user disconnected");
-//   });
-//   socket.on("chat message", (msg) => {
-//     console.log("message: " + msg);
-//   });
-// });
-
-// server.listen(9090, () => {
-//   console.log("Server is listening on 9090");
-// });
