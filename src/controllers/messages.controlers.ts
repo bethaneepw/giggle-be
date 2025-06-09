@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import { AnyArray } from "mongoose";
-const { messageSchema } = require("../../db/schema/messageSchema.js");
 const {
-  selectChatbyId,
-  selectMessagebyRoomId,
-  removeMessagebyId,
-  modifyMessagebyId, allMessages
-} = require("../models/messages.models");
+    selectChatbyId,
+    selectMessagebyRoomId,
+    removeMessagebyId,
+    modifyMessagebyId, allMessages
+  } = require("../models/messages.models");
+const { messageSchema } = require("../../db/schema/messageSchema.js");
+
 const { mongoose } = require("mongoose");
 
 const message = mongoose.model("messages", messageSchema);
