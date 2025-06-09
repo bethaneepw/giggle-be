@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { AnyArray } from "mongoose";
+const { selectMessagebyRoomId } =require ("../models/messages.models")
 const { messageSchema } = require("../../db/schema/messageSchema.js")
 
 const { mongoose } = require("mongoose");
