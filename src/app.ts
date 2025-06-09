@@ -43,7 +43,7 @@ const {
   getMessagebyRoomId,
   patchMessagebyId,
   deleteMessagebyId,
-  getAllMessages
+  getAllMessages,
 } = require(".././src/controllers/messages.controlers");
 
 app.get("/api", getApi);
@@ -81,7 +81,7 @@ app.post("/api/messages/:roomId", postMessagebyId);
 app.get("/api/messages/:roomId", getMessagebyRoomId);
 app.delete("/api/messages/:message_id", deleteMessagebyId);
 app.patch("/api/messages/:message_id", patchMessagebyId);
-app.get(/"/api/messages/", getAllMessages);
+app.get("/api/messages/", getAllMessages);
 /*
 
 To-do:
