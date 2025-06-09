@@ -38,6 +38,13 @@ const {
   handleMongoErrors,
 } = require("./controllers/error.controller");
 
+const {
+  postMessagebyId,
+  getMessagebyRoomId,
+  patchMessagebyId,
+  deleteMessagebyId,
+} = require(".././src/controllers/messages.controlers");
+
 app.get("/api", getApi);
 
 app.get("/api/events", getEvents);
@@ -68,6 +75,11 @@ app.post("/api/tickets", postTicket);
 app.delete("/api/tickets/:ticket_id", deleteTicket);
 
 app.patch("/api/tickets/:ticket_id", patchTicket);
+
+app.post("/api/messages/:roomId", postMessagebyId);
+app.get("/api/messages/:roomId", getMessagebyRoomId);
+app.delete("/api/messages/:message_id", deleteMessagebyId);
+app.patch("/api/messages/:message_id", patchMessagebyId);
 
 /*
 
