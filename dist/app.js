@@ -10,7 +10,7 @@ const { getTickets, getTicketById, postTicket, deleteTicket, patchTicket, } = re
 const { getEvents, getEventById, postEvent, deleteEvent, } = require("./controllers/events.controllers");
 const { getUsers, postUser, deleteUser, getUserById, patchUser, } = require("./controllers/users.controllers");
 const { handleCustomErrors, catchAllErrors, handleMongoErrors, } = require("./controllers/error.controller");
-const { postMessagebyId, getMessagebyRoomId, patchMessagebyId, deleteMessagebyId } = require("../dist/controllers");
+const { postMessagebyId, getMessagebyRoomId, patchMessagebyId, deleteMessagebyId, getAllMessages, } = require("./controllers/messages.controler");
 app.get("/api", getApi);
 app.get("/api/events", getEvents);
 //queries to add still: date
@@ -27,19 +27,20 @@ app.get("/api/tickets/:ticket_id", getTicketById);
 app.post("/api/tickets", postTicket);
 app.delete("/api/tickets/:ticket_id", deleteTicket);
 app.patch("/api/tickets/:ticket_id", patchTicket);
-// app.post("/api/messages/:roomId", postMessagebyId);
-// app.get("/api/messages/:roomId", getMessagebyRoomId);
-// app.delete("/api/messages/:message_id", deleteMessagebyId);
-// app.patch("/api/messages/:message_id", patchMessagebyId);
-// /*
+app.post("/api/messages/:roomId", postMessagebyId);
+app.get("/api/messages/:roomId", getMessagebyRoomId);
+app.delete("/api/messages/:message_id", deleteMessagebyId);
+app.patch("/api/messages/:message_id", patchMessagebyId);
+app.get("/api/messages", getAllMessages);
+/*
 
-// To-do:
+To-do:
 
-// get users queries
-// get events queries
-// get tickets queries ? by user id?
-// patch/ tickets
-// */
+get users queries
+get events queries
+get tickets queries ? by user id?
+patch/ tickets
+*/
 // Error handling
 app.all("/*splat", (req, res, next) => {
     res.status(404).send({ msg: "Invalid url!" });
