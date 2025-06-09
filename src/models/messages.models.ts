@@ -11,3 +11,9 @@ export const selectChatbyId = (roomId:any) => {
         return message
     })
 }
+
+export const allMessages = () => {
+    return message.find({}).then((messages)=> {
+        return messages
+    })
+}
