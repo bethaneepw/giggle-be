@@ -1139,12 +1139,12 @@ describe("GET /api/messages/:roomId", () => {
   });
 });
 
-describe.only("GET /api/chats/:chat_id", () => {
+describe("GET /api/chats/:chat_id", () => {
   test("200: Gets Chat by Chat ID", () => {
     return request(app)
       .get("/api/chats/68405d38239a61ea5b7ad207")
       .expect(200)
-      .then(({ body: chat }) => {
+      .then(({ body: { chat } }) => {
         expect(chat).toMatchObject({
           _id: "68405d38239a61ea5b7ad207",
           user_ids: expect.any(Array),
@@ -1153,12 +1153,12 @@ describe.only("GET /api/chats/:chat_id", () => {
       });
   });
 
-  test("404: When given invalid id", () => {
+  test("400: When given invalid id", () => {
     return request(app)
       .get("/api/chats/NotValidId")
-      .expect(404)
+      .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Chat does not exist!");
+        expect(msg).toBe("Invalid request!");
       });
   });
 
@@ -1171,8 +1171,43 @@ describe.only("GET /api/chats/:chat_id", () => {
       });
   });
 });
-
 // Select Chats by UserID
+
+describe.only("GET /api/chats/users/:user_id", () => {
+  test("200: Responds with chats according to specific User ID", () => {
+    return request(app)
+      .get("/api/chats/users/68405b9711f50eebe1b59521")
+      .expect(200)
+      .then(({ body: { chats } }) => {
+        expect(chats.length).toBe(2);
+        chats.forEach((chat) => {
+          expect(chat).toMatchObject({
+            _id: expect.any(String),
+            user_ids: expect.arrayContaining(["68405b9711f50eebe1b59521"]),
+          });
+        });
+      });
+  });
+
+test("404: Not found when given invalid string for UserID", () => {
+    return request(app)
+      .get("/api/chats/users/NotValidId")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Chat does not exist!");
+      });
+  });
+
+  test("404: Not found when given valid id not in database", () => {
+    return request(app)
+      .get("/api/chats/users/684811d9d7f3b6a405f6e9b0")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Chat does not exist!");
+      });
+  });
+});
+
 describe("POST /api/events additional img functionality", () => {
   test("201: Posts a new event works with img_url", () => {
     return request(app)

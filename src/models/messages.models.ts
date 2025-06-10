@@ -11,7 +11,6 @@ export const selectMessagesbyRoomId = (roomId: any) => {
       throw { msg: "Chat Room does not exist!", status: 404 };
     })
     .then((messages: any) => {
-      console.log("Empty messages??");
       return messages;
     });
 };

@@ -27,7 +27,7 @@ const clientOptions = {
 async function run() {
   try {
     await mongoose.connect(uri, clientOptions);
-    await mongoose.connection.db.admin().command({ ping: 1 });
+  //  await mongoose.connection.db.admin().command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );

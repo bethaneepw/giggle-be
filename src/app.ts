@@ -47,7 +47,8 @@ const {
 } = require("./controllers/messages.controller");
 
 const {
-  getChatById
+  getChatById,
+  getChatsByUserId
 } = require("./controllers/chats.controllers")
 
 app.get("/api", getApi);
@@ -85,7 +86,11 @@ app.get("/api/messages", getAllMessages);
 
 app.get("/api/messages/:roomId", getMessagesbyRoomId);
 
-app.get("/api/chats/:chat_id", getChatById)
+app.get("/api/chats/:chats_id", getChatById)
+
+app.get("/api/chats/users/:user_id", getChatsByUserId)
+
+
 // Untested
 app.post("/api/messages/:roomId", postMessagebyId);
 
