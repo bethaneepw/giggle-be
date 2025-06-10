@@ -78,12 +78,11 @@
 
       <div class="test-section">
         <h3>Send Message</h3>
-        <input
-          type="text"
-          id="usernameInput"
-          placeholder="Username"
-          value="TestUser"
-        />
+        <select id="userSelect">
+          <option value="68405b9711f50eebe1b59521">Bruce (TheBoss)</option>
+          <option value="68405b9711f50eebe1b59522">Lucy (BoygeniusMVP)</option>
+          <option value="68405b9711f50eebe1b59523">Colin (col99)</option>
+        </select>
         <input type="text" id="messageInput" placeholder="Type message..." />
         <button onclick="sendMessage()">Send</button>
       </div>
@@ -104,10 +103,17 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script>
-      const SERVER_URL = "http://192.168.1.25:9090"; //test with localhost
+      const SERVER_URL = "http://localhost:9091";
       const socket = io(SERVER_URL);
 
       let currentRoom = null;
+
+      // User data for testing
+      const users = {
+        "68405b9711f50eebe1b59521": { username: "TheBoss", name: "Bruce" },
+        "68405b9711f50eebe1b59522": { username: "BoygeniusMVP", name: "Lucy" },
+        "68405b9711f50eebe1b59523": { username: "col99", name: "Colin" },
+      };
 
       socket.on("connect", () => {
         document.getElementById("status").className = "status connected";
@@ -148,17 +154,19 @@
       }
 
       function sendMessage() {
-        const username = document.getElementById("usernameInput").value.trim();
+        const senderId = document.getElementById("userSelect").value;
         const message = document.getElementById("messageInput").value.trim();
 
-        if (!message || !currentRoom || !username) {
-          alert("Please join a room and enter username and message");
+        if (!message || !currentRoom || !senderId) {
+          alert("Please join a room, select a user, and enter a message");
           return;
         }
 
+        const userData = users[senderId];
         const messageData = {
           roomId: currentRoom,
-          senderUsername: username,
+          senderId: senderId,
+          senderUsername: userData.username,
           body: message,
         };
 
@@ -168,15 +176,25 @@
       }
 
       function addMessageToDisplay(message) {
+        console.log("Full message object:", message);
+
         const messagesDiv = document.getElementById("messages");
         const messageElement = document.createElement("div");
         messageElement.className = "message";
+
+        // Use senderUsername if available, otherwise use senderId, otherwise "Unknown"
+        let senderName = message.senderUsername || "Unknown";
+
+        // If we only have senderId, convert it to a readable name
+        if (!message.senderUsername && message.senderId) {
+          const userData = users[message.senderId];
+          senderName = userData ? userData.username : message.senderId;
+        }
+
         messageElement.innerHTML = `
-                <strong>${message.senderUsername}:</strong> ${message.body}
-                <small>(${new Date(
-                  message.timestamp
-                ).toLocaleTimeString()})</small>
-            `;
+    <strong>${senderName}:</strong> ${message.body}
+    <small>(${new Date(message.timestamp).toLocaleTimeString()})</small>
+  `;
         messagesDiv.appendChild(messageElement);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }
