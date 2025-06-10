@@ -20,3 +20,13 @@ export const allMessages = () => {
     return messages;
   });
 };
+
+export const addMessageByRoomId = (roomId: any, senderId: any, body: any) => {
+  return Message.create({
+    roomId: "68405d38239a61ea5b7ad207",
+    senderId,
+    body,
+  }).then((message: any) => {
+    return message;
+  });
+};

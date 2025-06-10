@@ -32,10 +32,7 @@ app.get("/api/messages", getAllMessages);
 app.get("/api/messages/:roomId", getMessagesbyRoomId);
 app.get("/api/chats/:chats_id", getChatById);
 app.get("/api/chats/users/:user_id", getChatsByUserId);
-// Untested
 app.post("/api/messages/:roomId", postMessagebyId);
-app.delete("/api/messages/:message_id", deleteMessagebyId);
-app.patch("/api/messages/:message_id", patchMessagebyId);
 /*
 
 To-do:

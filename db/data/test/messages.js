@@ -1,5 +1,5 @@
 const { mongoose } = require("mongoose");
-const {messageSchema} = require("../../schema/messageSchema");
+const { messageSchema } = require("../../schema/messageSchema");
 
 const Message = mongoose.model("messages", messageSchema);
 

@@ -1171,9 +1171,8 @@ describe("GET /api/chats/:chat_id", () => {
       });
   });
 });
-// Select Chats by UserID
 
-describe.only("GET /api/chats/users/:user_id", () => {
+describe("GET /api/chats/users/:user_id", () => {
   test("200: Responds with chats according to specific User ID", () => {
     return request(app)
       .get("/api/chats/users/68405b9711f50eebe1b59521")
@@ -1189,7 +1188,7 @@ describe.only("GET /api/chats/users/:user_id", () => {
       });
   });
 
-test("404: Not found when given invalid string for UserID", () => {
+  test("404: Not found when given invalid string for UserID", () => {
     return request(app)
       .get("/api/chats/users/NotValidId")
       .expect(404)
@@ -1208,6 +1207,88 @@ test("404: Not found when given invalid string for UserID", () => {
   });
 });
 
+describe.only("POST /api/messages/:roomId", () => {
+  test("201: Successfully adds a message to the chat room", () => {
+    return request(app)
+      .post("/api/messages/68405d38239a61ea5b7ad207")
+      .send({
+        senderId: "68405b9711f50eebe1b59523",
+        body: "Hellooooooooooo?",
+      })
+      .expect(201)
+      .then(({ body: { message } }) => {
+        expect(message).toMatchObject({
+          senderId: "68405b9711f50eebe1b59523",
+          body: "Hellooooooooooo?",
+          _id: expect.any(String),
+          timestamp: expect.any(String),
+          displayToClient: true,
+        });
+      });
+  });
+  test("400: Bad Request if body is empty", () => {
+    return request(app)
+      .post("/api/messages/68405d38239a61ea5b7ad207")
+      .send({
+        senderId: "68405b9711f50eebe1b59523",
+        body: "",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Body must not be empty");
+      });
+  });
+  test("400: Bad request if sender is valid but not in the chatroom", () => {
+    return request(app)
+      .post("/api/messages/68405d38239a61ea5b7ad207")
+      .send({
+        senderId: "68405b9711f50eebe1b59522",
+        body: "Helloooooo!",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid user for this chat!");
+      });
+  });
+  test("400: Bad request if sender ID is invalid but not in the chatroom", () => {
+    return request(app)
+      .post("/api/messages/68405d38239a61ea5b7ad207")
+      .send({
+        senderId: "AnInvalidId",
+        body: "Invalid id!",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid user for this chat!");
+      });
+  });
+  test("400: Bad reqeust if roomID is invalid", () => {
+    return request(app)
+    .post("/api/messages/InvalidRoomId")
+    .send({
+      senderId: "68405b9711f50eebe1b59522",
+      body: "Helloooooo!"
+    })
+    .expect(400)
+    .then(({body: { msg }})=> {
+      expect(msg).toBe("Invalid request!")
+    })
+  });
+
+   test("400: Bad request if roomID is valid but not found", () => {
+    return request(app)
+    .post("/api/messages/6848372e473a76bbb2e567d4")
+    .send({
+      senderId: "68405b9711f50eebe1b59522",
+      body: "Helloooooo!"
+    })
+    .expect(404)
+    .then(({body: { msg }})=> {
+      expect(msg).toBe("Chat Room does not exist!")
+    })
+  });
+
+});
 describe("POST /api/events additional img functionality", () => {
   test("201: Posts a new event works with img_url", () => {
     return request(app)
