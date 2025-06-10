@@ -1068,3 +1068,22 @@ describe("PATCH /api/users/:user_id", () => {
     });
   });
 });
+
+describe("GET /api/messages", () => {
+  test("200 responds with an array containing all messages", () => {
+    return request(app)
+      .get("/api/messages")
+      .expect(200)
+      .then(({ body: { messages } }) => {
+        expect(messages.length).toBe(7);
+        messages.forEach((message) => {
+          expect(message).toMatchObject({
+            // event_artist: expect.any(String),
+            // event_location: expect.any(String),
+            // event_venue: expect.any(String),
+            // event_date: expect.any(String),
+          });
+        });
+      });
+  });
+});

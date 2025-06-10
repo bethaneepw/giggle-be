@@ -1,11 +1,8 @@
 import { Request, Response } from "express";
-import { AnyArray } from "mongoose";
 const { selectMessagebyRoomId, allMessages } =require ("../models/messages.models")
-const { messageSchema } = require("../../db/schema/messageSchema.js")
+// const { mongoose } = require("mongoose");
 
-const { mongoose } = require("mongoose");
-
-const message = mongoose.model("messages", messageSchema)
+// const message = mongoose.model("messages", messageSchema)
 
 exports.postMessagebyId = (
   req: Request,
@@ -14,8 +11,8 @@ exports.postMessagebyId = (
 ): Promise<void> => {
   const { roomId } = req.params;
   return selectChatbyId(roomId)
-    .then((message) => {
-      res.status(201).send({ message });
+    .then((Message) => {
+      res.status(201).send({ Message });
     })
     .catch(next);
 };
@@ -26,8 +23,8 @@ exports.getMessagebyRoomId = (
 ): Promise<void> => {
   const { roomId } = req.params;
   return selectMessagebyRoomId(roomId)
-    .then((message) => {
-      res.status(200).send({ message });
+    .then((Message) => {
+      res.status(200).send({ Message });
     })
     .catch(next);
 };
@@ -38,8 +35,8 @@ exports.deleteMessagebyId = (
 ): Promise<void> => {
   const { message_id } = req.params;
   return removeMessagebyId(message_id)
-    .then((message) => {
-      res.status(204).send({ message });
+    .then((Message) => {
+      res.status(204).send({ Message });
     })
     .catch(next);
 };
@@ -50,8 +47,8 @@ exports.patchMessagebyId = (
 ): Promise<void> => {
   const { message_id } = req.params;
   return modifyMessagebyId(message_id)
-    .then((message) => {
-      res.status(204).send({ message });
+    .then((Message) => {
+      res.status(204).send({ Message });
     })
     .catch(next);
 };
