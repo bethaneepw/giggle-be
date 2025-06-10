@@ -20,4 +20,3 @@ const allMessages = () => {
     });
 };
 exports.allMessages = allMessages;
-

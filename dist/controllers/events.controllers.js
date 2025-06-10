@@ -36,7 +36,7 @@ exports.getEventById = (req, res, next) => {
         .catch(next);
 };
 exports.postEvent = (req, res, next) => {
-    const { event_artist, event_location, event_venue, event_date } = req.body;
+    const { event_artist, event_location, event_venue, event_date, event_img } = req.body;
     if (event_artist === "" ||
         event_location === "" ||
         event_venue === "" ||
@@ -44,7 +44,7 @@ exports.postEvent = (req, res, next) => {
         throw { msg: "Information cannot be blank!", status: 400 };
     }
     else {
-        return addNewEvent(event_artist, event_location, event_venue, event_date)
+        return addNewEvent(event_artist, event_location, event_venue, event_date, event_img)
             .then((newEvent) => {
             res.status(201).send({ newEvent });
         })
