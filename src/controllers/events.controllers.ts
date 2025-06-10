@@ -53,7 +53,8 @@ exports.postEvent = (
   res: Response<Event>,
   next
 ): Promise<void> => {
-  const { event_artist, event_location, event_venue, event_date } = req.body;
+  const { event_artist, event_location, event_venue, event_date, event_img } =
+    req.body;
   if (
     event_artist === "" ||
     event_location === "" ||
@@ -62,7 +63,13 @@ exports.postEvent = (
   ) {
     throw { msg: "Information cannot be blank!", status: 400 };
   } else {
-    return addNewEvent(event_artist, event_location, event_venue, event_date)
+    return addNewEvent(
+      event_artist,
+      event_location,
+      event_venue,
+      event_date,
+      event_img
+    )
       .then((newEvent) => {
         res.status(201).send({ newEvent });
       })

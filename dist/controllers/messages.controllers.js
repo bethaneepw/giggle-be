@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const { eventSchema } = require("../../db/schema/eventSchema");
 const { mongoose } = require("mongoose");
+const { selectMessagesByChatId } = require("../models/messages.models");
 exports.getMessagesByChatId = (req, res, next) => {
     const { chat_id } = req.params;
     return selectMessagesByChatId(chat_id)
