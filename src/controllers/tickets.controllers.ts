@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { selectTicketByEventId } from "../models/tickets.models";
 
 const {
   selectTickets,
@@ -92,6 +93,19 @@ exports.patchTicket = (
   return Promise.all([pendingUpdateTicket, pendingSelectTicketById])
     .then(([updatedTicket]) => {
       res.status(200).send({ updatedTicket });
+    })
+    .catch(next);
+};
+
+exports.getTicketsByEventId = (
+  req: Request,
+  res: Response,
+  next: any
+): Promise<void> => {
+  const { event_id } = req.params;
+  return selectTicketByEventId(event_id)
+    .then((tickets: any) => {
+      res.status(200).send({ tickets });
     })
     .catch(next);
 };

@@ -31,8 +31,7 @@ export const selectMessagesByRoomId = (roomId:any) => {
    .orFail(() => {
       throw { msg: "Chat Room does not exist!", status: 404 };
     })
-    .then((messages) => {
-    console.log("Empty messages??");
+    .then((messages: any) => {
       return messages;
     });
 };
@@ -63,6 +62,16 @@ export const addNewMessage = (
     msgId: Date.now(),
   }).then((newMessage) => {
     return newMessage;
+  });
+};
+
+export const addMessageByRoomId = (roomId: any, senderId: any, body: any) => {
+  return Message.create({
+    roomId: "68405d38239a61ea5b7ad207",
+    senderId,
+    body,
+  }).then((message: any) => {
+    return message;
   });
 };
 

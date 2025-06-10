@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 
-const { selectChatById } = require("../models/chats.models");
+const {
+  selectChatById,
+  selectChatsByUserId,
+} = require("../models/chats.models");
 const chats = require("../../db/data/test/chats");
 
 exports.getChatById = (
@@ -12,6 +15,19 @@ exports.getChatById = (
   return selectChatById(chats_id)
     .then((chat: any) => {
       res.status(200).send({ chat });
+    })
+    .catch(next);
+};
+
+exports.getChatsByUserId = (
+  req: Request,
+  res: Response,
+  next: any
+): Promise<void> => {
+  const { user_id } = req.params;
+  return selectChatsByUserId(user_id)
+    .then((chats: any) => {
+      res.status(200).send({ chats });
     })
     .catch(next);
 };

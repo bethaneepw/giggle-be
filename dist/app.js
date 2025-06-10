@@ -6,12 +6,12 @@ const cors = require("cors");
 app.use(cors());
 app.use(express.json());
 const { getApi } = require("./controllers/controllers");
-const { getTickets, getTicketById, postTicket, deleteTicket, patchTicket, } = require("./controllers/tickets.controllers");
+const { getTickets, getTicketById, postTicket, deleteTicket, patchTicket, getTicketsByEventId, } = require("./controllers/tickets.controllers");
 const { getEvents, getEventById, postEvent, deleteEvent, } = require("./controllers/events.controllers");
 const { getUsers, postUser, deleteUser, getUserById, patchUser, } = require("./controllers/users.controllers");
 const { handleCustomErrors, catchAllErrors, handleMongoErrors, } = require("./controllers/error.controller");
 const { postMessagebyId, getMessagesbyRoomId, patchMessagebyId, deleteMessagebyId, getAllMessages, } = require("./controllers/messages.controller");
-const { getChatById } = require("./controllers/chats.controllers");
+const { getChatById, getChatsByUserId, } = require("./controllers/chats.controllers");
 app.get("/api", getApi);
 app.get("/api/events", getEvents);
 //queries to add still: date
@@ -30,11 +30,10 @@ app.delete("/api/tickets/:ticket_id", deleteTicket);
 app.patch("/api/tickets/:ticket_id", patchTicket);
 app.get("/api/messages", getAllMessages);
 app.get("/api/messages/:roomId", getMessagesbyRoomId);
-app.get("/api/chats/:chat_id", getChatById);
-// Untested
+app.get("/api/chats/:chats_id", getChatById);
+app.get("/api/chats/users/:user_id", getChatsByUserId);
 app.post("/api/messages/:roomId", postMessagebyId);
-app.delete("/api/messages/:message_id", deleteMessagebyId);
-app.patch("/api/messages/:message_id", patchMessagebyId);
+app.get("/api/tickets/events/:event_id", getTicketsByEventId);
 /*
 
 To-do:
