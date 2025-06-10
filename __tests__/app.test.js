@@ -1068,3 +1068,142 @@ describe("PATCH /api/users/:user_id", () => {
     });
   });
 });
+
+describe("GET /api/messages", () => {
+  test("200 responds with an array containing all messages", () => {
+    return request(app)
+      .get("/api/messages")
+      .expect(200)
+      .then(({ body: { messages } }) => {
+        expect(messages.length).toBe(7);
+        messages.forEach((message) => {
+          expect(message).toMatchObject({
+            _id: expect.any(String),
+            roomId: expect.any(String),
+            senderId: expect.any(String),
+            body: expect.any(String),
+            timestamp: expect.any(String),
+            displayToClient: expect.any(Boolean),
+          });
+        });
+      });
+  });
+});
+
+describe("GET /api/messages/:roomId", () => {
+  test("200: Responds with all messages by room ID", () => {
+    return request(app)
+      .get("/api/messages/68405d38239a61ea5b7ad204")
+      .expect(200)
+      .then(({ body: { messages } }) => {
+        expect(messages.length).toBe(3);
+        messages.forEach((message) => {
+          expect(message).toMatchObject({
+            _id: expect.any(String),
+            roomId: "68405d38239a61ea5b7ad204",
+            senderId: expect.any(String),
+            body: expect.any(String),
+            timestamp: expect.any(String),
+            displayToClient: expect.any(Boolean),
+          });
+        });
+      });
+  });
+
+  // test("200: Responds with an empty array if no messages exist", () => {
+  //   return request(app)
+  //     .get("/api/messages/6847fefbcccbf3a1bacece94")
+  //     .expect(200)
+  //     .then(({ body: messages }) => {
+  //       expect(Array.isArray(messages)).toBe(true);
+  //       expect(messages.length).toBe(0);
+  //     });
+  // });
+
+  test("400: Bad request when given invalid ID", () => {
+    return request(app)
+      .get("/api/messages/banana")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid request!");
+      });
+  });
+
+  test("404: Not found when given valid ID not in database", () => {
+    return request(app)
+      .get("/api/messages/6848003706c41f2402f1bb44")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Chat Room does not exist!");
+      });
+  });
+});
+
+describe.only("GET /api/chats/:chat_id", () => {
+  test("200: Gets Chat by Chat ID", () => {
+    return request(app)
+      .get("/api/chats/68405d38239a61ea5b7ad207")
+      .expect(200)
+      .then(({ body: chat }) => {
+        expect(chat).toMatchObject({
+          _id: "68405d38239a61ea5b7ad207",
+          user_ids: expect.any(Array),
+        });
+        expect(chat.user_ids.length).toBe(2);
+      });
+  });
+
+  test("404: When given invalid id", () => {
+    return request(app)
+      .get("/api/chats/NotValidId")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Chat does not exist!");
+      });
+  });
+
+  test("404: Not found when given valid id not in database", () => {
+    return request(app)
+      .get("/api/chats/684811d9d7f3b6a405f6e9b0")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Chat does not exist!");
+      });
+  });
+});
+
+// Select Chats by UserID
+describe("POST /api/events additional img functionality", () => {
+  test("201: Posts a new event works with img_url", () => {
+    return request(app)
+      .post("/api/events")
+      .send({
+        event_artist: "Angel Olsen",
+        event_location: "Leeds",
+        event_venue: "Brudenell Social Club",
+        event_date: "2026-09-01T00:20:00Z",
+        event_img:
+          "https://images.unsplash.com/photo-1713279766640-6ec28b7c8c4c?q=80&w=1527&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      })
+      .expect(201)
+      .then(({ body: { newEvent } }) => {
+        expect(newEvent).toMatchObject({
+          event_artist: "Angel Olsen",
+          event_location: "Leeds",
+          event_venue: "Brudenell Social Club",
+          event_date: expect.any(String),
+          event_img:
+            "https://images.unsplash.com/photo-1713279766640-6ec28b7c8c4c?q=80&w=1527&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          _id: expect.any(String),
+        });
+      })
+      .then(() => {
+        return request(app)
+          .get("/api/events")
+          .expect(200)
+          .then(({ body: { events } }) => {
+            expect(events.length).toBe(4);
+          });
+      });
+  });
+});

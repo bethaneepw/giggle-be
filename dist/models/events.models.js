@@ -47,12 +47,13 @@ const selectEventById = (id) => {
     });
 };
 exports.selectEventById = selectEventById;
-const addNewEvent = (event_artist, event_location, event_venue, event_date) => {
+const addNewEvent = (event_artist, event_location, event_venue, event_date, event_img) => {
     return Event.create({
         event_artist: event_artist,
         event_location: event_location,
         event_venue: event_venue,
         event_date: event_date,
+        event_img: event_img,
     }).then((newEvent) => {
         return newEvent;
     });
