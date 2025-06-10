@@ -10,7 +10,8 @@ const { getTickets, getTicketById, postTicket, deleteTicket, patchTicket, } = re
 const { getEvents, getEventById, postEvent, deleteEvent, } = require("./controllers/events.controllers");
 const { getUsers, postUser, deleteUser, getUserById, patchUser, } = require("./controllers/users.controllers");
 const { handleCustomErrors, catchAllErrors, handleMongoErrors, } = require("./controllers/error.controller");
-const { postMessagebyId, getMessagebyRoomId, patchMessagebyId, deleteMessagebyId, getAllMessages, } = require("./controllers/messages.controler");
+const { postMessagebyId, getMessagesbyRoomId, patchMessagebyId, deleteMessagebyId, getAllMessages, } = require("./controllers/messages.controller");
+const { getChatById } = require("./controllers/chats.controllers");
 app.get("/api", getApi);
 app.get("/api/events", getEvents);
 //queries to add still: date
@@ -27,11 +28,13 @@ app.get("/api/tickets/:ticket_id", getTicketById);
 app.post("/api/tickets", postTicket);
 app.delete("/api/tickets/:ticket_id", deleteTicket);
 app.patch("/api/tickets/:ticket_id", patchTicket);
+app.get("/api/messages", getAllMessages);
+app.get("/api/messages/:roomId", getMessagesbyRoomId);
+app.get("/api/chats/:chat_id", getChatById);
+// Untested
 app.post("/api/messages/:roomId", postMessagebyId);
-app.get("/api/messages/:roomId", getMessagebyRoomId);
 app.delete("/api/messages/:message_id", deleteMessagebyId);
 app.patch("/api/messages/:message_id", patchMessagebyId);
-app.get("/api/messages", getAllMessages);
 /*
 
 To-do:

@@ -40,11 +40,15 @@ const {
 
 const {
   postMessagebyId,
-  getMessagebyRoomId,
+  getMessagesbyRoomId,
   patchMessagebyId,
   deleteMessagebyId,
   getAllMessages,
-} = require("./controllers/messages.controler");
+} = require("./controllers/messages.controller");
+
+const {
+  getChatById
+} = require("./controllers/chats.controllers")
 
 app.get("/api", getApi);
 
@@ -77,11 +81,17 @@ app.delete("/api/tickets/:ticket_id", deleteTicket);
 
 app.patch("/api/tickets/:ticket_id", patchTicket);
 
+app.get("/api/messages", getAllMessages);
+
+app.get("/api/messages/:roomId", getMessagesbyRoomId);
+
+app.get("/api/chats/:chat_id", getChatById)
+// Untested
 app.post("/api/messages/:roomId", postMessagebyId);
-app.get("/api/messages/:roomId", getMessagebyRoomId);
+
 app.delete("/api/messages/:message_id", deleteMessagebyId);
 app.patch("/api/messages/:message_id", patchMessagebyId);
-app.get("/api/messages", getAllMessages);
+
 /*
 
 To-do:

@@ -1078,12 +1078,98 @@ describe("GET /api/messages", () => {
         expect(messages.length).toBe(7);
         messages.forEach((message) => {
           expect(message).toMatchObject({
-            // event_artist: expect.any(String),
-            // event_location: expect.any(String),
-            // event_venue: expect.any(String),
-            // event_date: expect.any(String),
+            _id: expect.any(String),
+            roomId: expect.any(String),
+            senderId: expect.any(String),
+            body: expect.any(String),
+            timestamp: expect.any(String),
+            displayToClient: expect.any(Boolean),
           });
         });
       });
   });
 });
+
+describe("GET /api/messages/:roomId", () => {
+  test("200: Responds with all messages by room ID", () => {
+    return request(app)
+      .get("/api/messages/68405d38239a61ea5b7ad204")
+      .expect(200)
+      .then(({ body: { messages } }) => {
+        expect(messages.length).toBe(3);
+        messages.forEach((message) => {
+          expect(message).toMatchObject({
+            _id: expect.any(String),
+            roomId: "68405d38239a61ea5b7ad204",
+            senderId: expect.any(String),
+            body: expect.any(String),
+            timestamp: expect.any(String),
+            displayToClient: expect.any(Boolean),
+          });
+        });
+      });
+  });
+
+  // test("200: Responds with an empty array if no messages exist", () => {
+  //   return request(app)
+  //     .get("/api/messages/6847fefbcccbf3a1bacece94")
+  //     .expect(200)
+  //     .then(({ body: messages }) => {
+  //       expect(Array.isArray(messages)).toBe(true);
+  //       expect(messages.length).toBe(0);
+  //     });
+  // });
+
+  test("400: Bad request when given invalid ID", () => {
+    return request(app)
+      .get("/api/messages/banana")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid request!");
+      });
+  });
+
+  test("404: Not found when given valid ID not in database", () => {
+    return request(app)
+      .get("/api/messages/6848003706c41f2402f1bb44")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Chat Room does not exist!");
+      });
+  });
+});
+
+describe.only("GET /api/chats/:chat_id", () => {
+  test("200: Gets Chat by Chat ID", () => {
+    return request(app)
+      .get("/api/chats/68405d38239a61ea5b7ad207")
+      .expect(200)
+      .then(({ body: chat }) => {
+        expect(chat).toMatchObject({
+          _id: "68405d38239a61ea5b7ad207",
+          user_ids: expect.any(Array),
+        });
+        expect(chat.user_ids.length).toBe(2);
+      });
+  });
+
+  test("404: When given invalid id", () => {
+    return request(app)
+      .get("/api/chats/NotValidId")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Chat does not exist!");
+      });
+  });
+
+  test("404: Not found when given valid id not in database", () => {
+    return request(app)
+      .get("/api/chats/684811d9d7f3b6a405f6e9b0")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Chat does not exist!");
+      });
+  });
+});
+
+// Select Chats by UserID
