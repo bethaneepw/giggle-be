@@ -69,3 +69,13 @@ export const updateTicket = (ticketId, dataToUpdate) => {
     throw { msg: "Invalid information!", status: 400 };
   }
 };
+
+export const selectTicketByEventId = (event_id: any) => {
+  return Ticket.find({ eventDetails: event_id })
+    .orFail(() => {
+      throw { msg: "No tickets found under that Event Id!", status: 404 };
+    })
+    .then((tickets: any) => {
+      return tickets;
+    });
+};

@@ -1207,7 +1207,7 @@ describe("GET /api/chats/users/:user_id", () => {
   });
 });
 
-describe.only("POST /api/messages/:roomId", () => {
+describe("POST /api/messages/:roomId", () => {
   test("201: Successfully adds a message to the chat room", () => {
     return request(app)
       .post("/api/messages/68405d38239a61ea5b7ad207")
@@ -1323,3 +1323,42 @@ describe("POST /api/events additional img functionality", () => {
       });
   });
 });
+
+describe.only("GET: /api/tickets/events/:event_id", () => {
+  test("200: Returns an array of tickets by given event Id", () => {
+    return request(app)
+    .get("/api/tickets/events/66679e9e54711517579556f3")
+    .expect(200)
+    .then(({body: { tickets }})=> {
+      expect(tickets.length).toBe(2)
+      tickets.forEach((ticket)=>{
+        expect(ticket).toMatchObject({
+          _id: expect.any(String),
+          owner_username: expect.any(String),
+          eventDetails: "66679e9e54711517579556f3",
+          notes: expect.any(String),
+          hasBeenClaimed: expect.any(Boolean)
+        })
+      })
+    })
+  })
+
+  test("400: Bad request when given invalid event id", () => {
+    return request(app)
+    .get("/api/tickets/events/NotAValidId")
+    .expect(400)
+    .then(({ body: {msg}})=>{
+      expect(msg).toBe("Invalid request!")
+    })
+  })
+
+  test("404: Not found when given valid ID that is not in database", () => {
+    return request(app)
+    .get("/api/tickets/events/66679e9e54711517579556f2")
+    .expect(404)
+    .then(({ body: {msg}})=>{
+      expect(msg).toBe("No tickets found under that Event Id!")
+    })
+  })
+
+})

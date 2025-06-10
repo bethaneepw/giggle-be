@@ -16,8 +16,7 @@ exports.postMessagebyId = (req, res, next) => {
         throw { msg: "Chat Room does not exist!", status: 404 };
     })
         .then((validChats) => {
-        return Chat.find({ _id: roomId, user_ids: { $in: [senderId] } })
-            .orFail(() => {
+        return Chat.find({ _id: roomId, user_ids: { $in: [senderId] } }).orFail(() => {
             throw { msg: "Invalid user for this chat!", status: 400 };
         });
     })

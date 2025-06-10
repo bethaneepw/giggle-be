@@ -15,6 +15,7 @@ const {
   postTicket,
   deleteTicket,
   patchTicket,
+  getTicketsByEventId,
 } = require("./controllers/tickets.controllers");
 
 const {
@@ -48,8 +49,8 @@ const {
 
 const {
   getChatById,
-  getChatsByUserId
-} = require("./controllers/chats.controllers")
+  getChatsByUserId,
+} = require("./controllers/chats.controllers");
 
 app.get("/api", getApi);
 
@@ -86,11 +87,13 @@ app.get("/api/messages", getAllMessages);
 
 app.get("/api/messages/:roomId", getMessagesbyRoomId);
 
-app.get("/api/chats/:chats_id", getChatById)
+app.get("/api/chats/:chats_id", getChatById);
 
-app.get("/api/chats/users/:user_id", getChatsByUserId)
+app.get("/api/chats/users/:user_id", getChatsByUserId);
 
 app.post("/api/messages/:roomId", postMessagebyId);
+
+app.get("/api/tickets/events/:event_id", getTicketsByEventId);
 
 /*
 

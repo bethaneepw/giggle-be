@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const tickets_models_1 = require("../models/tickets.models");
 const { selectTickets, selectTicketById, addNewTicket, deleteTicketById, updateTicket, } = require("../models/tickets.models");
 // interface Ticket {
 //   id: number;
@@ -55,6 +56,14 @@ exports.patchTicket = (req, res, next) => {
     return Promise.all([pendingUpdateTicket, pendingSelectTicketById])
         .then(([updatedTicket]) => {
         res.status(200).send({ updatedTicket });
+    })
+        .catch(next);
+};
+exports.getTicketsByEventId = (req, res, next) => {
+    const { event_id } = req.params;
+    return (0, tickets_models_1.selectTicketByEventId)(event_id)
+        .then((tickets) => {
+        res.status(200).send({ tickets });
     })
         .catch(next);
 };

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTicket = exports.deleteTicketById = exports.addNewTicket = exports.selectTicketById = exports.selectTickets = void 0;
+exports.selectTicketByEventId = exports.updateTicket = exports.deleteTicketById = exports.addNewTicket = exports.selectTicketById = exports.selectTickets = void 0;
 const { mongoose } = require("../../db/connection");
 const { ticketSchema } = require("../../db/schema/ticketSchema");
 const Ticket = mongoose.model("tickets", ticketSchema);
@@ -57,3 +57,13 @@ const updateTicket = (ticketId, dataToUpdate) => {
     }
 };
 exports.updateTicket = updateTicket;
+const selectTicketByEventId = (event_id) => {
+    return Ticket.find({ eventDetails: event_id })
+        .orFail(() => {
+        throw { msg: "No tickets found under that Event Id!", status: 404 };
+    })
+        .then((tickets) => {
+        return tickets;
+    });
+};
+exports.selectTicketByEventId = selectTicketByEventId;
