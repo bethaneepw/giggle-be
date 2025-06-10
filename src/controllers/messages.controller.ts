@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-const { selectMessagebyRoomId, allMessages } =require ("../models/messages.models")
-// const { mongoose } = require("mongoose");
-
-// const message = mongoose.model("messages", messageSchema)
+const {
+  selectMessagesbyRoomId,
+  allMessages,
+} = require("../models/messages.models");
+const { mongoose } = require("mongoose");
 
 exports.postMessagebyId = (
   req: Request,
@@ -16,15 +17,15 @@ exports.postMessagebyId = (
     })
     .catch(next);
 };
-exports.getMessagebyRoomId = (
+exports.getMessagesbyRoomId = (
   req: Request,
   res: Response,
   next: any
 ): Promise<void> => {
   const { roomId } = req.params;
-  return selectMessagebyRoomId(roomId)
-    .then((Message) => {
-      res.status(200).send({ Message });
+  return selectMessagesbyRoomId(roomId)
+    .then((messages) => {
+      res.status(200).send({ messages });
     })
     .catch(next);
 };
@@ -53,14 +54,13 @@ exports.patchMessagebyId = (
     .catch(next);
 };
 exports.getAllMessages = (
-    req: Request,
-    res: Response,
-    next: any
-  ): Promise<void> => {
-    return allMessages()
+  req: Request,
+  res: Response,
+  next: any
+): Promise<void> => {
+  return allMessages()
     .then((messages) => {
-        res.status(200).send({messages})
+      res.status(200).send({ messages });
     })
-    .catch(next)
-  }
-
+    .catch(next);
+};

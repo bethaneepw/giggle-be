@@ -1,21 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.allMessages = exports.selectChatbyId = void 0;
+exports.allMessages = exports.selectMessagesbyRoomId = void 0;
 const { mongoose } = require("../../db/connection");
 const { messageSchema } = require("../../db/schema/messageSchema");
-const message = mongoose.model("messages", messageSchema);
-const selectChatbyId = (roomId) => {
-    return message.findbyId(roomId)
+const Message = mongoose.model("messages", messageSchema);
+const selectChatById = require("./chats.models");
+const { chatSchema } = require("../../db/schema/chatSchema");
+const Chat = mongoose.model("chats", chatSchema);
+const selectMessagesbyRoomId = (roomId) => {
+    return Message.find({ roomId: roomId })
         .orFail(() => {
-        throw { msg: "Message does not exist, status:404" };
+        throw { msg: "Chat Room does not exist!", status: 404 };
     })
-        .then((message) => {
-        return message;
+        .then((messages) => {
+        console.log("Empty messages??");
+        return messages;
     });
 };
-exports.selectChatbyId = selectChatbyId;
+exports.selectMessagesbyRoomId = selectMessagesbyRoomId;
 const allMessages = () => {
-    return message.find({}).then((messages) => {
+    return Message.find({}).then((messages) => {
         return messages;
     });
 };

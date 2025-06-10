@@ -1,19 +1,23 @@
 const { mongoose } = require("../../db/connection");
 const { messageSchema } = require("../../db/schema/messageSchema");
-const message = mongoose.model("messages", messageSchema);
+const Message = mongoose.model("messages", messageSchema);
+const selectChatById = require("./chats.models");
+const { chatSchema } = require("../../db/schema/chatSchema");
+const Chat = mongoose.model("chats", chatSchema);
 
-export const selectChatbyId = (roomId:any) => {
-    return message.findbyId(roomId)
+export const selectMessagesbyRoomId = (roomId: any) => {
+  return Message.find({ roomId: roomId })
     .orFail(() => {
-        throw { msg: "Message does not exist, status:404"}
+      throw { msg: "Chat Room does not exist!", status: 404 };
     })
-    .then((message) => {
-        return message
-    })
-}
+    .then((messages: any) => {
+      console.log("Empty messages??");
+      return messages;
+    });
+};
 
 export const allMessages = () => {
-    return message.find({}).then((messages)=> {
-        return messages
-    })
-}
+  return Message.find({}).then((messages: any) => {
+    return messages;
+  });
+};
