@@ -1,13 +1,19 @@
 const { mongoose } = require("../../db/connection");
 const { messageSchema } = require("../../db/schema/messageSchema");
-const Message = mongoose.model("messages", messageSchema);
+const message = mongoose.model("messages", messageSchema);
 
-exports.selectMessagesByChatId = (chat_id) => {
-  return Message.find({ roomId: chat_id })
+export const selectChatbyId = (roomId:any) => {
+    return message.findbyId(roomId)
     .orFail(() => {
-      console.log("oopsie");
+        throw { msg: "Message does not exist, status:404"}
     })
-    .then((messages) => {
-      return messages;
-    });
-};
+    .then((message) => {
+        return message
+    })
+}
+
+export const allMessages = () => {
+    return message.find({}).then((messages)=> {
+        return messages
+    })
+}
