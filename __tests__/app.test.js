@@ -1173,3 +1173,37 @@ describe.only("GET /api/chats/:chat_id", () => {
 });
 
 // Select Chats by UserID
+describe("POST /api/events additional img functionality", () => {
+  test("201: Posts a new event works with img_url", () => {
+    return request(app)
+      .post("/api/events")
+      .send({
+        event_artist: "Angel Olsen",
+        event_location: "Leeds",
+        event_venue: "Brudenell Social Club",
+        event_date: "2026-09-01T00:20:00Z",
+        event_img:
+          "https://images.unsplash.com/photo-1713279766640-6ec28b7c8c4c?q=80&w=1527&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      })
+      .expect(201)
+      .then(({ body: { newEvent } }) => {
+        expect(newEvent).toMatchObject({
+          event_artist: "Angel Olsen",
+          event_location: "Leeds",
+          event_venue: "Brudenell Social Club",
+          event_date: expect.any(String),
+          event_img:
+            "https://images.unsplash.com/photo-1713279766640-6ec28b7c8c4c?q=80&w=1527&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          _id: expect.any(String),
+        });
+      })
+      .then(() => {
+        return request(app)
+          .get("/api/events")
+          .expect(200)
+          .then(({ body: { events } }) => {
+            expect(events.length).toBe(4);
+          });
+      });
+  });
+});
