@@ -12,7 +12,7 @@ if (ENV === "production") {
 }
 
 if (!process.env.MONGO_DEV && !process.env.MONGODB_URI) {
-  throw new Error("PGDATABASE or DATABASE_URL not set");
+  throw new Error("MONGO_DEV or MONGODB_URI not set");
 }
 
 const clientOptions = {
