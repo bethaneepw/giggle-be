@@ -1,8 +1,12 @@
 import { Request, Response } from "express";
-import { addMessageByRoomId } from "../models/messages.models";
+import {
+  addMessageByRoomId,
+  selectMessageByMessageId,
+} from "../models/messages.models";
 const {
-  selectMessagesbyRoomId,
-  allMessages,
+  selectMessagesByRoomId,
+  selectMessages,
+  modifyMessageById,
 } = require("../models/messages.models");
 const { mongoose } = require("mongoose");
 const { chatSchema } = require("../../db/schema/chatSchema");
@@ -34,7 +38,7 @@ exports.postMessagebyId = (
     .then(() => {
       return addMessageByRoomId(roomId, senderId, body);
     })
-    .then((message) => {
+    .then((message: any) => {
       res.status(201).send({ message });
     })
     .catch(next);
@@ -45,43 +49,36 @@ exports.getMessagesbyRoomId = (
   next: any
 ): Promise<void> => {
   const { roomId } = req.params;
-  return selectMessagesbyRoomId(roomId)
-    .then((messages) => {
+  return selectMessagesByRoomId(roomId)
+    .then((messages: any) => {
       res.status(200).send({ messages });
     })
     .catch(next);
 };
-exports.deleteMessagebyId = (
-  req: Request,
-  res: Response,
-  next: any
-): Promise<void> => {
-  const { message_id } = req.params;
-  return removeMessagebyId(message_id)
-    .then((Message) => {
-      res.status(204).send({ Message });
-    })
-    .catch(next);
-};
+
 exports.patchMessagebyId = (
   req: Request,
   res: Response,
   next: any
 ): Promise<void> => {
   const { message_id } = req.params;
-  return modifyMessagebyId(message_id)
-    .then((Message) => {
-      res.status(204).send({ Message });
+  const dataToUpdate = req.body;
+  const pendingUpdateMessage = modifyMessageById(message_id, dataToUpdate);
+  const pendingSelectMessageByMessageId = selectMessageByMessageId(message_id);
+  return Promise.all([pendingUpdateMessage, pendingSelectMessageByMessageId])
+    .then(([updatedMessage]) => {
+      res.status(200).send({ updatedMessage });
     })
     .catch(next);
 };
+
 exports.getAllMessages = (
   req: Request,
   res: Response,
   next: any
 ): Promise<void> => {
-  return allMessages()
-    .then((messages) => {
+  return selectMessages()
+    .then((messages: any) => {
       res.status(200).send({ messages });
     })
     .catch(next);

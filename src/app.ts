@@ -95,15 +95,7 @@ app.post("/api/messages/:roomId", postMessagebyId);
 
 app.get("/api/tickets/events/:event_id", getTicketsByEventId);
 
-/*
-
-To-do:
-
-get users queries
-get events queries
-get tickets queries ? by user id? 
-patch/ tickets
-*/
+app.patch("/api/messages/:message_id", patchMessagebyId);
 
 // Error handling
 

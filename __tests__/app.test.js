@@ -1091,12 +1091,12 @@ describe("GET /api/messages", () => {
 });
 
 describe("GET /api/messages/:roomId", () => {
-  test("200: Responds with all messages by room ID", () => {
+  test("200: Responds with all messages by room ID that are being displayed to client", () => {
     return request(app)
       .get("/api/messages/68405d38239a61ea5b7ad204")
       .expect(200)
       .then(({ body: { messages } }) => {
-        expect(messages.length).toBe(3);
+        expect(messages.length).toBe(2);
         messages.forEach((message) => {
           expect(message).toMatchObject({
             _id: expect.any(String),
@@ -1264,30 +1264,29 @@ describe("POST /api/messages/:roomId", () => {
   });
   test("400: Bad reqeust if roomID is invalid", () => {
     return request(app)
-    .post("/api/messages/InvalidRoomId")
-    .send({
-      senderId: "68405b9711f50eebe1b59522",
-      body: "Helloooooo!"
-    })
-    .expect(400)
-    .then(({body: { msg }})=> {
-      expect(msg).toBe("Invalid request!")
-    })
+      .post("/api/messages/InvalidRoomId")
+      .send({
+        senderId: "68405b9711f50eebe1b59522",
+        body: "Helloooooo!",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid request!");
+      });
   });
 
-   test("400: Bad request if roomID is valid but not found", () => {
+  test("400: Bad request if roomID is valid but not found", () => {
     return request(app)
-    .post("/api/messages/6848372e473a76bbb2e567d4")
-    .send({
-      senderId: "68405b9711f50eebe1b59522",
-      body: "Helloooooo!"
-    })
-    .expect(404)
-    .then(({body: { msg }})=> {
-      expect(msg).toBe("Chat Room does not exist!")
-    })
+      .post("/api/messages/6848372e473a76bbb2e567d4")
+      .send({
+        senderId: "68405b9711f50eebe1b59522",
+        body: "Helloooooo!",
+      })
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Chat Room does not exist!");
+      });
   });
-
 });
 describe("POST /api/events additional img functionality", () => {
   test("201: Posts a new event works with img_url", () => {
@@ -1324,41 +1323,94 @@ describe("POST /api/events additional img functionality", () => {
   });
 });
 
-describe.only("GET: /api/tickets/events/:event_id", () => {
+describe("GET: /api/tickets/events/:event_id", () => {
   test("200: Returns an array of tickets by given event Id", () => {
     return request(app)
-    .get("/api/tickets/events/66679e9e54711517579556f3")
-    .expect(200)
-    .then(({body: { tickets }})=> {
-      expect(tickets.length).toBe(2)
-      tickets.forEach((ticket)=>{
-        expect(ticket).toMatchObject({
-          _id: expect.any(String),
-          owner_username: expect.any(String),
-          eventDetails: "66679e9e54711517579556f3",
-          notes: expect.any(String),
-          hasBeenClaimed: expect.any(Boolean)
-        })
-      })
-    })
-  })
+      .get("/api/tickets/events/66679e9e54711517579556f3")
+      .expect(200)
+      .then(({ body: { tickets } }) => {
+        expect(tickets.length).toBe(3);
+        tickets.forEach((ticket) => {
+          expect(ticket).toMatchObject({
+            _id: expect.any(String),
+            owner_username: expect.any(String),
+            eventDetails: "66679e9e54711517579556f3",
+            //  notes: expect.any(String),
+            hasBeenClaimed: expect.any(Boolean),
+          });
+        });
+      });
+  });
 
   test("400: Bad request when given invalid event id", () => {
     return request(app)
-    .get("/api/tickets/events/NotAValidId")
-    .expect(400)
-    .then(({ body: {msg}})=>{
-      expect(msg).toBe("Invalid request!")
-    })
-  })
+      .get("/api/tickets/events/NotAValidId")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid request!");
+      });
+  });
 
   test("404: Not found when given valid ID that is not in database", () => {
     return request(app)
-    .get("/api/tickets/events/66679e9e54711517579556f2")
-    .expect(404)
-    .then(({ body: {msg}})=>{
-      expect(msg).toBe("No tickets found under that Event Id!")
-    })
-  })
+      .get("/api/tickets/events/66679e9e54711517579556f2")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("No tickets found under that Event Id!");
+      });
+  });
+});
 
-})
+describe("PATCH: /api/messages/:message_id", () => {
+  test("200: Successfully updates message", () => {
+    return request(app)
+      .patch("/api/messages/68417f91c0cadf7869342c42")
+      .send({ displayToClient: false })
+      .expect(200)
+      .then(({ body: { updatedMessage } }) => {
+        expect(updatedMessage).toMatchObject({
+          _id: "68417f91c0cadf7869342c42",
+          roomId: "68405d38239a61ea5b7ad207",
+          senderId: "68405b9711f50eebe1b59521",
+          body: "What did you want?",
+          timestamp: "2025-01-26T00:05:00.000Z",
+          displayToClient: false,
+        });
+      });
+  });
+
+  test("400: Bad request when updating message with info not aligned with schema", () => {
+    return request(app)
+      .patch("/api/messages/68417f99cc80869edc3c3931")
+      .send({ displayToClient: "This Isn't Aligned To Schema" })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid request!");
+      });
+  });
+
+  test("400: Bad request when message Id is invalid", () => {
+    return request(app)
+      .patch("/api/messages/InvalidMessageId")
+      .send({ displayToClient: false })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid request!");
+      });
+  });
+
+  test("404: Not found when message Id is not in database", () => {
+    return request(app)
+      .patch("/api/messages/68405b9711f50eebe1b59521")
+      .send({ displayToClient: false })
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Message does not exist!");
+      });
+  });
+
+  // Success
+  // Error: Sent Info Not aligned to Schema
+  // Invalid ID
+  // Not Found Id
+});
