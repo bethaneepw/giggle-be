@@ -740,6 +740,8 @@ describe("Users Model", () => {
           isVerified: true,
           interestedEvents: ["66679e9e54711517579556f3"],
           profilePictureURL: "aRealImageUrl",
+          password: "password123",
+          email: "misty89@email.com",
         })
         .expect(201)
         .then(({ body: { newUser } }) => {
@@ -768,6 +770,8 @@ describe("Users Model", () => {
             interestedEvents: ["66679e9e54711517579556f3"],
             profilePictureURL: "aRealImageUrl",
             _id: expect.any(String),
+            password: expect.any(String),
+            email: "misty89@email.com",
           });
         })
         .then(() => {
@@ -780,11 +784,48 @@ describe("Users Model", () => {
         });
     });
 
+    test("201: Password should be hashed when a user is created", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          firstName: "Father John",
+          lastName: "Misty",
+          username: "PapaMisty",
+          location: {
+            town: "Leeds",
+            postcode: "LS10 1JH",
+          },
+          preferences: {
+            drinkPreference: "A lot",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: false,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "People are boring.",
+          dateOfBirth: "1989-09-23",
+          gender: "Man",
+          trustRating: 1.0,
+          isVerified: true,
+          interestedEvents: ["66679e9e54711517579556f3"],
+          profilePictureURL: "aRealImageUrl",
+          password: "password123",
+          email: "misty89@email.com",
+        })
+        .expect(201)
+        .then(({ body: { newUser } }) => {
+          expect(newUser.password).not.toBe("password123");
+        });
+    });
+
     describe("Errors", () => {
       test("400: Not all required keys present in user object", () => {
         return request(app)
           .post("/api/users")
           .send({
+            // firstName missing
             lastName: "Misty",
             username: "PapaMisty",
             location: {
@@ -807,6 +848,8 @@ describe("Users Model", () => {
             isVerified: true,
             interestedEvents: ["66679e9e54711517579556f3"],
             profilePictureURL: "aRealImageUrl",
+            password: "password",
+            email: "notallpresent@email.com",
           })
           .expect(400)
           .then(({ body: { msg } }) => {
@@ -843,7 +886,7 @@ describe("Users Model", () => {
           })
           .expect(400)
           .then(({ body: { msg } }) => {
-            expect(msg).toBe("Information cannot be blank!");
+            expect(msg).toBe("Invalid information!");
           });
       });
     });
@@ -1142,6 +1185,23 @@ describe("Users Model", () => {
     });
   });
 
+  describe("GET /api/users AUTHENTICATION", () => {
+    test("200 Users have an email, and password is NOT returned", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body: { users } }) => {
+          expect(users.length).toBeGreaterThan(0);
+          users.forEach((user) => {
+            expect(user).toMatchObject({
+              email: expect.any(String),
+            });
+            expect(user.password).toBeUndefined;
+          });
+        });
+    });
+  });
+
   describe("DELETE /api/users/:user_id", () => {
     test("204: Deletes specified user", () => {
       return request(app)
@@ -1178,6 +1238,77 @@ describe("Users Model", () => {
           .then(({ body: { msg } }) => {
             expect(msg).toBe("User does not exist!");
           });
+      });
+    });
+  });
+
+  describe("POST /api/login", () => {
+    test("200: Responds with the correct logged in user", async () => {
+      const {
+        body: { newUser },
+      } = await request(app)
+        .post("/api/users")
+        .send({
+          firstName: "Auth",
+          lastName: "Test",
+          username: "AuthTest",
+          location: {
+            town: "Leeds",
+            postcode: "LS10 1JH",
+          },
+          preferences: {
+            drinkPreference: "A lot",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: false,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "This user is for testing authentication.",
+          dateOfBirth: "1989-09-23",
+          gender: "Man",
+          trustRating: 1.0,
+          isVerified: true,
+          interestedEvents: ["66679e9e54711517579556f3"],
+          profilePictureURL: "aRealImageUrl",
+          password: "password123",
+          email: "authtest@email.com",
+        });
+
+      const {
+        body: { loggedInUser },
+      } = await request(app)
+        .post("/api/login")
+        .send({ email: "authtest@email.com", password: "password123" })
+        .expect(201);
+
+      expect(loggedInUser).toMatchObject({
+        _id: newUser._id,
+        firstName: "Auth",
+        lastName: "Test",
+        username: "AuthTest",
+        location: {
+          town: "Leeds",
+          postcode: "LS10 1JH",
+        },
+        preferences: {
+          drinkPreference: "A lot",
+          seatPreference: "Standing",
+          giggingStyle: {
+            mosher: false,
+            singalong: true,
+            photographer: false,
+          },
+        },
+        biography: "This user is for testing authentication.",
+        dateOfBirth: "1989-09-23T00:00:00.000Z",
+        gender: "Man",
+        trustRating: 1.0,
+        isVerified: true,
+        interestedEvents: ["66679e9e54711517579556f3"],
+        profilePictureURL: "aRealImageUrl",
+        email: "authtest@email.com",
       });
     });
   });

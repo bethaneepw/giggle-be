@@ -27,10 +27,10 @@ module.exports = [
     gender: "Man",
     trustRating: 1.0,
     isVerified: true,
-    interestedEvents: [
-      "66679e9e54711517579556f3"
-    ],
+    interestedEvents: ["66679e9e54711517579556f3"],
     profilePictureURL: "aRealImageUrl",
+    password: "Password",
+    email: "theboss@email.com",
   }),
   new User({
     _id: "68405b9711f50eebe1b59522",
@@ -57,6 +57,8 @@ module.exports = [
     isVerified: true,
     interestedEvents: [],
     profilePictureURL: "aRealImageUrl",
+    password: "Password",
+    email: "lucydacus@email.com",
   }),
   new User({
     _id: "68405b9711f50eebe1b59523",
@@ -75,6 +77,7 @@ module.exports = [
         singalong: false,
         photographer: true,
       },
+      password: "Password",
     },
     biography: "Coolest guy in NJ",
     dateOfBirth: "1960-03-18",
@@ -83,5 +86,7 @@ module.exports = [
     isVerified: false,
     interestedEvents: [],
     profilePictureURL: "aRealImageUrl",
+    password: "Password",
+    email: "colinastley@email.com",
   }),
 ];

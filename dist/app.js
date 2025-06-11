@@ -8,7 +8,7 @@ app.use(express.json());
 const { getApi } = require("./controllers/controllers");
 const { getTickets, getTicketById, postTicket, deleteTicket, patchTicket, getTicketsByEventId, } = require("./controllers/tickets.controllers");
 const { getEvents, getEventById, postEvent, deleteEvent, } = require("./controllers/events.controllers");
-const { getUsers, postUser, deleteUser, getUserById, patchUser, getUserByUsername } = require("./controllers/users.controllers");
+const { getUsers, postUser, deleteUser, getUserById, patchUser, getUserByUsername, postLoginUser } = require("./controllers/users.controllers");
 const { handleCustomErrors, catchAllErrors, handleMongoErrors, } = require("./controllers/error.controller");
 const { postMessagebyId, getMessagesbyRoomId, patchMessagebyId, deleteMessagebyId, getAllMessages, } = require("./controllers/messages.controller");
 const { getChatById, getChatsByUserId, } = require("./controllers/chats.controllers");
@@ -36,6 +36,7 @@ app.post("/api/messages/:roomId", postMessagebyId);
 app.get("/api/tickets/events/:event_id", getTicketsByEventId);
 app.patch("/api/messages/:message_id", patchMessagebyId);
 app.get("/api/users/username/:username", getUserByUsername);
+app.post("/api/login", postLoginUser);
 // Error handling
 app.all("/*splat", (req, res, next) => {
     res.status(404).send({ msg: "Invalid url!" });
