@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const { selectMessagebyRoomId, allMessages } = require("../models/messages.models");
-// const { mongoose } = require("mongoose");
-// const message = mongoose.model("messages", messageSchema)
+
 exports.postMessagebyId = (req, res, next) => {
     const { roomId } = req.params;
     return selectChatbyId(roomId)

@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { addMessageByRoomId } from "../models/messages.models";
 const {
-  selectMessagesbyRoomId,
-  allMessages,
+  selectMessagesByRoomId,
+  selectMessages,
+  modifyMessageById,
 } = require("../models/messages.models");
 const { mongoose } = require("mongoose");
 const { chatSchema } = require("../../db/schema/chatSchema");
@@ -45,33 +46,23 @@ exports.getMessagesbyRoomId = (
   next: any
 ): Promise<void> => {
   const { roomId } = req.params;
-  return selectMessagesbyRoomId(roomId)
+  return selectMessagesByRoomId(roomId)
     .then((messages) => {
       res.status(200).send({ messages });
     })
     .catch(next);
 };
-exports.deleteMessagebyId = (
-  req: Request,
-  res: Response,
-  next: any
-): Promise<void> => {
-  const { message_id } = req.params;
-  return removeMessagebyId(message_id)
-    .then((Message) => {
-      res.status(204).send({ Message });
-    })
-    .catch(next);
-};
+
 exports.patchMessagebyId = (
   req: Request,
   res: Response,
   next: any
 ): Promise<void> => {
   const { message_id } = req.params;
-  return modifyMessagebyId(message_id)
-    .then((Message) => {
-      res.status(204).send({ Message });
+  const dataToUpdate = req.body;
+  return modifyMessageById(message_id, dataToUpdate)
+    .then((message) => {
+      res.status(200).send({ message });
     })
     .catch(next);
 };
@@ -80,7 +71,7 @@ exports.getAllMessages = (
   res: Response,
   next: any
 ): Promise<void> => {
-  return allMessages()
+  return selectMessages()
     .then((messages) => {
       res.status(200).send({ messages });
     })

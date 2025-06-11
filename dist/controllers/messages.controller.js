@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const messages_models_1 = require("../models/messages.models");
-const { selectMessagesbyRoomId, allMessages, } = require("../models/messages.models");
+const { selectMessagesByRoomId, selectMessages, modifyMessageById, } = require("../models/messages.models");
 const { mongoose } = require("mongoose");
 const { chatSchema } = require("../../db/schema/chatSchema");
 const Chat = mongoose.model("chats", chatSchema);
@@ -30,30 +30,23 @@ exports.postMessagebyId = (req, res, next) => {
 };
 exports.getMessagesbyRoomId = (req, res, next) => {
     const { roomId } = req.params;
-    return selectMessagesbyRoomId(roomId)
+    return selectMessagesByRoomId(roomId)
         .then((messages) => {
         res.status(200).send({ messages });
     })
         .catch(next);
 };
-exports.deleteMessagebyId = (req, res, next) => {
-    const { message_id } = req.params;
-    return removeMessagebyId(message_id)
-        .then((Message) => {
-        res.status(204).send({ Message });
-    })
-        .catch(next);
-};
 exports.patchMessagebyId = (req, res, next) => {
     const { message_id } = req.params;
-    return modifyMessagebyId(message_id)
-        .then((Message) => {
-        res.status(204).send({ Message });
+    const dataToUpdate = req.body;
+    return modifyMessageById(message_id, dataToUpdate)
+        .then((message) => {
+        res.status(200).send({ message });
     })
         .catch(next);
 };
 exports.getAllMessages = (req, res, next) => {
-    return allMessages()
+    return selectMessages()
         .then((messages) => {
         res.status(200).send({ messages });
     })

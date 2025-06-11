@@ -8,11 +8,11 @@ export const selectChats = () => {
   });
 };
 
-export const selectChatsByUserId = (userId) => {
-  return Chat.find({ user_ids: userId }).then((chats) => {
-    return chats;
-  });
-};
+// export const selectChatsByUserId = (userId) => {
+//   return Chat.find({ user_ids: userId }).then((chats) => {
+//     return chats;
+//   });
+// };
 
 export const addNewChat = (user_ids) => {
   if (!user_ids || user_ids.length !== 2) {
@@ -54,7 +54,7 @@ export const selectChatById = (_id: any) => {
 };
 
 export const selectChatsByUserId = (_id: any) => {
-  return Chat.find({user_ids: {$in: [_id]}})
+  return Chat.find({ user_ids: { $in: [_id] } })
     .orFail(() => {
       throw { msg: "Chat does not exist!", status: 404 };
     })

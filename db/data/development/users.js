@@ -223,6 +223,6 @@ module.exports = [
     isVerified: true,
     memberSince: "2025-05-25",
     interestedEvents: ["6841b08fdd14c4583ebed053"],
-    profilePictureURL: "https://example.com/profiles/jar_man.jpg",
+    profilePictureURL: "https://robohash.org/mail@ashallendesign.co.uk",
   }),
 ];
