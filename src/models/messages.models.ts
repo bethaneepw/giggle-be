@@ -25,8 +25,7 @@ export const selectMessageByMessageId = (messageId) => {
 export const selectMessagesByRoomId = (roomId: any) => {
   console.log("=== selectMessagesByRoomId called with roomId:", roomId);
   console.log("=== roomId type:", typeof roomId);
-  
-  // Convert string to ObjectId if needed
+
   const queryRoomId = mongoose.Types.ObjectId.isValid(roomId) 
     ? new mongoose.Types.ObjectId(roomId) 
     : roomId;
@@ -44,7 +43,7 @@ export const selectMessagesByRoomId = (roomId: any) => {
     })
     .catch((error) => {
       console.error("=== Error querying messages:", error);
-      return []; // Return empty array on error instead of throwing
+      return []; 
     });
 };
 
@@ -77,7 +76,7 @@ export const addNewMessage = (
 };
 
 export const getMessageCountByRoomId = (roomId) => {
-  // Convert to ObjectId if needed for consistency
+
   const queryRoomId = mongoose.Types.ObjectId.isValid(roomId) 
     ? new mongoose.Types.ObjectId(roomId) 
     : roomId;
@@ -91,7 +90,7 @@ export const getMessageCountByRoomId = (roomId) => {
 };
 
 export const getLastMessageByRoomId = (roomId) => {
-  // Convert to ObjectId if needed for consistency
+
   const queryRoomId = mongoose.Types.ObjectId.isValid(roomId) 
     ? new mongoose.Types.ObjectId(roomId) 
     : roomId;
