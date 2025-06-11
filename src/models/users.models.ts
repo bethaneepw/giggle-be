@@ -213,3 +213,7 @@ export const selectUserByUsername = (username: any) => {
     return user[0];
   });
 };
+
+export const verifyUserLogIn = async (email, password) =>  {
+
+}

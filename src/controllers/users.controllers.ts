@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
+import { verifyUserLogIn } from "../models/users.models";
 const { mongoose } = require("../../db/connection");
 const { userSchema } = require("../../db/schema/userSchema");
 const User = mongoose.model("users", userSchema);
+const jwt = require("jsonwebtoken");
 
 const {
   selectUsers,
@@ -11,13 +13,6 @@ const {
   updateUser,
   selectUserByUsername,
 } = require("../models/users.models");
-
-// interface User {
-//   id: number;
-//   name: string;
-//   profile_picture: string;
-//   trustworthiness: number;
-// }
 
 exports.getUsers = (req: Request, res: Response<User>): Promise<void> => {
   return selectUsers().then((users) => {
@@ -130,4 +125,15 @@ exports.getUserByUsername = (
   return selectUserByUsername(username).then((user: any) => {
     res.status(200).send({ user });
   });
+};
+
+exports.postLoginUser = async (req: Request, res: Response, next: any) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(401).send({ msg: "Invalid credentials" });
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) return res.status(401).send({ msg: "Invalid credentials" });
+
+  const token = jwt.sign()
+  res.status(201).send({ loggedInUser });
 };

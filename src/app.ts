@@ -100,6 +100,8 @@ app.patch("/api/messages/:message_id", patchMessagebyId);
 
 app.get("/api/users/username/:username", getUserByUsername);
 
+app.post("/api/login", postLoginUser)
+
 // Error handling
 
 app.all("/*splat", (req: Request, res: Response, next) => {
