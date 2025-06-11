@@ -192,3 +192,10 @@ export const updateUser = (userId, dataToUpdate) => {
     });
   }
 };
+
+export const selectUserByUsername = (username: any) => {
+  console.log(username);
+  return User.find({ username: username }).then((user: any) => {
+    return user[0];
+  });
+};

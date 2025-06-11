@@ -9,6 +9,7 @@ const {
   deleteUserByUserId,
   selectUserByUserId,
   updateUser,
+  selectUserByUsername,
 } = require("../models/users.models");
 
 // interface User {
@@ -111,4 +112,15 @@ exports.patchUser = (
       res.status(200).send({ updatedUser });
     })
     .catch(next);
+};
+
+exports.getUserByUsername = (
+  req: Request,
+  res: Response,
+  next: any
+): Promise<void> => {
+  const { username } = req.params;
+  return selectUserByUsername(username).then((user: any) => {
+    res.status(200).send({ user });
+  });
 };

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.deleteUserByUserId = exports.addNewUser = exports.selectUserByUserId = exports.selectUsers = void 0;
+exports.selectUserByUsername = exports.updateUser = exports.deleteUserByUserId = exports.addNewUser = exports.selectUserByUserId = exports.selectUsers = void 0;
 const { mongoose } = require("../../db/connection");
 const { userSchema } = require("../../db/schema/userSchema");
 const User = mongoose.model("users", userSchema);
@@ -117,3 +117,10 @@ const updateUser = (userId, dataToUpdate) => {
     }
 };
 exports.updateUser = updateUser;
+const selectUserByUsername = (username) => {
+    console.log(username);
+    return User.find({ username: username }).then((user) => {
+        return user[0];
+    });
+};
+exports.selectUserByUsername = selectUserByUsername;
