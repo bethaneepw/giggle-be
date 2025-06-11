@@ -1186,7 +1186,7 @@ describe("Users Model", () => {
   });
 
   describe("GET /api/users AUTHENTICATION", () => {
-    test("200 Users have password and email", () => {
+    test("200 Users have an email, and password is NOT returned", () => {
       return request(app)
         .get("/api/users")
         .expect(200)
@@ -1194,9 +1194,9 @@ describe("Users Model", () => {
           expect(users.length).toBeGreaterThan(0);
           users.forEach((user) => {
             expect(user).toMatchObject({
-              password: expect.any(String),
               email: expect.any(String),
             });
+            expect(user.password).toBeUndefined;
           });
         });
     });
@@ -1238,6 +1238,77 @@ describe("Users Model", () => {
           .then(({ body: { msg } }) => {
             expect(msg).toBe("User does not exist!");
           });
+      });
+    });
+  });
+
+  describe("POST /api/login", () => {
+    test("200: Responds with the correct logged in user", async () => {
+      const {
+        body: { newUser },
+      } = await request(app)
+        .post("/api/users")
+        .send({
+          firstName: "Auth",
+          lastName: "Test",
+          username: "AuthTest",
+          location: {
+            town: "Leeds",
+            postcode: "LS10 1JH",
+          },
+          preferences: {
+            drinkPreference: "A lot",
+            seatPreference: "Standing",
+            giggingStyle: {
+              mosher: false,
+              singalong: true,
+              photographer: false,
+            },
+          },
+          biography: "This user is for testing authentication.",
+          dateOfBirth: "1989-09-23",
+          gender: "Man",
+          trustRating: 1.0,
+          isVerified: true,
+          interestedEvents: ["66679e9e54711517579556f3"],
+          profilePictureURL: "aRealImageUrl",
+          password: "password123",
+          email: "authtest@email.com",
+        });
+
+      const {
+        body: { loggedInUser },
+      } = await request(app)
+        .post("/api/login")
+        .send({ email: "authtest@email.com", password: "password123" })
+        .expect(201);
+
+      expect(loggedInUser).toMatchObject({
+        _id: newUser._id,
+        firstName: "Auth",
+        lastName: "Test",
+        username: "AuthTest",
+        location: {
+          town: "Leeds",
+          postcode: "LS10 1JH",
+        },
+        preferences: {
+          drinkPreference: "A lot",
+          seatPreference: "Standing",
+          giggingStyle: {
+            mosher: false,
+            singalong: true,
+            photographer: false,
+          },
+        },
+        biography: "This user is for testing authentication.",
+        dateOfBirth: "1989-09-23T00:00:00.000Z",
+        gender: "Man",
+        trustRating: 1.0,
+        isVerified: true,
+        interestedEvents: ["66679e9e54711517579556f3"],
+        profilePictureURL: "aRealImageUrl",
+        email: "authtest@email.com",
       });
     });
   });

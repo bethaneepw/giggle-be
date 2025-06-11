@@ -31,7 +31,8 @@ const {
   deleteUser,
   getUserById,
   patchUser,
-  getUserByUsername
+  getUserByUsername,
+  postLoginUser
 } = require("./controllers/users.controllers");
 
 const {

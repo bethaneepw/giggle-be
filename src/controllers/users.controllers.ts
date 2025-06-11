@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
-import { verifyUserLogIn } from "../models/users.models";
 const { mongoose } = require("../../db/connection");
 const { userSchema } = require("../../db/schema/userSchema");
 const User = mongoose.model("users", userSchema);
 const jwt = require("jsonwebtoken");
-
+const JWT_SECRET = process.env.JWT_SECRET || "secretToken";
 const {
   selectUsers,
   addNewUser,
@@ -129,11 +128,22 @@ exports.getUserByUsername = (
 
 exports.postLoginUser = async (req: Request, res: Response, next: any) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) return res.status(401).send({ msg: "Invalid credentials" });
-  const isMatch = await user.comparePassword(password);
-  if (!isMatch) return res.status(401).send({ msg: "Invalid credentials" });
+  const loggedInUser = await User.findOne({ email });
+  if (!loggedInUser) {
+    console.log("USER WRONG");
+    return res.status(401).send({ msg: "Invalid credentials" });
+  }
+  const isMatch = await loggedInUser.comparePassword(password);
+  if (!isMatch) {
+    console.log(password);
+    console.log("PASSWORD WRONG");
+    return res.status(401).send({ msg: "Invalid credentials" });
+  }
 
-  const token = jwt.sign()
-  res.status(201).send({ loggedInUser });
+  const token = jwt.sign(
+    { _id: loggedInUser._id, email: loggedInUser.email },
+    JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+  res.status(201).send({ msg: "Login successful", token, loggedInUser });
 };
