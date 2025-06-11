@@ -12,7 +12,7 @@ const { mongoose } = require("mongoose");
 const { chatSchema } = require("../../db/schema/chatSchema");
 const Chat = mongoose.model("chats", chatSchema);
 
-exports.postMessagebyId = (
+exports.getMessagesByRoomId = (
   req: Request,
   res: Response,
   next: any
@@ -83,3 +83,17 @@ exports.getAllMessages = (
     })
     .catch(next);
 };
+
+
+exports.postMessagebyId = (req: Request, res: Response) => {
+  res.status(501).json({ error: "Not implemented" });
+};
+
+exports.deleteMessagebyId = (req: Request, res: Response) => {
+  res.status(501).json({ error: "Not implemented" });
+};
+
+exports.patchMessagebyId = (req: Request, res: Response) => {
+  res.status(501).json({ error: "Not implemented" });
+};
+

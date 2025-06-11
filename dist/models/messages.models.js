@@ -24,9 +24,15 @@ const selectMessageByMessageId = (messageId) => {
 };
 exports.selectMessageByMessageId = selectMessageByMessageId;
 const selectMessagesByRoomId = (roomId) => {
+    console.log("=== selectMessagesByRoomId called with roomId:", roomId);
+    console.log("=== roomId type:", typeof roomId);
+    const queryRoomId = mongoose.Types.ObjectId.isValid(roomId)
+        ? new mongoose.Types.ObjectId(roomId)
+        : roomId;
+    console.log("=== Using queryRoomId:", queryRoomId);
     return Message.find({
-        roomId: roomId,
-        displayToClient: true,
+        roomId: queryRoomId,
+        displayToClient: true
     })
         .sort({ timestamp: 1 })
         .orFail(() => {
@@ -68,18 +74,24 @@ const addMessageByRoomId = (roomId, senderId, body) => {
 };
 exports.addMessageByRoomId = addMessageByRoomId;
 const getMessageCountByRoomId = (roomId) => {
+    const queryRoomId = mongoose.Types.ObjectId.isValid(roomId)
+        ? new mongoose.Types.ObjectId(roomId)
+        : roomId;
     return Message.countDocuments({
-        roomId: roomId,
-        displayToClient: true,
+        roomId: queryRoomId,
+        displayToClient: true
     }).then((count) => {
         return count;
     });
 };
 exports.getMessageCountByRoomId = getMessageCountByRoomId;
 const getLastMessageByRoomId = (roomId) => {
+    const queryRoomId = mongoose.Types.ObjectId.isValid(roomId)
+        ? new mongoose.Types.ObjectId(roomId)
+        : roomId;
     return Message.findOne({
-        roomId: roomId,
-        displayToClient: true,
+        roomId: queryRoomId,
+        displayToClient: true
     })
         .sort({ timestamp: -1 })
         .then((message) => {
@@ -99,3 +111,12 @@ const modifyMessageById = (message_id, dataToUpdate) => {
     }
 };
 exports.modifyMessageById = modifyMessageById;
+module.exports = {
+    selectMessages: exports.selectMessages,
+    selectMessageByMessageId: exports.selectMessageByMessageId,
+    selectMessagesByRoomId: exports.selectMessagesByRoomId,
+    addNewMessage: exports.addNewMessage,
+    getMessageCountByRoomId: exports.getMessageCountByRoomId,
+    getLastMessageByRoomId: exports.getLastMessageByRoomId,
+    allMessages: exports.selectMessages
+};

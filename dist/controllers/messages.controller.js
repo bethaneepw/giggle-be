@@ -5,7 +5,7 @@ const { selectMessagesByRoomId, selectMessages, modifyMessageById, } = require("
 const { mongoose } = require("mongoose");
 const { chatSchema } = require("../../db/schema/chatSchema");
 const Chat = mongoose.model("chats", chatSchema);
-exports.postMessagebyId = (req, res, next) => {
+exports.getMessagesByRoomId = (req, res, next) => {
     const { roomId } = req.params;
     const { senderId, body } = req.body;
     if (!body) {
@@ -53,4 +53,13 @@ exports.getAllMessages = (req, res, next) => {
         res.status(200).send({ messages });
     })
         .catch(next);
+};
+exports.postMessagebyId = (req, res) => {
+    res.status(501).json({ error: "Not implemented" });
+};
+exports.deleteMessagebyId = (req, res) => {
+    res.status(501).json({ error: "Not implemented" });
+};
+exports.patchMessagebyId = (req, res) => {
+    res.status(501).json({ error: "Not implemented" });
 };
