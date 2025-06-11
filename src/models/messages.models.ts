@@ -22,21 +22,31 @@ export const selectMessageByMessageId = (messageId) => {
     });
 };
 
-export const selectMessagesByRoomId = (roomId:any) => {
+export const selectMessagesByRoomId = (roomId: any) => {
+  console.log("=== selectMessagesByRoomId called with roomId:", roomId);
+  console.log("=== roomId type:", typeof roomId);
+  
+  // Convert string to ObjectId if needed
+  const queryRoomId = mongoose.Types.ObjectId.isValid(roomId) 
+    ? new mongoose.Types.ObjectId(roomId) 
+    : roomId;
+  
+  console.log("=== Using queryRoomId:", queryRoomId);
+  
   return Message.find({ 
-    roomId: roomId,
+    roomId: queryRoomId,
     displayToClient: true 
   })
     .sort({ timestamp: 1 })
-   .orFail(() => {
-      throw { msg: "Chat Room does not exist!", status: 404 };
-    })
     .then((messages) => {
-    console.log("Empty messages??");
-      return messages;
+      console.log(`=== Database query returned ${messages.length} messages for roomId ${roomId}`);
+      return messages || [];
+    })
+    .catch((error) => {
+      console.error("=== Error querying messages:", error);
+      return []; // Return empty array on error instead of throwing
     });
 };
-
 
 export const addNewMessage = (
   roomId,
@@ -67,8 +77,13 @@ export const addNewMessage = (
 };
 
 export const getMessageCountByRoomId = (roomId) => {
+  // Convert to ObjectId if needed for consistency
+  const queryRoomId = mongoose.Types.ObjectId.isValid(roomId) 
+    ? new mongoose.Types.ObjectId(roomId) 
+    : roomId;
+    
   return Message.countDocuments({ 
-    roomId: roomId,
+    roomId: queryRoomId,
     displayToClient: true 
   }).then((count) => {
     return count;
@@ -76,8 +91,13 @@ export const getMessageCountByRoomId = (roomId) => {
 };
 
 export const getLastMessageByRoomId = (roomId) => {
+  // Convert to ObjectId if needed for consistency
+  const queryRoomId = mongoose.Types.ObjectId.isValid(roomId) 
+    ? new mongoose.Types.ObjectId(roomId) 
+    : roomId;
+    
   return Message.findOne({ 
-    roomId: roomId,
+    roomId: queryRoomId,
     displayToClient: true 
   })
     .sort({ timestamp: -1 })
@@ -85,3 +105,14 @@ export const getLastMessageByRoomId = (roomId) => {
       return message;
     });
 };
+
+module.exports = {
+  selectMessages,
+  selectMessageByMessageId,
+  selectMessagesByRoomId,
+  addNewMessage,
+  getMessageCountByRoomId,
+  getLastMessageByRoomId,
+  allMessages: selectMessages  
+};
+

@@ -1,17 +1,89 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
+const { selectChats, selectChatById } = require("../models/chats.models");
+const { selectUserByUserId } = require("../models/users.models");
+const {
+  selectMessagesByRoomId,
+  getMessageCountByRoomId,
+  getLastMessageByRoomId,
+} = require("../models/messages.models");
 
-const { selectChatById } = require("../models/chats.models");
-const chats = require("../../db/data/test/chats");
-
-exports.getChatById = (
+export const getChats = async (
   req: Request,
   res: Response,
-  next: any
-): Promise<void> => {
-  const { chats_id } = req.params;
-  return selectChatById(chats_id)
-    .then((chat: any) => {
-      res.status(200).send({ chat });
-    })
-    .catch(next);
+  next: NextFunction
+) => {
+  try {
+    const chats = await selectChats();
+
+    const chatsWithUserInfo = await Promise.all(
+      chats.map(async (chat: any) => {
+   
+        const userPromises = chat.user_ids.map((userId: string) =>
+          selectUserByUserId(userId).catch(() => null)
+        );
+        const users = (await Promise.all(userPromises)).filter(
+          (user: any) => user !== null
+        );
+
+    
+        const messageCount = await getMessageCountByRoomId(chat._id);
+
+        
+        const lastMessage = await getLastMessageByRoomId(chat._id);
+
+        return {
+          ...chat.toObject(),
+          users: users.map((user: any) => ({
+            _id: user._id,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+          })),
+          messageCount,
+          lastMessage: lastMessage
+            ? {
+                body: lastMessage.body,
+                timestamp: lastMessage.timestamp,
+                senderUsername: lastMessage.senderUsername,
+              }
+            : null,
+        };
+      })
+    );
+
+    res.status(200).json(chatsWithUserInfo);
+  } catch (error) {
+    next(error);
+  }
 };
+
+export const getChatById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { chat_id } = req.params;
+    console.log("=== getChatById called with chat_id:", chat_id);
+
+    const chat = await selectChatById(chat_id);
+    console.log("=== Found chat:", chat._id);
+
+    const messages = await selectMessagesByRoomId(chat_id);
+    console.log("=== Found messages count:", messages.length);
+    console.log("=== Messages:", messages);
+
+    const chatWithMessages = {
+      ...chat.toObject(),
+      msgs: messages,
+    };
+
+    console.log("=== Sending response with msgs array of length:", chatWithMessages.msgs.length);
+    res.status(200).json(chatWithMessages);
+  } catch (error) {
+    console.error("=== Error in getChatById:", error);
+    next(error);
+  }
+};
+
+/
