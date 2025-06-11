@@ -39,6 +39,34 @@ module.exports = [
     hasBeenClaimed: false,
   }),
   new Ticket({
+    owner_username: "freyja_redmane",
+    seating: "Seating",
+    eventDetails: "6842aa5401b3d102a586c50a", // J.J. Slider
+    notes: "Anyone confused about where the seats actually in the Brude?!",
+    hasBeenClaimed: true,
+  }),
+  new Ticket({
+    owner_username: "mirielLikesTurtles",
+    seating: "Standing",
+    eventDetails: "6842aa5401b3d102a586c50a", // J.J. Slider
+    notes: "Boy does JJ look like Angel Olsen!",
+    hasBeenClaimed: false,
+  }),
+  new Ticket({
+    owner_username: "bernahlk92",
+    seating: "Standing",
+    eventDetails: "6842aa5401b3d102a586c50a", // J.J. Slider
+    notes: "Planning to go down early and get near the front :)",
+    hasBeenClaimed: false,
+  }),
+  new Ticket({
+    owner_username: "scarlett_m",
+    seating: "Seating",
+    eventDetails: "6842aa5401b3d102a586c50a", // J.J.Slider
+    notes: "",
+    hasBeenClaimed: true,
+  }),
+  new Ticket({
     owner_username: "scarlett_m",
     seating: "Standing",
     eventDetails: "6841b11448f32b84af511461", // J.J.Slider
