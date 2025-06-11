@@ -39,18 +39,23 @@ exports.postUser = (req: Request, res: Response<User>, next): Promise<void> => {
     isVerified,
     interestedEvents,
     profilePictureURL,
+    password,
+    email,
   } = req.body;
   if (
-    firstName === "" ||
-    lastName === "" ||
-    username === "" ||
-    location === "" ||
-    biography === "" ||
-    dateOfBirth === "" ||
-    trustRating === "" ||
-    profilePictureURL === ""
+    !firstName ||
+    !lastName ||
+    !username ||
+    !location ||
+    !location.town ||
+    !location.postcode ||
+    !dateOfBirth ||
+    trustRating === undefined ||
+    !profilePictureURL ||
+    !password ||
+    !email
   ) {
-    throw { msg: "Information cannot be blank!", status: 400 };
+    throw { msg: "Invalid information!", status: 400 };
   } else {
     return addNewUser(
       firstName,
@@ -64,7 +69,9 @@ exports.postUser = (req: Request, res: Response<User>, next): Promise<void> => {
       trustRating,
       isVerified,
       interestedEvents,
-      profilePictureURL
+      profilePictureURL,
+      password,
+      email
     )
       .then((newUser) => {
         res.status(201).send({ newUser });

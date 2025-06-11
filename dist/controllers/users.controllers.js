@@ -16,19 +16,22 @@ exports.getUsers = (req, res) => {
     });
 };
 exports.postUser = (req, res, next) => {
-    const { firstName, lastName, username, location, preferences, biography, dateOfBirth, gender, trustRating, isVerified, interestedEvents, profilePictureURL, } = req.body;
-    if (firstName === "" ||
-        lastName === "" ||
-        username === "" ||
-        location === "" ||
-        biography === "" ||
-        dateOfBirth === "" ||
-        trustRating === "" ||
-        profilePictureURL === "") {
-        throw { msg: "Information cannot be blank!", status: 400 };
+    const { firstName, lastName, username, location, preferences, biography, dateOfBirth, gender, trustRating, isVerified, interestedEvents, profilePictureURL, password, email, } = req.body;
+    if (!firstName ||
+        !lastName ||
+        !username ||
+        !location ||
+        !location.town ||
+        !location.postcode ||
+        !dateOfBirth ||
+        trustRating === undefined ||
+        !profilePictureURL ||
+        !password ||
+        !email) {
+        throw { msg: "Invalid information!", status: 400 };
     }
     else {
-        return addNewUser(firstName, lastName, username, location, preferences, biography, dateOfBirth, gender, trustRating, isVerified, interestedEvents, profilePictureURL)
+        return addNewUser(firstName, lastName, username, location, preferences, biography, dateOfBirth, gender, trustRating, isVerified, interestedEvents, profilePictureURL, password, email)
             .then((newUser) => {
             res.status(201).send({ newUser });
         })

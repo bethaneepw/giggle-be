@@ -97,6 +97,8 @@ describe("Seed", () => {
         gender: "Woman",
         interestedEvents: [],
         profilePictureURL: "http://testURL.com/test.jpg",
+        password: "password",
+        email: "testseed@email.com",
       });
       await expect(user.validate()).resolves.toBeUndefined();
     });
@@ -112,6 +114,8 @@ describe("Seed", () => {
         gender: "Woman",
         interestedEvents: [],
         profilePictureURL: "http://testURL.com/test.jpg",
+        password: "password",
+        email: "testseed2@email.com",
       });
       expect(user.preferences.giggingStyle.mosher).toBe(false);
       expect(user.preferences.giggingStyle.singalong).toBe(false);
@@ -129,6 +133,8 @@ describe("Seed", () => {
         gender: "Woman",
         interestedEvents: [],
         profilePictureURL: "http://testURL.com/test.jpg",
+        password: "password",
+        email: "testseed3@email.com",
       };
       await User.create(userData);
       await expect(User.create(userData)).rejects.toThrow(
@@ -149,6 +155,8 @@ describe("Seed", () => {
         interestedEvents: [],
         profilePictureURL: "http://testURL.com/test.jpg",
         // Missing dateOfBirth
+        password: "password",
+        email: "testseed4@email.com",
       };
       await expect(User.create(userData)).rejects.toThrow(
         new Error(
@@ -168,6 +176,8 @@ describe("Seed", () => {
         gender: "Alien", // Invalid
         interestedEvents: [],
         profilePictureURL: "http://testURL.com/test.jpg",
+        password: "password",
+        email: "testseed5@email.com",
       };
       await expect(User.create(userData)).rejects.toThrow(
         new Error(
@@ -188,6 +198,8 @@ describe("Seed", () => {
         interestedEvents: [],
         profilePictureURL: "http://testURL.com/test.jpg",
         trustRating: 1.5,
+        password: "password",
+        email: "testseed6@email.com",
       };
       await expect(User.create(userData)).rejects.toThrow(
         new Error(
@@ -207,6 +219,8 @@ describe("Seed", () => {
         gender: "Woman",
         interestedEvents: [],
         profilePictureURL: "http://testURL.com/test.jpg",
+        password: "password",
+        email: "testseed7@email.com",
       };
 
       await expect(User.create(userData)).rejects.toThrow(
@@ -215,6 +229,42 @@ describe("Seed", () => {
         )
       );
     });
+
+    test("Rejects duplicate emails", async () => {
+      const userData1 = {
+        firstName: "Test",
+        lastName: "Smith",
+        username: "uniqueEmails1",
+        location: { town: "Testville", postcode: "TS1 1TS" },
+        preferences: {},
+        dateOfBirth: new Date("2000-01-01"),
+        gender: "Woman",
+        interestedEvents: [],
+        profilePictureURL: "http://testURL.com/test.jpg",
+        password: "password",
+        email: "notunique@email.com",
+      };
+      const userData2 = {
+        firstName: "Test",
+        lastName: "Smith",
+        username: "uniqueEmails2",
+        location: { town: "Testville", postcode: "TS1 1TS" },
+        preferences: {},
+        dateOfBirth: new Date("2000-01-01"),
+        gender: "Woman",
+        interestedEvents: [],
+        profilePictureURL: "http://testURL.com/test.jpg",
+        password: "password",
+        email: "notunique@email.com",
+      };
+      await User.create(userData1);
+      await expect(User.create(userData2)).rejects.toThrow(
+        new Error(
+          'E11000 duplicate key error collection: giggle_test.users index: email_1 dup key: { email: "notunique@email.com" }'
+        )
+      );
+    });
+    
   });
 
   describe("Events collection", () => {

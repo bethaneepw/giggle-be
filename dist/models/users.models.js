@@ -4,6 +4,8 @@ exports.selectUserByUsername = exports.updateUser = exports.deleteUserByUserId =
 const { mongoose } = require("../../db/connection");
 const { userSchema } = require("../../db/schema/userSchema");
 const User = mongoose.model("users", userSchema);
+const bcrypt = require("bcrypt");
+const SALT_WORK_FACTOR = 10;
 const selectUsers = () => {
     return User.find({}).then((users) => {
         return users;
@@ -20,7 +22,7 @@ const selectUserByUserId = (userId) => {
     });
 };
 exports.selectUserByUserId = selectUserByUserId;
-const addNewUser = (firstName, lastName, username, location, preferences, biography, dateOfBirth, gender, trustRating, isVerified, interestedEvents, profilePictureURL) => {
+const addNewUser = (firstName, lastName, username, location, preferences, biography, dateOfBirth, gender, trustRating, isVerified, interestedEvents, profilePictureURL, password, email) => {
     return User.create({
         firstName,
         lastName,
@@ -34,8 +36,19 @@ const addNewUser = (firstName, lastName, username, location, preferences, biogra
         isVerified,
         interestedEvents,
         profilePictureURL,
-    }).then((newUser) => {
+        password,
+        email,
+    })
+        .then((newUser) => {
         return newUser;
+    })
+        .catch((err) => {
+        if (err.name === "ValidationError") {
+            throw { msg: "Invalid information!", status: 400 };
+        }
+        else {
+            return err;
+        }
     });
 };
 exports.addNewUser = addNewUser;

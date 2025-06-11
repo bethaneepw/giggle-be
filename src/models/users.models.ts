@@ -1,19 +1,21 @@
 const { mongoose } = require("../../db/connection");
 const { userSchema } = require("../../db/schema/userSchema");
 const User = mongoose.model("users", userSchema);
+const bcrypt = require("bcrypt");
+const SALT_WORK_FACTOR = 10;
 
 export const selectUsers = () => {
-  return User.find({}).then((users) => {
+  return User.find({}).then((users: any) => {
     return users;
   });
 };
 
-export const selectUserByUserId = (userId) => {
+export const selectUserByUserId = (userId: any) => {
   return User.findById(userId)
     .orFail(() => {
       throw { msg: "User does not exist!", status: 404 };
     })
-    .then((user) => {
+    .then((user: any) => {
       return user;
     });
 };
@@ -30,7 +32,9 @@ export const addNewUser = (
   trustRating,
   isVerified,
   interestedEvents,
-  profilePictureURL
+  profilePictureURL,
+  password,
+  email
 ) => {
   return User.create({
     firstName,
@@ -45,12 +49,22 @@ export const addNewUser = (
     isVerified,
     interestedEvents,
     profilePictureURL,
-  }).then((newUser) => {
-    return newUser;
-  });
+    password,
+    email,
+  })
+    .then((newUser: any) => {
+      return newUser;
+    })
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        throw { msg: "Invalid information!", status: 400 };
+      } else {
+        return err;
+      }
+    });
 };
 
-export const deleteUserByUserId = (userId) => {
+export const deleteUserByUserId = (userId: any) => {
   return User.findByIdAndDelete(userId).then(() => {});
 };
 

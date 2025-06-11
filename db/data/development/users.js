@@ -23,6 +23,8 @@ module.exports = [
     memberSince: "2025-05-24",
     interestedEvents: [],
     profilePictureURL: "https://example.com/profiles/john_doe92.jpg",
+    password: "password",
+    email: "fakeemail1@email.com",
   }),
   new User({
     _id: "6841b83cb614f77a81b68513",
@@ -43,6 +45,8 @@ module.exports = [
     memberSince: "2025-05-25",
     interestedEvents: ["6841b051cc1b8b8ee55b6e1d"],
     profilePictureURL: "https://example.com/profiles/pointyHatEnjoyer.jpg",
+    password: "password",
+    email: "fakeemail2@email.com",
   }),
   new User({
     _id: "6841b84b309aaa9367de0c29",
@@ -63,6 +67,8 @@ module.exports = [
     memberSince: "2025-05-24",
     interestedEvents: [],
     profilePictureURL: "https://example.com/profiles/mirielLikesTurtles.jpg",
+    password: "password",
+    email: "fakeemail3@email.com",
   }),
   new User({
     _id: "6841b879c2c71307acb46c51",
@@ -83,6 +89,8 @@ module.exports = [
     memberSince: "2025-06-25",
     interestedEvents: ["6841b11448f32b84af511461"],
     profilePictureURL: "https://example.com/profiles/freyja_redmane.jpg",
+    password: "password",
+    email: "fakeemail4@email.com",
   }),
   new User({
     _id: "6841b87e5783843a75f13120",
@@ -104,6 +112,8 @@ module.exports = [
     memberSince: "2025-06-25",
     interestedEvents: [],
     profilePictureURL: "https://example.com/profiles/lordKenneth.jpg",
+    password: "password",
+    email: "fakeemail5@email.com",
   }),
   new User({
     _id: "6841b8841eca10853eb5fa0d",
@@ -124,6 +134,8 @@ module.exports = [
     memberSince: "2025-05-24",
     interestedEvents: ["6841ade2e789d40979e235ca"],
     profilePictureURL: "https://example.com/profiles/scarlett_m.jpg",
+    password: "password",
+    email: "fakeemail6@email.com",
   }),
   new User({
     _id: "6841b889896285fce9d14796",
@@ -144,6 +156,8 @@ module.exports = [
     memberSince: "2025-05-25",
     interestedEvents: [],
     profilePictureURL: "https://example.com/profiles/hunter_jerren.jpg",
+    password: "password",
+    email: "fakeemail7@email.com",
   }),
   new User({
     _id: "6841b89ab79d94a7dae54eba",
@@ -164,6 +178,8 @@ module.exports = [
     memberSince: "2025-05-25",
     interestedEvents: [],
     profilePictureURL: "https://example.com/profiles/nepheli_99.jpg",
+    password: "password",
+    email: "fakeemail8@email.com",
   }),
   new User({
     _id: "6841b89f651e088a4534d24a",
@@ -184,6 +200,8 @@ module.exports = [
     memberSince: "2025-05-25",
     interestedEvents: ["6841b08fdd14c4583ebed053"],
     profilePictureURL: "https://example.com/profiles/old_albus.jpg",
+    password: "password",
+    email: "fakeemail9@email.com",
   }),
   new User({
     _id: "6841b8a381d395a620af285f",
@@ -204,6 +222,8 @@ module.exports = [
     memberSince: "2025-05-25",
     interestedEvents: [],
     profilePictureURL: "https://example.com/profiles/jar_man.jpg",
+    password: "password",
+    email: "fakeemail10@email.com",
   }),
   new User({
     _id: "6841b8a92dc3ed702a69d6b1",
@@ -224,5 +244,7 @@ module.exports = [
     memberSince: "2025-05-25",
     interestedEvents: ["6841b08fdd14c4583ebed053"],
     profilePictureURL: "https://robohash.org/mail@ashallendesign.co.uk",
+    password: "password",
+    email: "fakeemail11@email.com",
   }),
 ];
