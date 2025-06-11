@@ -1361,7 +1361,7 @@ describe("GET: /api/tickets/events/:event_id", () => {
   });
 });
 
-describe.only("PATCH: /api/messages/:message_id", () => {
+describe("PATCH: /api/messages/:message_id", () => {
   test("200: Successfully updates message", () => {
     return request(app)
       .patch("/api/messages/68417f91c0cadf7869342c42")

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.modifyMessageById = exports.getLastMessageByRoomId = exports.getMessageCountByRoomId = exports.addMessageByRoomId = exports.selectMessagesByRoomId = exports.selectMessageByMessageId = exports.selectMessages = void 0;
+exports.modifyMessageById = exports.getLastMessageByRoomId = exports.getMessageCountByRoomId = exports.addMessageByRoomId = exports.addNewMessage = exports.selectMessagesByRoomId = exports.selectMessageByMessageId = exports.selectMessages = void 0;
 const { mongoose } = require("../../db/connection");
 const { messageSchema } = require("../../db/schema/messageSchema");
 const Message = mongoose.model("messages", messageSchema);
@@ -37,31 +37,26 @@ const selectMessagesByRoomId = (roomId) => {
     });
 };
 exports.selectMessagesByRoomId = selectMessagesByRoomId;
-// export const addNewMessage = (
-//   roomId,
-//   senderId,
-//   body,
-//   senderUsername = null,
-//   displayToClient = true
-// ) => {
-//   if (!roomId || !senderId || !body) {
-//     throw { msg: "roomId, senderId, and body are required!", status: 400 };
-//   }
-//   if (body.trim() === "") {
-//     throw { msg: "Message body cannot be empty!", status: 400 };
-//   }
-//   return Message.create({
-//     roomId,
-//     senderId,
-//     senderUsername,
-//     body: body.trim(),
-//     timestamp: new Date(),
-//     displayToClient,
-//     msgId: Date.now(),
-//   }).then((newMessage) => {
-//     return newMessage;
-//   });
-// };
+const addNewMessage = (roomId, senderId, body, senderUsername = null, displayToClient = true) => {
+    if (!roomId || !senderId || !body) {
+        throw { msg: "roomId, senderId, and body are required!", status: 400 };
+    }
+    if (body.trim() === "") {
+        throw { msg: "Message body cannot be empty!", status: 400 };
+    }
+    return Message.create({
+        roomId,
+        senderId,
+        senderUsername,
+        body: body.trim(),
+        timestamp: new Date(),
+        displayToClient,
+        msgId: Date.now(),
+    }).then((newMessage) => {
+        return newMessage;
+    });
+};
+exports.addNewMessage = addNewMessage;
 const addMessageByRoomId = (roomId, senderId, body) => {
     return Message.create({
         roomId: "68405d38239a61ea5b7ad207",

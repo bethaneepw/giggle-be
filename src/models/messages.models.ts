@@ -35,33 +35,33 @@ export const selectMessagesByRoomId = (roomId: any) => {
     });
 };
 
-// export const addNewMessage = (
-//   roomId,
-//   senderId,
-//   body,
-//   senderUsername = null,
-//   displayToClient = true
-// ) => {
-//   if (!roomId || !senderId || !body) {
-//     throw { msg: "roomId, senderId, and body are required!", status: 400 };
-//   }
+export const addNewMessage = (
+  roomId,
+  senderId,
+  body,
+  senderUsername = null,
+  displayToClient = true
+) => {
+  if (!roomId || !senderId || !body) {
+    throw { msg: "roomId, senderId, and body are required!", status: 400 };
+  }
 
-//   if (body.trim() === "") {
-//     throw { msg: "Message body cannot be empty!", status: 400 };
-//   }
+  if (body.trim() === "") {
+    throw { msg: "Message body cannot be empty!", status: 400 };
+  }
 
-//   return Message.create({
-//     roomId,
-//     senderId,
-//     senderUsername,
-//     body: body.trim(),
-//     timestamp: new Date(),
-//     displayToClient,
-//     msgId: Date.now(),
-//   }).then((newMessage) => {
-//     return newMessage;
-//   });
-// };
+  return Message.create({
+    roomId,
+    senderId,
+    senderUsername,
+    body: body.trim(),
+    timestamp: new Date(),
+    displayToClient,
+    msgId: Date.now(),
+  }).then((newMessage) => {
+    return newMessage;
+  });
+};
 
 export const addMessageByRoomId = (roomId: any, senderId: any, body: any) => {
   return Message.create({
