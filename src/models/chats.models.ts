@@ -8,12 +8,6 @@ export const selectChats = () => {
   });
 };
 
-// export const selectChatsByUserId = (userId) => {
-//   return Chat.find({ user_ids: userId }).then((chats) => {
-//     return chats;
-//   });
-// };
-
 export const addNewChat = (user_ids) => {
   if (!user_ids || user_ids.length !== 2) {
     throw { msg: "Chat must have exactly 2 user IDs!", status: 400 };
