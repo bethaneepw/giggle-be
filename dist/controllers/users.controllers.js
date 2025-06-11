@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const { mongoose } = require("../../db/connection");
 const { userSchema } = require("../../db/schema/userSchema");
 const User = mongoose.model("users", userSchema);
-const { selectUsers, addNewUser, deleteUserByUserId, selectUserByUserId, updateUser, } = require("../models/users.models");
+const { selectUsers, addNewUser, deleteUserByUserId, selectUserByUserId, updateUser, selectUserByUsername, } = require("../models/users.models");
 // interface User {
 //   id: number;
 //   name: string;
@@ -63,4 +63,10 @@ exports.patchUser = (req, res, next) => {
         res.status(200).send({ updatedUser });
     })
         .catch(next);
+};
+exports.getUserByUsername = (req, res, next) => {
+    const { username } = req.params;
+    return selectUserByUsername(username).then((user) => {
+        res.status(200).send({ user });
+    });
 };
