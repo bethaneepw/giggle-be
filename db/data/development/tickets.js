@@ -42,7 +42,7 @@ module.exports = [
     owner_username: "freyja_redmane",
     seating: "Seating",
     eventDetails: "6842aa5401b3d102a586c50a", // J.J. Slider
-    notes: "Anyone confused about where the seats actually in the Brude?!",
+    notes: "Anyone confused about where the seats actually are in the Brude?!",
     hasBeenClaimed: true,
   }),
   new Ticket({
