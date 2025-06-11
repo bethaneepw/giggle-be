@@ -5,7 +5,6 @@ const selectChatById = require("./chats.models");
 const { chatSchema } = require("../../db/schema/chatSchema");
 const Chat = mongoose.model("chats", chatSchema);
 
-
 export const selectMessages = () => {
   return Message.find({}).then((messages) => {
     return messages;
@@ -22,20 +21,19 @@ export const selectMessageByMessageId = (messageId) => {
     });
 };
 
-export const selectMessagesByRoomId = (roomId:any) => {
-  return Message.find({ 
+export const selectMessagesByRoomId = (roomId: any) => {
+  return Message.find({
     roomId: roomId,
-    displayToClient: true 
+    displayToClient: true,
   })
     .sort({ timestamp: 1 })
-   .orFail(() => {
+    .orFail(() => {
       throw { msg: "Chat Room does not exist!", status: 404 };
     })
     .then((messages: any) => {
       return messages;
     });
 };
-
 
 // export const addNewMessage = (
 //   roomId,
@@ -76,18 +74,18 @@ export const addMessageByRoomId = (roomId: any, senderId: any, body: any) => {
 };
 
 export const getMessageCountByRoomId = (roomId) => {
-  return Message.countDocuments({ 
+  return Message.countDocuments({
     roomId: roomId,
-    displayToClient: true 
+    displayToClient: true,
   }).then((count) => {
     return count;
   });
 };
 
 export const getLastMessageByRoomId = (roomId) => {
-  return Message.findOne({ 
+  return Message.findOne({
     roomId: roomId,
-    displayToClient: true 
+    displayToClient: true,
   })
     .sort({ timestamp: -1 })
     .then((message) => {
@@ -97,8 +95,16 @@ export const getLastMessageByRoomId = (roomId) => {
 
 export const modifyMessageById = (message_id, dataToUpdate) => {
   const { displayToClient } = dataToUpdate;
-  if (displayToClient !== true || false) {
-    throw { msg: "Invalid request!"}
+
+  if (displayToClient === true || displayToClient === false) {
+    return Message.findByIdAndUpdate(
+      message_id,
+      { $set: { displayToClient: displayToClient } },
+      { new: true, runValidators: true }
+    ).then((updatedMessage: any) => {
+      return updatedMessage;
+    });
+  } else {
+    throw { msg: "Invalid request!", status: 400 };
   }
-  return Message.findByIdAndUpdate(message_id, {displayToClient: displayToClient}, { new: true, runValidators: true })
-}
+};

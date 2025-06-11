@@ -1335,7 +1335,7 @@ describe("GET: /api/tickets/events/:event_id", () => {
             _id: expect.any(String),
             owner_username: expect.any(String),
             eventDetails: "66679e9e54711517579556f3",
-          //  notes: expect.any(String),
+            //  notes: expect.any(String),
             hasBeenClaimed: expect.any(Boolean),
           });
         });
@@ -1364,16 +1364,16 @@ describe("GET: /api/tickets/events/:event_id", () => {
 describe.only("PATCH: /api/messages/:message_id", () => {
   test("200: Successfully updates message", () => {
     return request(app)
-      .patch("/api/messages/68417f99cc80869edc3c3931")
+      .patch("/api/messages/68417f91c0cadf7869342c42")
       .send({ displayToClient: false })
       .expect(200)
-      .then(({ body: { message } }) => {
-        expect(message).toMatchObject({
+      .then(({ body: { updatedMessage } }) => {
+        expect(updatedMessage).toMatchObject({
           _id: "68417f91c0cadf7869342c42",
           roomId: "68405d38239a61ea5b7ad207",
           senderId: "68405b9711f50eebe1b59521",
           body: "What did you want?",
-          timestamp: "2025-01-26T00:05:00Z",
+          timestamp: "2025-01-26T00:05:00.000Z",
           displayToClient: false,
         });
       });
@@ -1384,32 +1384,30 @@ describe.only("PATCH: /api/messages/:message_id", () => {
       .patch("/api/messages/68417f99cc80869edc3c3931")
       .send({ displayToClient: "This Isn't Aligned To Schema" })
       .expect(400)
-      .then(({body : {msg}})=>{
-        expect(msg).toBe("Invalid request!")
-      })
-  })
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid request!");
+      });
+  });
 
-    test("400: Bad request when message Id is invalid", () => {
+  test("400: Bad request when message Id is invalid", () => {
     return request(app)
       .patch("/api/messages/InvalidMessageId")
       .send({ displayToClient: false })
       .expect(400)
-      .then(({body : {msg}})=>{
-        expect(msg).toBe("Invalid request!")
-      })
-  })
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid request!");
+      });
+  });
 
   test("404: Not found when message Id is not in database", () => {
     return request(app)
-      .patch("/api/messages/684852c0f9e24de28a75aa12")
+      .patch("/api/messages/68405b9711f50eebe1b59521")
       .send({ displayToClient: false })
-      .expect(400)
-      .then(({body : {msg}})=>{
-        expect(msg).toBe("No message found!")
-      })
-  })
-
-
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Message does not exist!");
+      });
+  });
 
   // Success
   // Error: Sent Info Not aligned to Schema

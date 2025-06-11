@@ -39,9 +39,11 @@ exports.getMessagesbyRoomId = (req, res, next) => {
 exports.patchMessagebyId = (req, res, next) => {
     const { message_id } = req.params;
     const dataToUpdate = req.body;
-    return modifyMessageById(message_id, dataToUpdate)
-        .then((message) => {
-        res.status(200).send({ message });
+    const pendingUpdateMessage = modifyMessageById(message_id, dataToUpdate);
+    const pendingSelectMessageByMessageId = (0, messages_models_1.selectMessageByMessageId)(message_id);
+    return Promise.all([pendingUpdateMessage, pendingSelectMessageByMessageId])
+        .then(([updatedMessage]) => {
+        res.status(200).send({ updatedMessage });
     })
         .catch(next);
 };

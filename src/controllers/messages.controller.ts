@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { addMessageByRoomId } from "../models/messages.models";
+import {
+  addMessageByRoomId,
+  selectMessageByMessageId,
+} from "../models/messages.models";
 const {
   selectMessagesByRoomId,
   selectMessages,
@@ -35,7 +38,7 @@ exports.postMessagebyId = (
     .then(() => {
       return addMessageByRoomId(roomId, senderId, body);
     })
-    .then((message) => {
+    .then((message: any) => {
       res.status(201).send({ message });
     })
     .catch(next);
@@ -47,7 +50,7 @@ exports.getMessagesbyRoomId = (
 ): Promise<void> => {
   const { roomId } = req.params;
   return selectMessagesByRoomId(roomId)
-    .then((messages) => {
+    .then((messages: any) => {
       res.status(200).send({ messages });
     })
     .catch(next);
@@ -60,19 +63,22 @@ exports.patchMessagebyId = (
 ): Promise<void> => {
   const { message_id } = req.params;
   const dataToUpdate = req.body;
-  return modifyMessageById(message_id, dataToUpdate)
-    .then((message) => {
-      res.status(200).send({ message });
+  const pendingUpdateMessage = modifyMessageById(message_id, dataToUpdate);
+  const pendingSelectMessageByMessageId = selectMessageByMessageId(message_id);
+  return Promise.all([pendingUpdateMessage, pendingSelectMessageByMessageId])
+    .then(([updatedMessage]) => {
+      res.status(200).send({ updatedMessage });
     })
     .catch(next);
 };
+
 exports.getAllMessages = (
   req: Request,
   res: Response,
   next: any
 ): Promise<void> => {
   return selectMessages()
-    .then((messages) => {
+    .then((messages: any) => {
       res.status(200).send({ messages });
     })
     .catch(next);

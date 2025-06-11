@@ -26,7 +26,7 @@ exports.selectMessageByMessageId = selectMessageByMessageId;
 const selectMessagesByRoomId = (roomId) => {
     return Message.find({
         roomId: roomId,
-        displayToClient: true
+        displayToClient: true,
     })
         .sort({ timestamp: 1 })
         .orFail(() => {
@@ -75,7 +75,7 @@ exports.addMessageByRoomId = addMessageByRoomId;
 const getMessageCountByRoomId = (roomId) => {
     return Message.countDocuments({
         roomId: roomId,
-        displayToClient: true
+        displayToClient: true,
     }).then((count) => {
         return count;
     });
@@ -84,7 +84,7 @@ exports.getMessageCountByRoomId = getMessageCountByRoomId;
 const getLastMessageByRoomId = (roomId) => {
     return Message.findOne({
         roomId: roomId,
-        displayToClient: true
+        displayToClient: true,
     })
         .sort({ timestamp: -1 })
         .then((message) => {
@@ -94,9 +94,13 @@ const getLastMessageByRoomId = (roomId) => {
 exports.getLastMessageByRoomId = getLastMessageByRoomId;
 const modifyMessageById = (message_id, dataToUpdate) => {
     const { displayToClient } = dataToUpdate;
-    if (displayToClient !== true || false) {
-        throw { msg: "Invalid request!" };
+    if (displayToClient === true || displayToClient === false) {
+        return Message.findByIdAndUpdate(message_id, { $set: { displayToClient: displayToClient } }, { new: true, runValidators: true }).then((updatedMessage) => {
+            return updatedMessage;
+        });
     }
-    return Message.findByIdAndUpdate(message_id, { displayToClient: displayToClient }, { new: true, runValidators: true });
+    else {
+        throw { msg: "Invalid request!", status: 400 };
+    }
 };
 exports.modifyMessageById = modifyMessageById;
