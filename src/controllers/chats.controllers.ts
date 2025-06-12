@@ -5,6 +5,7 @@ const {
   selectMessagesByRoomId,
   getMessageCountByRoomId,
   getLastMessageByRoomId,
+  selectChatsByUserId,
 } = require("../models/messages.models");
 
 export const getChats = async (
@@ -76,4 +77,18 @@ export const getChatById = async (
     console.error("=== Error in getChatById:", error);
     next(error);
   }
+};
+
+export const getChatsByUserId = (
+  req: Request,
+  res: Response,
+  next: any
+): Promise<void> => {
+  const { user_id } = req.params;
+  console.log("CONTROLELR!");
+  return selectChatsByUserId(user_id)
+    .then((chats: any) => {
+      res.status(200).send({ chats });
+    })
+    .catch(next);
 };

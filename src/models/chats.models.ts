@@ -37,7 +37,7 @@ export const updateChatUsers = (chatId, user_ids) => {
     return updatedChat;
   });
 };
-exports.selectChatById = (_id: any) => {
+export const selectChatById = (_id: any) => {
   return Chat.findById(_id)
     .orFail(() => {
       throw { msg: "Chat does not exist!", status: 404 };
@@ -48,6 +48,9 @@ exports.selectChatById = (_id: any) => {
 };
 
 export const selectChatsByUserId = (_id: any) => {
+  if (!mongoose.Types.ObjectId.isValid(_id)) {
+    throw { msg: "Invalid user ID", status: 400 };
+  }
   return Chat.find({ user_ids: { $in: [_id] } })
     .orFail(() => {
       throw { msg: "Chat does not exist!", status: 404 };

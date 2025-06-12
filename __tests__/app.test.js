@@ -1385,7 +1385,7 @@ describe("Messages Model", () => {
     });
   });
 
-  describe.skip("POST /api/messages/:roomId", () => {
+  describe("POST /api/messages/:roomId", () => {
     test("201: Successfully adds a message to the chat room", () => {
       return request(app)
         .post("/api/messages/68405d38239a61ea5b7ad207")
@@ -1523,15 +1523,16 @@ describe("Messages Model", () => {
 });
 
 describe("Chats Model", () => {
-
-  test("GET /api/chats", () => {
-    return request(app)
-    .get("/api/chats")
-    .expect(200)
-    .then(({body: {chatsWithUserInfo}})=>{
-      expect(chatsWithUserInfo.length).toBeGreaterThan(0)
-    })
-  })
+  describe("GET /api/chats", () => {
+    test("GET /api/chats", () => {
+      return request(app)
+        .get("/api/chats")
+        .expect(200)
+        .then(({ body: { chatsWithUserInfo } }) => {
+          expect(chatsWithUserInfo.length).toBeGreaterThan(0);
+        });
+    });
+  });
   describe("GET /api/chats/:chat_id", () => {
     test("200: Gets Chat by Chat ID", () => {
       return request(app)
@@ -1568,14 +1569,14 @@ describe("Chats Model", () => {
   describe.skip("GET /api/chats/users/:user_id", () => {
     test("200: Responds with chats according to specific User ID", () => {
       return request(app)
-        .get("/api/chats/users/68405b9711f50eebe1b59521")
+        .get("/api/chats/users/68405b9711f50eebe1b59522")
         .expect(200)
         .then(({ body: { chats } }) => {
           expect(chats.length).toBe(2);
           chats.forEach((chat) => {
             expect(chat).toMatchObject({
               _id: expect.any(String),
-              user_ids: expect.arrayContaining(["68405b9711f50eebe1b59521"]),
+              user_ids: expect.arrayContaining(["68405b9711f50eebe1b59522"]),
             });
           });
         });

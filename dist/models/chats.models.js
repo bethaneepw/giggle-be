@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.selectChatsByUserId = exports.updateChatUsers = exports.deleteChatByChatId = exports.addNewChat = exports.selectChats = void 0;
+exports.selectChatsByUserId = exports.selectChatById = exports.updateChatUsers = exports.deleteChatByChatId = exports.addNewChat = exports.selectChats = void 0;
 const { mongoose } = require("../../db/connection");
 const { chatSchema } = require("../../db/schema/chatSchema");
 const Chat = mongoose.model("chats", chatSchema);
@@ -34,7 +34,7 @@ const updateChatUsers = (chatId, user_ids) => {
     });
 };
 exports.updateChatUsers = updateChatUsers;
-exports.selectChatById = (_id) => {
+const selectChatById = (_id) => {
     return Chat.findById(_id)
         .orFail(() => {
         throw { msg: "Chat does not exist!", status: 404 };
@@ -43,7 +43,11 @@ exports.selectChatById = (_id) => {
         return chat;
     });
 };
+exports.selectChatById = selectChatById;
 const selectChatsByUserId = (_id) => {
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+        throw { msg: "Invalid user ID", status: 400 };
+    }
     return Chat.find({ user_ids: { $in: [_id] } })
         .orFail(() => {
         throw { msg: "Chat does not exist!", status: 404 };

@@ -25,15 +25,15 @@ export const selectMessagesByRoomId = (roomId: any) => {
   console.log("=== selectMessagesByRoomId called with roomId:", roomId);
   console.log("=== roomId type:", typeof roomId);
 
-  const queryRoomId = mongoose.Types.ObjectId.isValid(roomId) 
-    ? new mongoose.Types.ObjectId(roomId) 
+  const queryRoomId = mongoose.Types.ObjectId.isValid(roomId)
+    ? new mongoose.Types.ObjectId(roomId)
     : roomId;
-  
+
   console.log("=== Using queryRoomId:", queryRoomId);
-  
-  return Message.find({ 
+
+  return Message.find({
     roomId: queryRoomId,
-    displayToClient: true 
+    displayToClient: true,
   })
     .sort({ timestamp: 1 })
     .orFail(() => {
@@ -73,8 +73,15 @@ export const addNewMessage = (
 };
 
 export const addMessageByRoomId = (roomId: any, senderId: any, body: any) => {
+  if (
+    !mongoose.Types.ObjectId.isValid(roomId) ||
+    !mongoose.Types.ObjectId.isValid(senderId)
+  ) {
+    throw { msg: "Invalid roomId or senderId", status: 400 };
+  }
+
   return Message.create({
-    roomId: "68405d38239a61ea5b7ad207",
+    roomId,
     senderId,
     body,
   }).then((message: any) => {
@@ -83,28 +90,26 @@ export const addMessageByRoomId = (roomId: any, senderId: any, body: any) => {
 };
 
 export const getMessageCountByRoomId = (roomId) => {
-
-  const queryRoomId = mongoose.Types.ObjectId.isValid(roomId) 
-    ? new mongoose.Types.ObjectId(roomId) 
+  const queryRoomId = mongoose.Types.ObjectId.isValid(roomId)
+    ? new mongoose.Types.ObjectId(roomId)
     : roomId;
-    
-  return Message.countDocuments({ 
+
+  return Message.countDocuments({
     roomId: queryRoomId,
-    displayToClient: true 
+    displayToClient: true,
   }).then((count) => {
     return count;
   });
 };
 
 export const getLastMessageByRoomId = (roomId) => {
-
-  const queryRoomId = mongoose.Types.ObjectId.isValid(roomId) 
-    ? new mongoose.Types.ObjectId(roomId) 
+  const queryRoomId = mongoose.Types.ObjectId.isValid(roomId)
+    ? new mongoose.Types.ObjectId(roomId)
     : roomId;
-    
-  return Message.findOne({ 
+
+  return Message.findOne({
     roomId: queryRoomId,
-    displayToClient: true 
+    displayToClient: true,
   })
     .sort({ timestamp: -1 })
     .then((message) => {
@@ -127,14 +132,3 @@ export const modifyMessageById = (message_id, dataToUpdate) => {
     throw { msg: "Invalid request!", status: 400 };
   }
 };
-
-module.exports = {
-  selectMessages,
-  selectMessageByMessageId,
-  selectMessagesByRoomId,
-  addNewMessage,
-  getMessageCountByRoomId,
-  getLastMessageByRoomId,
-  allMessages: selectMessages  
-};
-
