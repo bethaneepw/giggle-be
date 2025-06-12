@@ -22,7 +22,8 @@ module.exports = [
     isVerified: true,
     memberSince: "2025-05-24",
     interestedEvents: [],
-    profilePictureURL: "https://example.com/profiles/john_doe92.jpg",
+    profilePictureURL:
+      "https://images.pexels.com/photos/1804976/pexels-photo-1804976.jpeg",
     password: "password",
     email: "fakeemail1@email.com",
   }),
@@ -44,7 +45,8 @@ module.exports = [
     isVerified: false,
     memberSince: "2025-05-25",
     interestedEvents: ["6841b051cc1b8b8ee55b6e1d"],
-    profilePictureURL: "https://example.com/profiles/pointyHatEnjoyer.jpg",
+    profilePictureURL:
+      "https://images.pexels.com/photos/2647053/pexels-photo-2647053.jpeg",
     password: "password",
     email: "fakeemail2@email.com",
   }),
@@ -66,7 +68,8 @@ module.exports = [
     isVerified: true,
     memberSince: "2025-05-24",
     interestedEvents: [],
-    profilePictureURL: "https://example.com/profiles/mirielLikesTurtles.jpg",
+    profilePictureURL:
+      "https://images.pexels.com/photos/10467/pexels-photo-10467.jpeg",
     password: "password",
     email: "fakeemail3@email.com",
   }),
@@ -88,7 +91,8 @@ module.exports = [
     isVerified: true,
     memberSince: "2025-06-25",
     interestedEvents: ["6841b11448f32b84af511461"],
-    profilePictureURL: "https://example.com/profiles/freyja_redmane.jpg",
+    profilePictureURL:
+      "https://images.pexels.com/photos/17156748/pexels-photo-17156748/free-photo-of-pug-with-bandana.jpeg",
     password: "password",
     email: "fakeemail4@email.com",
   }),
@@ -111,7 +115,8 @@ module.exports = [
     isVerified: false,
     memberSince: "2025-06-25",
     interestedEvents: [],
-    profilePictureURL: "https://example.com/profiles/lordKenneth.jpg",
+    profilePictureURL:
+      "https://images.pexels.com/photos/1314550/pexels-photo-1314550.jpeg",
     password: "password",
     email: "fakeemail5@email.com",
   }),
@@ -133,7 +138,8 @@ module.exports = [
     isVerified: false,
     memberSince: "2025-05-24",
     interestedEvents: ["6841ade2e789d40979e235ca"],
-    profilePictureURL: "https://example.com/profiles/scarlett_m.jpg",
+    profilePictureURL:
+      "https://images.pexels.com/photos/47547/squirrel-animal-cute-rodents-47547.jpeg",
     password: "password",
     email: "fakeemail6@email.com",
   }),
@@ -155,7 +161,8 @@ module.exports = [
     isVerified: true,
     memberSince: "2025-05-25",
     interestedEvents: [],
-    profilePictureURL: "https://example.com/profiles/hunter_jerren.jpg",
+    profilePictureURL:
+      "https://images.pexels.com/photos/62289/yemen-chameleon-chamaeleo-calyptratus-chameleon-reptile-62289.jpeg",
     password: "password",
     email: "fakeemail7@email.com",
   }),
@@ -177,7 +184,8 @@ module.exports = [
     isVerified: true,
     memberSince: "2025-05-25",
     interestedEvents: [],
-    profilePictureURL: "https://example.com/profiles/nepheli_99.jpg",
+    profilePictureURL:
+      "https://images.pexels.com/photos/17811/pexels-photo.jpg",
     password: "password",
     email: "fakeemail8@email.com",
   }),
@@ -199,7 +207,8 @@ module.exports = [
     isVerified: false,
     memberSince: "2025-05-25",
     interestedEvents: ["6841b08fdd14c4583ebed053"],
-    profilePictureURL: "https://example.com/profiles/old_albus.jpg",
+    profilePictureURL:
+      "https://images.pexels.com/photos/1183434/pexels-photo-1183434.jpeg",
     password: "password",
     email: "fakeemail9@email.com",
   }),
@@ -221,7 +230,8 @@ module.exports = [
     isVerified: true,
     memberSince: "2025-05-25",
     interestedEvents: [],
-    profilePictureURL: "https://example.com/profiles/jar_man.jpg",
+    profilePictureURL:
+      "https://images.pexels.com/photos/1629781/pexels-photo-1629781.jpeg",
     password: "password",
     email: "fakeemail10@email.com",
   }),
