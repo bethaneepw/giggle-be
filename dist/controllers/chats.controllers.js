@@ -34,7 +34,7 @@ const getChats = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
                     }
                     : null });
         })));
-        res.status(200).json(chatsWithUserInfo);
+        res.status(200).send({ chatsWithUserInfo });
     }
     catch (error) {
         next(error);
@@ -47,7 +47,7 @@ const getChatById = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         const chat = yield selectChatById(chat_id);
         const messages = yield selectMessagesByRoomId(chat_id);
         const chatWithMessages = Object.assign(Object.assign({}, chat.toObject()), { msgs: messages });
-        res.status(200).json(chatWithMessages);
+        res.status(200).send({ chatWithMessages });
     }
     catch (error) {
         console.error("=== Error in getChatById:", error);

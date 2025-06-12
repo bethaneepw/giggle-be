@@ -17,7 +17,6 @@ export const getChats = async (
 
     const chatsWithUserInfo = await Promise.all(
       chats.map(async (chat: any) => {
-   
         const userPromises = chat.user_ids.map((userId: string) =>
           selectUserByUserId(userId).catch(() => null)
         );
@@ -25,10 +24,8 @@ export const getChats = async (
           (user: any) => user !== null
         );
 
-    
         const messageCount = await getMessageCountByRoomId(chat._id);
 
-        
         const lastMessage = await getLastMessageByRoomId(chat._id);
 
         return {
@@ -51,7 +48,7 @@ export const getChats = async (
       })
     );
 
-    res.status(200).json(chatsWithUserInfo);
+    res.status(200).send({ chatsWithUserInfo });
   } catch (error) {
     next(error);
   }
@@ -64,24 +61,19 @@ export const getChatById = async (
 ) => {
   try {
     const { chat_id } = req.params;
-    
 
     const chat = await selectChatById(chat_id);
-   
 
     const messages = await selectMessagesByRoomId(chat_id);
-
 
     const chatWithMessages = {
       ...chat.toObject(),
       msgs: messages,
     };
 
-   
-    res.status(200).json(chatWithMessages);
+    res.status(200).send({ chatWithMessages });
   } catch (error) {
     console.error("=== Error in getChatById:", error);
     next(error);
   }
 };
-
