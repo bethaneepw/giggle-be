@@ -39,8 +39,7 @@ app.get("/api/chats/:chat_id", getChatById);
 app.get("/api/chats", getChats);
 //untested
 // app.post("/api/messages/:roomId", postMessagebyId);
-// app.get("/api/tickets/events/:event_id", getTicketsByEventId);
-// 
+app.get("/api/tickets/events/:event_id", getTicketsByEventId);
 app.patch("/api/messages/:message_id", patchMessagebyId);
 app.get("/api/users/username/:username", getUserByUsername);
 app.post("/api/login", postLoginUser);
