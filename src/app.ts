@@ -36,7 +36,8 @@ const {
   deleteUser,
   getUserById,
   patchUser,
-  getUserByUsername
+  getUserByUsername,
+  postLoginUser
 } = require("./controllers/users.controllers");
 
 const {
@@ -103,6 +104,8 @@ app.get("/api/chats", getChats);
 app.patch("/api/messages/:message_id", patchMessagebyId);
 
 app.get("/api/users/username/:username", getUserByUsername);
+
+app.post("/api/login", postLoginUser)
 
 // Error handling
 

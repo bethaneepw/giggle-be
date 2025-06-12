@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const eventSchema = require("./eventSchema");
+
 
 const ticketSchema = new mongoose.Schema({
   owner_username: { type: String, required: true },

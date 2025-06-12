@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt"),
+  SALT_WORK_FACTOR = 10;
 
 const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
@@ -56,6 +58,36 @@ const userSchema = new mongoose.Schema({
     },
   ],
   profilePictureURL: { type: String, required: true },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 6,
+  },
 });
+
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
+
+  try {
+    const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
+    this.password = await bcrypt.hash(this.password, salt);
+  } catch (err) {
+    throw err;
+  }
+});
+
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  try {
+    return await bcrypt.compare(candidatePassword, this.password);
+  } catch (err) {
+    throw new Error("Password comparison failed");
+  }
+};
 
 module.exports = { userSchema };

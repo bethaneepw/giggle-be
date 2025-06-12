@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 const { mongoose } = require("../../db/connection");
 const { userSchema } = require("../../db/schema/userSchema");
 const User = mongoose.model("users", userSchema);
-
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = process.env.JWT_SECRET || "secretToken";
 const {
   selectUsers,
   addNewUser,
@@ -11,13 +12,6 @@ const {
   updateUser,
   selectUserByUsername,
 } = require("../models/users.models");
-
-// interface User {
-//   id: number;
-//   name: string;
-//   profile_picture: string;
-//   trustworthiness: number;
-// }
 
 exports.getUsers = (req: Request, res: Response<User>): Promise<void> => {
   return selectUsers().then((users) => {
@@ -39,18 +33,23 @@ exports.postUser = (req: Request, res: Response<User>, next): Promise<void> => {
     isVerified,
     interestedEvents,
     profilePictureURL,
+    password,
+    email,
   } = req.body;
   if (
-    firstName === "" ||
-    lastName === "" ||
-    username === "" ||
-    location === "" ||
-    biography === "" ||
-    dateOfBirth === "" ||
-    trustRating === "" ||
-    profilePictureURL === ""
+    !firstName ||
+    !lastName ||
+    !username ||
+    !location ||
+    !location.town ||
+    !location.postcode ||
+    !dateOfBirth ||
+    trustRating === undefined ||
+    !profilePictureURL ||
+    !password ||
+    !email
   ) {
-    throw { msg: "Information cannot be blank!", status: 400 };
+    throw { msg: "Invalid information!", status: 400 };
   } else {
     return addNewUser(
       firstName,
@@ -64,7 +63,9 @@ exports.postUser = (req: Request, res: Response<User>, next): Promise<void> => {
       trustRating,
       isVerified,
       interestedEvents,
-      profilePictureURL
+      profilePictureURL,
+      password,
+      email
     )
       .then((newUser) => {
         res.status(201).send({ newUser });
@@ -123,4 +124,26 @@ exports.getUserByUsername = (
   return selectUserByUsername(username).then((user: any) => {
     res.status(200).send({ user });
   });
+};
+
+exports.postLoginUser = async (req: Request, res: Response, next: any) => {
+  const { email, password } = req.body;
+  const loggedInUser = await User.findOne({ email });
+  if (!loggedInUser) {
+    console.log("USER WRONG");
+    return res.status(401).send({ msg: "Invalid credentials" });
+  }
+  const isMatch = await loggedInUser.comparePassword(password);
+  if (!isMatch) {
+    console.log(password);
+    console.log("PASSWORD WRONG");
+    return res.status(401).send({ msg: "Invalid credentials" });
+  }
+
+  const token = jwt.sign(
+    { _id: loggedInUser._id, email: loggedInUser.email },
+    JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+  res.status(201).send({ msg: "Login successful", token, loggedInUser });
 };
