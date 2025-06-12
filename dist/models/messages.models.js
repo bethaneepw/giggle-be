@@ -32,7 +32,7 @@ const selectMessagesByRoomId = (roomId) => {
     console.log("=== Using queryRoomId:", queryRoomId);
     return Message.find({
         roomId: queryRoomId,
-        displayToClient: true
+        displayToClient: true,
     })
         .sort({ timestamp: 1 })
         .orFail(() => {
@@ -64,8 +64,12 @@ const addNewMessage = (roomId, senderId, body, senderUsername = null, displayToC
 };
 exports.addNewMessage = addNewMessage;
 const addMessageByRoomId = (roomId, senderId, body) => {
+    if (!mongoose.Types.ObjectId.isValid(roomId) ||
+        !mongoose.Types.ObjectId.isValid(senderId)) {
+        throw { msg: "Invalid roomId or senderId", status: 400 };
+    }
     return Message.create({
-        roomId: "68405d38239a61ea5b7ad207",
+        roomId,
         senderId,
         body,
     }).then((message) => {
@@ -79,7 +83,7 @@ const getMessageCountByRoomId = (roomId) => {
         : roomId;
     return Message.countDocuments({
         roomId: queryRoomId,
-        displayToClient: true
+        displayToClient: true,
     }).then((count) => {
         return count;
     });
@@ -91,7 +95,7 @@ const getLastMessageByRoomId = (roomId) => {
         : roomId;
     return Message.findOne({
         roomId: queryRoomId,
-        displayToClient: true
+        displayToClient: true,
     })
         .sort({ timestamp: -1 })
         .then((message) => {
@@ -111,12 +115,3 @@ const modifyMessageById = (message_id, dataToUpdate) => {
     }
 };
 exports.modifyMessageById = modifyMessageById;
-module.exports = {
-    selectMessages: exports.selectMessages,
-    selectMessageByMessageId: exports.selectMessageByMessageId,
-    selectMessagesByRoomId: exports.selectMessagesByRoomId,
-    addNewMessage: exports.addNewMessage,
-    getMessageCountByRoomId: exports.getMessageCountByRoomId,
-    getLastMessageByRoomId: exports.getLastMessageByRoomId,
-    allMessages: exports.selectMessages
-};

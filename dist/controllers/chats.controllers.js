@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getChatById = exports.getChats = void 0;
+exports.getChatsByUserId = exports.getChatById = exports.getChats = void 0;
 const { selectChats, selectChatById } = require("../models/chats.models");
 const { selectUserByUserId } = require("../models/users.models");
-const { selectMessagesByRoomId, getMessageCountByRoomId, getLastMessageByRoomId, } = require("../models/messages.models");
+const { selectMessagesByRoomId, getMessageCountByRoomId, getLastMessageByRoomId, selectChatsByUserId, } = require("../models/messages.models");
 const getChats = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const chats = yield selectChats();
@@ -55,3 +55,13 @@ const getChatById = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.getChatById = getChatById;
+const getChatsByUserId = (req, res, next) => {
+    const { user_id } = req.params;
+    console.log("CONTROLELR!");
+    return selectChatsByUserId(user_id)
+        .then((chats) => {
+        res.status(200).send({ chats });
+    })
+        .catch(next);
+};
+exports.getChatsByUserId = getChatsByUserId;

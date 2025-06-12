@@ -1,18 +1,17 @@
 import { Request, Response } from "express";
-import {
-  addMessageByRoomId,
-  selectMessageByMessageId,
-} from "../models/messages.models";
+
 const {
   selectMessagesByRoomId,
   selectMessages,
   modifyMessageById,
+  addMessageByRoomId,
+  selectMessageByMessageId,
 } = require("../models/messages.models");
 const { mongoose } = require("mongoose");
 const { chatSchema } = require("../../db/schema/chatSchema");
 const Chat = mongoose.model("chats", chatSchema);
 
-exports.getMessagesByRoomId = (
+exports.postMessageByRoomId = (
   req: Request,
   res: Response,
   next: any
@@ -21,7 +20,7 @@ exports.getMessagesByRoomId = (
   const { senderId, body } = req.body;
 
   if (!body) {
-    throw { msg: "Body must not be empty", status: 400 };
+    return next({ msg: "Body must not be empty", status: 400 });
   }
 
   return Chat.findById(roomId)
@@ -41,8 +40,12 @@ exports.getMessagesByRoomId = (
     .then((message: any) => {
       res.status(201).send({ message });
     })
-    .catch(next);
+    .catch((err: any) => {
+      console.error(" Error creating message", err);
+      next(err);
+    });
 };
+
 exports.getMessagesbyRoomId = (
   req: Request,
   res: Response,
@@ -84,7 +87,6 @@ exports.getAllMessages = (
     .catch(next);
 };
 
-
 exports.postMessagebyId = (req: Request, res: Response) => {
   res.status(501).json({ error: "Not implemented" });
 };
@@ -96,4 +98,3 @@ exports.deleteMessagebyId = (req: Request, res: Response) => {
 exports.patchMessagebyId = (req: Request, res: Response) => {
   res.status(501).json({ error: "Not implemented" });
 };
-

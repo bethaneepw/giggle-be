@@ -37,7 +37,7 @@ const {
   getUserById,
   patchUser,
   getUserByUsername,
-  postLoginUser
+  postLoginUser,
 } = require("./controllers/users.controllers");
 
 const {
@@ -47,14 +47,16 @@ const {
 } = require("./controllers/error.controller");
 
 const {
-  postMessagebyId,
   getMessagesbyRoomId,
   patchMessagebyId,
-  deleteMessagebyId,
-  getAllMessages,
+  postMessageByRoomId,
 } = require("./controllers/messages.controller");
 
-const { getChatById, getChats } = require("./controllers/chats.controllers");
+const {
+  getChatById,
+  getChats,
+  getChatsByUserId,
+} = require("./controllers/chats.controllers");
 
 app.get("/api", getApi);
 
@@ -90,18 +92,14 @@ app.patch("/api/tickets/:ticket_id", patchTicket);
 // app.get("/api/messages", getAllMessages);
 
 app.get("/api/messages/:roomId", getMessagesbyRoomId);
-
 app.get("/api/chats/:chat_id", getChatById);
-
 app.get("/api/chats", getChats);
-//untested
-
-// app.post("/api/messages/:roomId", postMessagebyId);
-
-app.get("/api/tickets/events/:event_id", getTicketsByEventId); 
+app.post("/api/messages/:roomId", postMessageByRoomId);
+app.get("/api/tickets/events/:event_id", getTicketsByEventId);
 app.patch("/api/messages/:message_id", patchMessagebyId);
 app.get("/api/users/username/:username", getUserByUsername);
-app.post("/api/login", postLoginUser)
+app.post("/api/login", postLoginUser);
+app.get("/api/chats/users/:user_id", getChatsByUserId);
 
 // Error handling
 

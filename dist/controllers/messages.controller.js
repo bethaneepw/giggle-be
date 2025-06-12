@@ -1,15 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const messages_models_1 = require("../models/messages.models");
-const { selectMessagesByRoomId, selectMessages, modifyMessageById, } = require("../models/messages.models");
+const { selectMessagesByRoomId, selectMessages, modifyMessageById, addMessageByRoomId, selectMessageByMessageId, } = require("../models/messages.models");
 const { mongoose } = require("mongoose");
 const { chatSchema } = require("../../db/schema/chatSchema");
 const Chat = mongoose.model("chats", chatSchema);
-exports.getMessagesByRoomId = (req, res, next) => {
+exports.postMessageByRoomId = (req, res, next) => {
     const { roomId } = req.params;
     const { senderId, body } = req.body;
     if (!body) {
-        throw { msg: "Body must not be empty", status: 400 };
+        return next({ msg: "Body must not be empty", status: 400 });
     }
     return Chat.findById(roomId)
         .orFail(() => {
@@ -21,12 +20,15 @@ exports.getMessagesByRoomId = (req, res, next) => {
         });
     })
         .then(() => {
-        return (0, messages_models_1.addMessageByRoomId)(roomId, senderId, body);
+        return addMessageByRoomId(roomId, senderId, body);
     })
         .then((message) => {
         res.status(201).send({ message });
     })
-        .catch(next);
+        .catch((err) => {
+        console.error(" Error creating message", err);
+        next(err);
+    });
 };
 exports.getMessagesbyRoomId = (req, res, next) => {
     const { roomId } = req.params;
@@ -40,7 +42,7 @@ exports.patchMessagebyId = (req, res, next) => {
     const { message_id } = req.params;
     const dataToUpdate = req.body;
     const pendingUpdateMessage = modifyMessageById(message_id, dataToUpdate);
-    const pendingSelectMessageByMessageId = (0, messages_models_1.selectMessageByMessageId)(message_id);
+    const pendingSelectMessageByMessageId = selectMessageByMessageId(message_id);
     return Promise.all([pendingUpdateMessage, pendingSelectMessageByMessageId])
         .then(([updatedMessage]) => {
         res.status(200).send({ updatedMessage });
