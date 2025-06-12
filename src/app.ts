@@ -92,7 +92,6 @@ app.patch("/api/tickets/:ticket_id", patchTicket);
 app.get("/api/messages/:roomId", getMessagesbyRoomId);
 
 app.get("/api/chats/:chat_id", getChatById);
-// Untested
 
 app.get("/api/chats", getChats);
 //untested

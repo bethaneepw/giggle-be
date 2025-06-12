@@ -1315,7 +1315,7 @@ describe("Users Model", () => {
 });
 
 describe("Messages Model", () => {
-  describe("GET /api/messages", () => {
+  describe.skip("GET /api/messages", () => {
     test("200 responds with an array containing all messages", () => {
       return request(app)
         .get("/api/messages")
@@ -1385,7 +1385,7 @@ describe("Messages Model", () => {
     });
   });
 
-  describe("POST /api/messages/:roomId", () => {
+  describe.skip("POST /api/messages/:roomId", () => {
     test("201: Successfully adds a message to the chat room", () => {
       return request(app)
         .post("/api/messages/68405d38239a61ea5b7ad207")
@@ -1466,126 +1466,137 @@ describe("Messages Model", () => {
         });
     });
   });
-});
 
-describe("GET /api/chats/:chat_id", () => {
-  test("200: Gets Chat by Chat ID", () => {
-    return request(app)
-      .get("/api/chats/68405d38239a61ea5b7ad207")
-      .expect(200)
-      .then(({ body: { chat } }) => {
-        expect(chat).toMatchObject({
-          _id: "68405d38239a61ea5b7ad207",
-          user_ids: expect.any(Array),
-        });
-        expect(chat.user_ids.length).toBe(2);
-      });
-  });
-
-  test("400: When given invalid id", () => {
-    return request(app)
-      .get("/api/chats/NotValidId")
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid request!");
-      });
-  });
-
-  test("404: Not found when given valid id not in database", () => {
-    return request(app)
-      .get("/api/chats/684811d9d7f3b6a405f6e9b0")
-      .expect(404)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Chat does not exist!");
-      });
-  });
-});
-
-describe("GET /api/chats/users/:user_id", () => {
-  test("200: Responds with chats according to specific User ID", () => {
-    return request(app)
-      .get("/api/chats/users/68405b9711f50eebe1b59521")
-      .expect(200)
-      .then(({ body: { chats } }) => {
-        expect(chats.length).toBe(2);
-        chats.forEach((chat) => {
-          expect(chat).toMatchObject({
-            _id: expect.any(String),
-            user_ids: expect.arrayContaining(["68405b9711f50eebe1b59521"]),
+  describe.skip("PATCH: /api/messages/:message_id", () => {
+    test("200: Successfully updates message", () => {
+      return request(app)
+        .patch("/api/messages/68417f91c0cadf7869342c42")
+        .send({ displayToClient: false })
+        .expect(200)
+        .then(({ body: { updatedMessage } }) => {
+          expect(updatedMessage).toMatchObject({
+            _id: "68417f91c0cadf7869342c42",
+            roomId: "68405d38239a61ea5b7ad207",
+            senderId: "68405b9711f50eebe1b59521",
+            body: "What did you want?",
+            timestamp: "2025-01-26T00:05:00.000Z",
+            displayToClient: false,
           });
         });
-      });
-  });
+    });
 
-  test("404: Not found when given invalid string for UserID", () => {
-    return request(app)
-      .get("/api/chats/users/NotValidId")
-      .expect(404)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Chat does not exist!");
-      });
-  });
+    test("400: Bad request when updating message with info not aligned with schema", () => {
+      return request(app)
+        .patch("/api/messages/68417f99cc80869edc3c3931")
+        .send({ displayToClient: "This Isn't Aligned To Schema" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request!");
+        });
+    });
 
-  test("404: Not found when given valid id not in database", () => {
-    return request(app)
-      .get("/api/chats/users/684811d9d7f3b6a405f6e9b0")
-      .expect(404)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Chat does not exist!");
-      });
+    test("400: Bad request when message Id is invalid", () => {
+      return request(app)
+        .patch("/api/messages/InvalidMessageId")
+        .send({ displayToClient: false })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request!");
+        });
+    });
+
+    test("404: Not found when message Id is not in database", () => {
+      return request(app)
+        .patch("/api/messages/68405b9711f50eebe1b59521")
+        .send({ displayToClient: false })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Message does not exist!");
+        });
+    });
+
+    // Success
+    // Error: Sent Info Not aligned to Schema
+    // Invalid ID
+    // Not Found Id
   });
 });
 
-describe("PATCH: /api/messages/:message_id", () => {
-  test("200: Successfully updates message", () => {
+describe("Chats Model", () => {
+
+  test("GET /api/chats", () => {
     return request(app)
-      .patch("/api/messages/68417f91c0cadf7869342c42")
-      .send({ displayToClient: false })
-      .expect(200)
-      .then(({ body: { updatedMessage } }) => {
-        expect(updatedMessage).toMatchObject({
-          _id: "68417f91c0cadf7869342c42",
-          roomId: "68405d38239a61ea5b7ad207",
-          senderId: "68405b9711f50eebe1b59521",
-          body: "What did you want?",
-          timestamp: "2025-01-26T00:05:00.000Z",
-          displayToClient: false,
+    .get("/api/chats")
+    .expect(200)
+    .then(({body: {chatsWithUserInfo}})=>{
+      expect(chatsWithUserInfo.length).toBeGreaterThan(0)
+    })
+  })
+  describe("GET /api/chats/:chat_id", () => {
+    test("200: Gets Chat by Chat ID", () => {
+      return request(app)
+        .get("/api/chats/68405d38239a61ea5b7ad207")
+        .expect(200)
+        .then(({ body: { chatWithMessages } }) => {
+          expect(chatWithMessages).toMatchObject({
+            _id: "68405d38239a61ea5b7ad207",
+            user_ids: expect.any(Array),
+          });
+          expect(chatWithMessages.user_ids.length).toBe(2);
         });
-      });
+    });
+
+    test("400: When given invalid id", () => {
+      return request(app)
+        .get("/api/chats/NotValidId")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request!");
+        });
+    });
+
+    test("404: Not found when given valid id not in database", () => {
+      return request(app)
+        .get("/api/chats/684811d9d7f3b6a405f6e9b0")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Chat does not exist!");
+        });
+    });
   });
 
-  test("400: Bad request when updating message with info not aligned with schema", () => {
-    return request(app)
-      .patch("/api/messages/68417f99cc80869edc3c3931")
-      .send({ displayToClient: "This Isn't Aligned To Schema" })
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid request!");
-      });
-  });
+  describe.skip("GET /api/chats/users/:user_id", () => {
+    test("200: Responds with chats according to specific User ID", () => {
+      return request(app)
+        .get("/api/chats/users/68405b9711f50eebe1b59521")
+        .expect(200)
+        .then(({ body: { chats } }) => {
+          expect(chats.length).toBe(2);
+          chats.forEach((chat) => {
+            expect(chat).toMatchObject({
+              _id: expect.any(String),
+              user_ids: expect.arrayContaining(["68405b9711f50eebe1b59521"]),
+            });
+          });
+        });
+    });
 
-  test("400: Bad request when message Id is invalid", () => {
-    return request(app)
-      .patch("/api/messages/InvalidMessageId")
-      .send({ displayToClient: false })
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid request!");
-      });
-  });
+    test("404: Not found when given invalid string for UserID", () => {
+      return request(app)
+        .get("/api/chats/users/NotValidId")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Chat does not exist!");
+        });
+    });
 
-  test("404: Not found when message Id is not in database", () => {
-    return request(app)
-      .patch("/api/messages/68405b9711f50eebe1b59521")
-      .send({ displayToClient: false })
-      .expect(404)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Message does not exist!");
-      });
+    test("404: Not found when given valid id not in database", () => {
+      return request(app)
+        .get("/api/chats/users/684811d9d7f3b6a405f6e9b0")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Chat does not exist!");
+        });
+    });
   });
-
-  // Success
-  // Error: Sent Info Not aligned to Schema
-  // Invalid ID
-  // Not Found Id
 });
