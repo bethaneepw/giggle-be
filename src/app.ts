@@ -1,4 +1,9 @@
 const express = require("express");
+const { run } = require("../db/connection");
+
+if (process.env.NODE_ENV !== "production") {
+  run();
+}
 const app = express();
 const cors = require("cors");
 
@@ -49,10 +54,7 @@ const {
   getAllMessages,
 } = require("./controllers/messages.controller");
 
-const {
-  getChatById,
-  getChatsByUserId,
-} = require("./controllers/chats.controllers");
+const { getChatById, getChats } = require("./controllers/chats.controllers");
 
 app.get("/api", getApi);
 
@@ -85,18 +87,20 @@ app.delete("/api/tickets/:ticket_id", deleteTicket);
 
 app.patch("/api/tickets/:ticket_id", patchTicket);
 
-app.get("/api/messages", getAllMessages);
+// app.get("/api/messages", getAllMessages);
 
 app.get("/api/messages/:roomId", getMessagesbyRoomId);
 
-app.get("/api/chats/:chats_id", getChatById);
+app.get("/api/chats/:chat_id", getChatById);
+// Untested
 
-app.get("/api/chats/users/:user_id", getChatsByUserId);
+app.get("/api/chats", getChats);
+//untested
 
-app.post("/api/messages/:roomId", postMessagebyId);
+// app.post("/api/messages/:roomId", postMessagebyId);
 
-app.get("/api/tickets/events/:event_id", getTicketsByEventId);
-
+// app.get("/api/tickets/events/:event_id", getTicketsByEventId);
+// 
 app.patch("/api/messages/:message_id", patchMessagebyId);
 
 app.get("/api/users/username/:username", getUserByUsername);

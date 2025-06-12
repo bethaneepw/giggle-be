@@ -37,7 +37,7 @@ export const updateChatUsers = (chatId, user_ids) => {
     return updatedChat;
   });
 };
-export const selectChatById = (_id: any) => {
+exports.selectChatById = (_id: any) => {
   return Chat.findById(_id)
     .orFail(() => {
       throw { msg: "Chat does not exist!", status: 404 };
